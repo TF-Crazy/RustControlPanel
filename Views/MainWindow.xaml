@@ -5,30 +5,15 @@
         Title="Rust Control Panel - Administration" Height="600" Width="1000"
         Background="{StaticResource PrimaryDarkBrush}">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" MinHeight="60"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Height="60" Background="Red">
+            <components:ServerBar />
+        </Border>
 
-        <components:ServerBar Grid.Row="0" DataContext="{Binding}"/>
-
-        <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0" Margin="5">
+        <TabControl Background="#151515">
             <TabItem Header="CONSOLE">
-                <Grid Background="#121212">
-                    <TextBlock Text="Flux Console en attente..." Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="JOUEURS">
-                <Grid Background="#121212">
-                    <TextBlock Text="Liste des joueurs vide." Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="MAP">
-                <Grid Background="#121212">
-                    <TextBlock Text="Map non chargée." Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Grid>
+                <TextBlock Text="Flux console en attente..." Foreground="White"/>
             </TabItem>
         </TabControl>
-    </Grid>
+    </DockPanel>
 </Window>

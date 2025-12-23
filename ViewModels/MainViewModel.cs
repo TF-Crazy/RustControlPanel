@@ -32,11 +32,29 @@ namespace RustControlPanel.ViewModels
 
         public MainViewModel()
         {
+            LoggerService.Log("Initialisation du MainViewModel...");
             _configService = new ConfigService();
-            // Chargement initial des serveurs depuis le JSON
-            Servers = new ObservableCollection<ServerConfig>(_configService.LoadServers());
-            SelectedServer = Servers.FirstOrDefault();
-            ConnectCommand = new RelayCommand(async () => await ConnectAsync());
+
+            try
+            {
+                var loadedServers = _configService.LoadServers();
+                Servers = [.. loadedServers];
+
+                // Sécurité : n'assigner que si la liste n'est pas vide
+                if (Servers.Count > 0)
+                {
+                    SelectedServer = Servers[0];
+                    LoggerService.Log($"Serveur par défaut sélectionné : {SelectedServer.Name}");
+                }
+
+                ConnectCommand = new RelayCommand(async () => await ConnectAsync());
+                LoggerService.Log("MainViewModel prêt.");
+            }
+            catch (Exception ex)
+            {
+                LoggerService.Error("Erreur fatale dans le constructeur MainViewModel", ex);
+                throw; // On laisse remonter pour que App.xaml.cs le logge aussi
+            }
         }
 
         /// <summary>

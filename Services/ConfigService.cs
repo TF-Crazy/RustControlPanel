@@ -22,13 +22,23 @@ namespace RustControlPanel.Services
 
         public List<ServerConfig> LoadServers()
         {
-            if (!File.Exists(_filePath)) return []; // Syntaxe simplifiée []
+            if (!File.Exists(_filePath))
+            {
+                LoggerService.Log("Aucun fichier servers.json trouvé, création d'une liste vide.");
+                return [];
+            }
             try
             {
                 string json = File.ReadAllText(_filePath);
-                return JsonSerializer.Deserialize<List<ServerConfig>>(json) ?? [];
+                var servers = JsonSerializer.Deserialize<List<ServerConfig>>(json, _jsonOptions);
+                LoggerService.Log($"{servers?.Count ?? 0} serveurs chargés depuis la configuration.");
+                return servers ?? [];
             }
-            catch { return []; }
+            catch (Exception ex)
+            {
+                LoggerService.Error("Erreur lors de la lecture du fichier JSON", ex);
+                return [];
+            }
         }
 
         public void SaveServers(List<ServerConfig> servers)

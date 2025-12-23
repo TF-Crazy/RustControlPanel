@@ -3,6 +3,7 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using RustControlPanel.Core.Rpc;
+using RustControlPanel.Services;
 
 namespace RustControlPanel.Core.Network
 {
@@ -22,26 +23,27 @@ namespace RustControlPanel.Core.Network
 
         public async Task ConnectAsync()
         {
+            LoggerService.Log($"Tentative de connexion à : {_uri.Host}");
             _socket = new ClientWebSocket();
             _cts = new CancellationTokenSource();
 
             try
             {
                 await _socket.ConnectAsync(_uri, _cts.Token);
+                LoggerService.Log("WebSocket connecté avec succès.");
                 OnConnected?.Invoke();
-
-                // Lance la boucle de réception sur un thread séparé
                 _ = Task.Run(ReceiveLoop, _cts.Token);
             }
             catch (Exception ex)
             {
-                OnError?.Invoke(ex);
+                LoggerService.Error("Échec de connexion WebSocket", ex);
                 throw;
             }
         }
 
         private async Task ReceiveLoop()
         {
+            LoggerService.Log("Démarrage de la boucle de réception.");
             var buffer = new byte[1024 * 128]; // Buffer de 128KB pour les grosses listes d'entités
             try
             {
@@ -60,11 +62,14 @@ namespace RustControlPanel.Core.Network
                         var data = new byte[result.Count];
                         Array.Copy(buffer, data, result.Count);
                         OnMessageReceived?.Invoke(data);
+                        LoggerService.Log($"Message reçu : {result.Count} octets", "NET");
                     }
                 }
             }
             catch (Exception ex)
             {
+                LoggerService.Error("Erreur dans la boucle de réception", ex);
+
                 if (!_cts.Token.IsCancellationRequested)
                     OnError?.Invoke(ex);
             }

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using RustControlPanel.Services;
 using RustControlPanel.ViewModels;
 using RustControlPanel.Views;
 namespace RustControlPanel
@@ -8,12 +9,23 @@ namespace RustControlPanel
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            LoggerService.Log("Démarrage de l'application...");
 
-            var mainWindow = new MainWindow
+            try
             {
-                DataContext = new MainViewModel()
-            };
-            mainWindow.Show();
+                var mainWindow = new MainWindow();
+                var viewModel = new MainViewModel();
+                mainWindow.DataContext = viewModel;
+
+                LoggerService.Log("Interface et ViewModel chargés.");
+                mainWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                LoggerService.Error("Crash critique au démarrage !", ex);
+                MessageBox.Show($"Erreur fatale au démarrage :\n{ex.Message}", "Crash", MessageBoxButton.OK, MessageBoxImage.Error);
+                Shutdown();
+            }
         }
     }
 }

@@ -36,7 +36,7 @@ namespace RustControlPanel.ViewModels
             {
                 _configService = new ConfigService();
                 var loaded = _configService.LoadServers();
-                Servers = loaded != null ? new ObservableCollection<ServerConfig>(loaded) : new ObservableCollection<ServerConfig>();
+                Servers = loaded != null ? new ObservableCollection<ServerConfig>(loaded) : [];
 
                 if (Servers.Count > 0) SelectedServer = Servers[0];
 
@@ -46,7 +46,7 @@ namespace RustControlPanel.ViewModels
             {
                 // On logge mais on ne bloque pas l'UI
                 LoggerService.Error("Erreur dans le constructeur MainViewModel", ex);
-                Servers = new ObservableCollection<ServerConfig>();
+                Servers = [];
                 ConnectCommand = new RelayCommand(() => { });
             }
         }
@@ -58,25 +58,29 @@ namespace RustControlPanel.ViewModels
         {
             if (SelectedServer == null) return;
 
-            if (_currentClient != null)
-            {
-                await _currentClient.DisconnectAsync();
-                _currentClient.Dispose();
-            }
+            LogService.Write($"Tentative de connexion vers {SelectedServer.Ip}...");
+            ConnectionStatus = "Connexion...";
 
-            ConnectionStatus = $"Connexion à {SelectedServer.Name}...";
             _currentClient = new BridgeClient(SelectedServer.ConnectionUri);
-            _currentClient.OnConnected += () => ConnectionStatus = "Connecté";
-            _currentClient.OnDisconnected += (r) => ConnectionStatus = $"Déconnecté : {r}";
-            _currentClient.OnError += (ex) => ConnectionStatus = $"Erreur : {ex.Message}";
+
+            // On lie les événements du client aux logs de debug
+            _currentClient.OnConnected += () => {
+                ConnectionStatus = "Connecté";
+                LogService.Write("WebSocket ouvert avec succès.", "SUCCESS");
+            };
+
+            _currentClient.OnError += (ex) => {
+                LogService.Write($"Erreur socket: {ex.Message}", "ERROR");
+            };
 
             try
             {
                 await _currentClient.ConnectAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ConnectionStatus = "Échec de connexion";
+                LogService.Write($"Échec: {ex.Message}", "ERROR");
+                ConnectionStatus = "Erreur";
             }
         }
 

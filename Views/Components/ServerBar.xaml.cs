@@ -11,5 +11,11 @@ namespace RustControlPanel.Views.Components
         {
             InitializeComponent();
         }
+
+        private void OpenDebug_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var debugWin = new DebugWindow();
+            debugWin.Show();
+        }
     }
 }

@@ -1,12 +1,40 @@
 ﻿<UserControl x:Class="RustControlPanel.Views.Components.ServerBar"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Background="Blue" Height="60">
-    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10">
-        <TextBlock Text="TEST SERVEUR:" Foreground="White" FontWeight="Bold" Margin="0,0,10,0"/>
+             Background="#2D2D2D" Height="60">
+    <Grid Margin="15,5">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Border Background="#1A1A1A" CornerRadius="4" Padding="5,2" Margin="0,0,10,0">
+                <ComboBox ItemsSource="{Binding Servers}" 
+                          SelectedItem="{Binding SelectedServer}" 
+                          DisplayMemberPath="Name"
+                          Width="180" Height="25" Background="Transparent" BorderThickness="0" Foreground="White"/>
+            </Border>
 
-        <Button Content="CONNEXION TEST" Width="120" Height="30"/>
+            <Button Content="CONNEXION" 
+                    Command="{Binding ConnectCommand}" 
+                    Style="{StaticResource ModernButton}" 
+                    Width="100" Height="30"/>
+        </StackPanel>
 
-        <TextBlock Text="{Binding ConnectionStatus}" Foreground="Yellow" Margin="20,0,0,0"/>
-    </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+            <Button Content="DEBUG" Click="OpenDebug_Click" 
+                    Background="#444" Foreground="White" BorderThickness="0" 
+                    Padding="10,2" Margin="0,0,15,0" Cursor="Hand"/>
+
+            <Ellipse Width="8" Height="8" Margin="0,0,8,0">
+                <Ellipse.Style>
+                    <Style TargetType="Ellipse">
+                        <Setter Property="Fill" Value="#555"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ConnectionStatus}" Value="Connecté">
+                                <Setter Property="Fill" Value="#4CAF50"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Ellipse.Style>
+            </Ellipse>
+            <TextBlock Text="{Binding ConnectionStatus}" Foreground="#AAA" FontSize="11" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
 </UserControl>

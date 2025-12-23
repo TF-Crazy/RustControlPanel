@@ -28,12 +28,12 @@ namespace RustControlPanel
 
         public App()
         {
-            // Capture les erreurs XAML / Rendu
+            // On capture les crashs de l'UI
             this.DispatcherUnhandledException += (s, e) =>
             {
-                LoggerService.Error("ERREUR NON GÉRÉE (UI)", e.Exception);
-                MessageBox.Show($"Crash UI : {e.Exception.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
-                e.Handled = true; // Empêche la fermeture immédiate pour voir le message
+                Services.LogService.HandleCrash(e.Exception);
+                MessageBox.Show("L'application a rencontré un problème. Un rapport de crash a été généré.", "Crash", MessageBoxButton.OK, MessageBoxImage.Error);
+                // On ne met pas e.Handled = true si on veut que l'app se ferme proprement après le crash
             };
         }
     }

@@ -10,7 +10,7 @@ namespace RustControlPanel.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        private readonly ConfigService _configService;
+        private readonly Services.ConfigService _configService;
         private BridgeClient? _currentClient; // Autoriser le null car on n'est pas tjs connecté
         private ServerConfig? _selectedServer; // Idem
         private string _connectionStatus = "Déconnecté";
@@ -32,9 +32,9 @@ namespace RustControlPanel.ViewModels
 
         public MainViewModel()
         {
+            _configService = new ConfigService();
             try
             {
-                _configService = new ConfigService();
                 var loaded = _configService.LoadServers();
                 Servers = loaded != null ? new ObservableCollection<ServerConfig>(loaded) : [];
 

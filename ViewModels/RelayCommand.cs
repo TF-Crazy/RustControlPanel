@@ -7,6 +7,11 @@ namespace RustControlPanel.ViewModels
     {
         public bool CanExecute(object? parameter) => true;
         public void Execute(object? parameter) => execute();
-        public event EventHandler? CanExecuteChanged;
+
+        public event EventHandler? CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
     }
 }

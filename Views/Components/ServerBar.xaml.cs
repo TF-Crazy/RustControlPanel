@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace RustControlPanel.Views.Components
 {
@@ -12,10 +13,13 @@ namespace RustControlPanel.Views.Components
             InitializeComponent();
         }
 
-        private void OpenDebug_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void OpenDebug_Click(object sender, RoutedEventArgs e)
         {
-            var debugWin = new DebugWindow();
-            debugWin.Show();
+            var mainWin = Application.Current.MainWindow as MainWindow;
+            if (mainWin != null)
+            {
+                mainWin.DebugPanel.Visibility = Visibility.Visible;
+            }
         }
     }
 }

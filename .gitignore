@@ -1,0 +1,13 @@
+# Dossiers
+.vs/
+bin/
+obj/
+
+# Fichiers
+RustControlPanel.csproj
+RustControlPanel.csproj.user
+RustControlPanel.sln
+
+# User Specific Data (Sensitive)
+/Servers/servers.json
+appsettings.json

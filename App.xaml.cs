@@ -27,5 +27,16 @@ namespace RustControlPanel
                 Shutdown();
             }
         }
+
+        public App()
+        {
+            // Capture les erreurs XAML / Rendu
+            this.DispatcherUnhandledException += (s, e) =>
+            {
+                LoggerService.Error("ERREUR NON GÉRÉE (UI)", e.Exception);
+                MessageBox.Show($"Crash UI : {e.Exception.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                e.Handled = true; // Empêche la fermeture immédiate pour voir le message
+            };
+        }
     }
 }

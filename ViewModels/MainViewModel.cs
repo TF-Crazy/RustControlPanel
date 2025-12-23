@@ -16,6 +16,7 @@ namespace RustControlPanel.ViewModels
         private string _connectionStatus = "Déconnecté";
 
         public ObservableCollection<ServerConfig> Servers { get; }
+        public System.Windows.Input.ICommand ConnectCommand { get; }
 
         public ServerConfig SelectedServer
         {
@@ -35,12 +36,13 @@ namespace RustControlPanel.ViewModels
             // Chargement initial des serveurs depuis le JSON
             Servers = new ObservableCollection<ServerConfig>(_configService.LoadServers());
             SelectedServer = Servers.FirstOrDefault();
+            ConnectCommand = new RelayCommand(async () => await ConnectAsync());
         }
 
         /// <summary>
         /// Initialise la connexion au serveur sélectionné
         /// </summary>
-        public async Task ConnectCommand()
+        public async Task ConnectAsync()
         {
             if (SelectedServer == null) return;
 

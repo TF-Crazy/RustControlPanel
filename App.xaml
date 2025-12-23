@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:RustControlPanel"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary Source="Resources/AppStyles.xaml"/>
     </Application.Resources>
 </Application>

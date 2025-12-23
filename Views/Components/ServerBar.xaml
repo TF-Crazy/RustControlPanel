@@ -1,0 +1,36 @@
+<UserControl x:Class="RustControlPanel.Views.Components.ServerBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#252525" Height="50">
+    <Grid Margin="10,0">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <TextBlock Text="SERVEUR :" Foreground="Gray" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="Bold"/>
+
+            <ComboBox ItemsSource="{Binding Servers}" 
+                      SelectedItem="{Binding SelectedServer}" 
+                      DisplayMemberPath="Name"
+                      Width="200" Height="30" VerticalContentAlignment="Center"/>
+
+            <Button Content="CONNEXION" 
+                    Command="{Binding ConnectCommand}" 
+                    Style="{StaticResource ModernButton}" 
+                    Margin="15,0,0,0" Width="100"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+            <Ellipse Width="10" Height="10" Margin="0,0,8,0">
+                <Ellipse.Style>
+                    <Style TargetType="Ellipse">
+                        <Setter Property="Fill" Value="Gray"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ConnectionStatus}" Value="Connecté">
+                                <Setter Property="Fill" Value="{StaticResource SuccessBrush}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Ellipse.Style>
+            </Ellipse>
+            <TextBlock Text="{Binding ConnectionStatus}" Foreground="White" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -11,14 +11,14 @@ namespace RustControlPanel.ViewModels
     public class MainViewModel : BaseViewModel
     {
         private readonly ConfigService _configService;
-        private BridgeClient _currentClient;
-        private ServerConfig _selectedServer;
+        private BridgeClient? _currentClient; // Autoriser le null car on n'est pas tjs connecté
+        private ServerConfig? _selectedServer; // Idem
         private string _connectionStatus = "Déconnecté";
 
         public ObservableCollection<ServerConfig> Servers { get; }
         public System.Windows.Input.ICommand ConnectCommand { get; }
 
-        public ServerConfig SelectedServer
+        public ServerConfig? SelectedServer
         {
             get => _selectedServer;
             set => SetProperty(ref _selectedServer, value);
@@ -46,7 +46,6 @@ namespace RustControlPanel.ViewModels
         {
             if (SelectedServer == null) return;
 
-            // Si un client existe déjà, on le nettoie
             if (_currentClient != null)
             {
                 await _currentClient.DisconnectAsync();
@@ -54,7 +53,6 @@ namespace RustControlPanel.ViewModels
             }
 
             ConnectionStatus = $"Connexion à {SelectedServer.Name}...";
-
             _currentClient = new BridgeClient(SelectedServer.ConnectionUri);
             _currentClient.OnConnected += () => ConnectionStatus = "Connecté";
             _currentClient.OnDisconnected += (r) => ConnectionStatus = $"Déconnecté : {r}";
@@ -64,7 +62,7 @@ namespace RustControlPanel.ViewModels
             {
                 await _currentClient.ConnectAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ConnectionStatus = "Échec de connexion";
             }
@@ -76,7 +74,7 @@ namespace RustControlPanel.ViewModels
         public void AddServer(ServerConfig config)
         {
             Servers.Add(config);
-            _configService.SaveServers(Servers.ToList());
+            _configService.SaveServers([.. Servers]);
         }
     }
 }

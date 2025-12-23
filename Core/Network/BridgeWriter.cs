@@ -4,19 +4,13 @@ using System.Text;
 
 namespace RustControlPanel.Core.Network
 {
-    public class BridgeWriter : BinaryWriter
+    public class BridgeWriter(MemoryStream ms) : BinaryWriter(ms, Encoding.UTF8)
     {
-        public BridgeWriter(MemoryStream ms) : base(ms, Encoding.UTF8) { }
-
         public override void Write(string value)
         {
-            // Carbon attend un UInt32 pour la longueur, pas le 7-bit de .NET
-            byte[] bytes = string.IsNullOrEmpty(value)
-                ? Array.Empty<byte>()
-                : Encoding.UTF8.GetBytes(value);
-
+            byte[] bytes = string.IsNullOrEmpty(value) ? [] : Encoding.UTF8.GetBytes(value);
             base.Write((uint)bytes.Length);
             base.Write(bytes);
         }
-    }
+    }    
 }

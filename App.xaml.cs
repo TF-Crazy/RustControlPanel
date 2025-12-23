@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using RustControlPanel.ViewModels;
-
+using RustControlPanel.Views;
 namespace RustControlPanel
 {
     public partial class App : Application
@@ -9,9 +9,10 @@ namespace RustControlPanel
         {
             base.OnStartup(e);
 
-            var mainWindow = new MainWindow();
-            // On injecte le ViewModel principal comme contexte de données
-            mainWindow.DataContext = new MainViewModel();
+            var mainWindow = new MainWindow
+            {
+                DataContext = new MainViewModel()
+            };
             mainWindow.Show();
         }
     }

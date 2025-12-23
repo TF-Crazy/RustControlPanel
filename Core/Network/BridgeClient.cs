@@ -6,11 +6,11 @@ using RustControlPanel.Core.Rpc;
 
 namespace RustControlPanel.Core.Network
 {
-    public class BridgeClient : IDisposable
+    public class BridgeClient(string connectionUri) : IDisposable
     {
         private ClientWebSocket _socket = default!;
         private CancellationTokenSource _cts = default!;
-        private readonly Uri _uri;
+        private readonly Uri _uri = new Uri(connectionUri);
 
         // Événements pour informer l'UI ou les ViewModels
         public event Action? OnConnected;
@@ -19,11 +19,6 @@ namespace RustControlPanel.Core.Network
         public event Action<Exception>? OnError;
 
         public bool IsConnected => _socket?.State == WebSocketState.Open;
-
-        public BridgeClient(string connectionUri)
-        {
-            _uri = new Uri(connectionUri);
-        }
 
         public async Task ConnectAsync()
         {
@@ -90,7 +85,7 @@ namespace RustControlPanel.Core.Network
             );
         }
 
-        public async Task DisconnectAsync(string reason = "Déconnexion manuelle")
+        public async Task DisconnectAsync(string reason = "") // "" au lieu de null
         {
             if (_socket != null)
             {
@@ -100,15 +95,24 @@ namespace RustControlPanel.Core.Network
                     await _socket.CloseAsync(WebSocketCloseStatus.NormalClosure, reason, CancellationToken.None);
                 }
                 _socket.Dispose();
-                _socket = null;
+                _socket = null!; // On utilise ! pour dire au compilateur qu'on sait ce qu'on fait
             }
             OnDisconnected?.Invoke(reason);
         }
 
         public void Dispose()
         {
-            _cts?.Cancel();
-            _socket?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this); // Correction CA1816
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _cts?.Cancel();
+                _socket?.Dispose();
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ namespace RustControlPanel.Core.Network
     {
         private ClientWebSocket _socket = default!;
         private CancellationTokenSource _cts = default!;
-        private readonly Uri _uri = new Uri(connectionUri);
+        private readonly Uri _uri = new(connectionUri);
 
         // Événements pour informer l'UI ou les ViewModels
         public event Action? OnConnected;

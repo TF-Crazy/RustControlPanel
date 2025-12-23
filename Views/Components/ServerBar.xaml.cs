@@ -15,8 +15,7 @@ namespace RustControlPanel.Views.Components
 
         private void OpenDebug_Click(object sender, RoutedEventArgs e)
         {
-            var mainWin = Application.Current.MainWindow as MainWindow;
-            if (mainWin != null)
+            if (Application.Current.MainWindow is MainWindow mainWin)
             {
                 mainWin.DebugPanel.Visibility = Visibility.Visible;
             }

@@ -26,26 +26,26 @@ namespace RustControlPanel.Services
             _filePath = File.Exists(localPath) ? localPath : appDataPath;
             _folderPath = Path.GetDirectoryName(_filePath) ?? "";
 
-            LoggerService.Log($"Utilisation du fichier de config : {_filePath}");
+            LogService.Write($"Utilisation du fichier de config : {_filePath}");
         }
 
         public List<ServerConfig> LoadServers()
         {
             if (!File.Exists(_filePath))
             {
-                LoggerService.Log("Aucun fichier servers.json trouvé, création d'une liste vide.");
+                LogService.Write("Aucun fichier servers.json trouvé, création d'une liste vide.");
                 return [];
             }
             try
             {
                 string json = File.ReadAllText(_filePath);
                 var servers = JsonSerializer.Deserialize<List<ServerConfig>>(json, _jsonOptions);
-                LoggerService.Log($"{servers?.Count ?? 0} serveurs chargés depuis la configuration.");
+                LogService.Write($"{servers?.Count ?? 0} serveurs chargés depuis la configuration.");
                 return servers ?? [];
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                LoggerService.Error("Erreur lors de la lecture du fichier JSON", ex);
+                LogService.Write("Erreur lors de la lecture du fichier JSON");
                 return [];
             }
         }

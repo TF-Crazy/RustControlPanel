@@ -9,7 +9,7 @@ namespace RustControlPanel.Views.Components
         public DebugPanelView()
         {
             InitializeComponent();
-            this.DataContext = new { Entries = Services.LogService.Entries };
+            this.DataContext = new { Services.LogService.Entries };
         }
 
         private void CloseDebug_Click(object sender, RoutedEventArgs e)

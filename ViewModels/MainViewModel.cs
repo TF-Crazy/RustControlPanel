@@ -16,6 +16,7 @@ namespace RustControlPanel.ViewModels
         private string _connectionStatus = "Déconnecté";
 
         public ObservableCollection<ServerConfig> Servers { get; }
+
         public System.Windows.Input.ICommand ConnectCommand { get; }
 
         public ServerConfig? SelectedServer
@@ -43,10 +44,10 @@ namespace RustControlPanel.ViewModels
                 ConnectCommand = new RelayCommand(async () => await ConnectAsync());
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // On logge mais on ne bloque pas l'UI
-                LoggerService.Error("Erreur dans le constructeur MainViewModel", ex);
+                LogService.Write("Erreur dans le constructeur MainViewModel");
                 Servers = [];
                 ConnectCommand = new RelayCommand(() => { });
             }

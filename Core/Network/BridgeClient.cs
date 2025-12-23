@@ -21,27 +21,27 @@ namespace RustControlPanel.Core.Network
 
         public async Task ConnectAsync()
         {
-            LoggerService.Log($"Tentative de connexion à : {_uri.Host}");
+            LogService.Write($"Tentative de connexion à : {_uri.Host}");
             _socket = new ClientWebSocket();
             _cts = new CancellationTokenSource();
 
             try
             {
                 await _socket.ConnectAsync(_uri, _cts.Token);
-                LoggerService.Log("WebSocket connecté avec succès.");
+                LogService.Write("WebSocket connecté avec succès.");
                 OnConnected?.Invoke();
                 _ = Task.Run(ReceiveLoop, _cts.Token);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                LoggerService.Error("Échec de connexion WebSocket", ex);
+                LogService.Write("Échec de connexion WebSocket");
                 throw;
             }
         }
 
         private async Task ReceiveLoop()
         {
-            LoggerService.Log("Démarrage de la boucle de réception.");
+            LogService.Write("Démarrage de la boucle de réception.");
             var buffer = new byte[1024 * 128]; 
             try
             {
@@ -60,13 +60,13 @@ namespace RustControlPanel.Core.Network
                         var data = new byte[result.Count];
                         Array.Copy(buffer, data, result.Count);
                         OnMessageReceived?.Invoke(data);
-                        LoggerService.Log($"Message reçu : {result.Count} octets", "NET");
+                        LogService.Write($"Message reçu : {result.Count} octets", "NET");
                     }
                 }
             }
             catch (Exception ex)
             {
-                LoggerService.Error("Erreur dans la boucle de réception", ex);
+                LogService.Write("Erreur dans la boucle de réception");
 
                 if (!_cts.Token.IsCancellationRequested)
                     OnError?.Invoke(ex);

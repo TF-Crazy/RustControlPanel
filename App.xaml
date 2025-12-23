@@ -6,6 +6,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/AppStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" xmlns:converters="clr-namespace:RustControlPanel.Core.Converters"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

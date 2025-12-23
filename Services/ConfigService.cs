@@ -16,8 +16,17 @@ namespace RustControlPanel.Services
 
         public ConfigService()
         {
-            _folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RustControlPanel");
-            _filePath = Path.Combine(_folderPath, "servers.json");
+            // Chemin 1 : Dans le dossier de l'application (pour le dev/git)
+            string localPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Servers", "servers.json");
+
+            // Chemin 2 : Dans AppData (pour l'installation finale)
+            string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RustControlPanel", "servers.json");
+
+            // On choisit le local s'il existe, sinon AppData
+            _filePath = File.Exists(localPath) ? localPath : appDataPath;
+            _folderPath = Path.GetDirectoryName(_filePath) ?? "";
+
+            LoggerService.Log($"Utilisation du fichier de config : {_filePath}");
         }
 
         public List<ServerConfig> LoadServers()

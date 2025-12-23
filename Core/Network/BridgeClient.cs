@@ -8,15 +8,15 @@ namespace RustControlPanel.Core.Network
 {
     public class BridgeClient : IDisposable
     {
-        private ClientWebSocket _socket;
-        private CancellationTokenSource _cts;
+        private ClientWebSocket _socket = default!;
+        private CancellationTokenSource _cts = default!;
         private readonly Uri _uri;
 
         // Événements pour informer l'UI ou les ViewModels
-        public event Action OnConnected;
-        public event Action<string> OnDisconnected;
-        public event Action<byte[]> OnMessageReceived;
-        public event Action<Exception> OnError;
+        public event Action? OnConnected;
+        public event Action<string>? OnDisconnected;
+        public event Action<byte[]>? OnMessageReceived;
+        public event Action<Exception>? OnError;
 
         public bool IsConnected => _socket?.State == WebSocketState.Open;
 

@@ -41,6 +41,7 @@ namespace RustControlPanel.ViewModels
                 if (Servers.Count > 0) SelectedServer = Servers[0];
 
                 ConnectCommand = new RelayCommand(async () => await ConnectAsync());
+
             }
             catch (Exception ex)
             {

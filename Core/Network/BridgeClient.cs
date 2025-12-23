@@ -12,8 +12,6 @@ namespace RustControlPanel.Core.Network
         private ClientWebSocket _socket = default!;
         private CancellationTokenSource _cts = default!;
         private readonly Uri _uri = new(connectionUri);
-
-        // Événements pour informer l'UI ou les ViewModels
         public event Action? OnConnected;
         public event Action<string>? OnDisconnected;
         public event Action<byte[]>? OnMessageReceived;
@@ -44,7 +42,7 @@ namespace RustControlPanel.Core.Network
         private async Task ReceiveLoop()
         {
             LoggerService.Log("Démarrage de la boucle de réception.");
-            var buffer = new byte[1024 * 128]; // Buffer de 128KB pour les grosses listes d'entités
+            var buffer = new byte[1024 * 128]; 
             try
             {
                 while (_socket.State == WebSocketState.Open && !_cts.Token.IsCancellationRequested)

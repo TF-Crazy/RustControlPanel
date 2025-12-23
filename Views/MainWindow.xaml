@@ -7,11 +7,11 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="Auto" MinHeight="60"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <components:ServerBar Grid.Row="0" VerticalAlignment="Top"/>
+        <components:ServerBar Grid.Row="0" DataContext="{Binding}"/>
 
         <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0" Margin="5">
             <TabItem Header="CONSOLE">

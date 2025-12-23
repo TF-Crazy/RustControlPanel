@@ -21,6 +21,21 @@ namespace RustControlPanel.Services
             catch { /* Impossible d'écrire sur le disque */ }
         }
 
+        public static void Initialize()
+        {
+            try
+            {
+                if (!Directory.Exists(LogFolder))
+                    Directory.CreateDirectory(LogFolder);
+
+                Log("Logger initialisé manuellement.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("ERREUR INITIALISATION LOGGER: " + ex.Message);
+            }
+        }
+
         public static void Log(string message, string level = "INFO")
         {
             string logLine = $"[{DateTime.Now:HH:mm:ss}] [{level}] {message}";

@@ -8,9 +8,9 @@ namespace RustControlPanel
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
+            LoggerService.Initialize();
             LoggerService.Log("Démarrage de l'application...");
-
+            base.OnStartup(e);
             try
             {
                 var mainWindow = new MainWindow();

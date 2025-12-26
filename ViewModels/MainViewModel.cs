@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using RustControlPanel.Core.Utils;
 using RustControlPanel.Services;
+using RustControlPanel.Views.Windows;
 
 namespace RustControlPanel.ViewModels
 {
@@ -20,6 +21,7 @@ namespace RustControlPanel.ViewModels
 
         private int _selectedTabIndex = 0;
         private bool _isConnected = false;
+        private string _connectionStatus = "Déconnecté";
         private string _serverName = "Not Connected";
         private int _playerCount = 0;
         private int _maxPlayers = 0;
@@ -45,6 +47,15 @@ namespace RustControlPanel.ViewModels
         {
             get => _isConnected;
             set => SetProperty(ref _isConnected, value);
+        }
+
+        /// <summary>
+        /// Connection status message.
+        /// </summary>
+        public string ConnectionStatus
+        {
+            get => _connectionStatus;
+            set => SetProperty(ref _connectionStatus, value);
         }
 
         /// <summary>
@@ -144,7 +155,16 @@ namespace RustControlPanel.ViewModels
             {
                 var loginWindow = new Views.Windows.LoginWindow();
                 loginWindow.Show();
-                Application.Current.MainWindow?.Close();
+                
+                // Close MainWindow
+                foreach (Window window in Application.Current.Windows)
+                {
+                    if (window is MainWindow)
+                    {
+                        window.Close();
+                        break;
+                    }
+                }
             });
         }
 
@@ -174,8 +194,20 @@ namespace RustControlPanel.ViewModels
         {
             IsConnected = isConnected;
 
-            if (!isConnected)
+            if (isConnected)
             {
+                ConnectionStatus = "Connecté";
+                
+                // Get server config if available
+                var config = ConnectionService.Instance.CurrentConfig;
+                if (config != null)
+                {
+                    ServerName = config.DisplayName ?? $"{config.Host}:{config.Port}";
+                }
+            }
+            else
+            {
+                ConnectionStatus = "Déconnecté";
                 ServerName = "Disconnected";
                 PlayerCount = 0;
                 MaxPlayers = 0;

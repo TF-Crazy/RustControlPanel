@@ -34,6 +34,8 @@
                 <!-- Navigation tabs -->
                 <RowDefinition Height="*"/>
                 <!-- Content -->
+                <RowDefinition Height="Auto"/>
+                <!-- Footer / Status bar -->
             </Grid.RowDefinitions>
 
             <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -138,7 +140,7 @@
             <!-- ═══════════════════════════════════════════════════════════════ -->
             <!-- NAVIGATION TABS                                                  -->
             <!-- ═══════════════════════════════════════════════════════════════ -->
-            <TabControl Grid.Row="2" Grid.RowSpan="2"
+            <TabControl Grid.Row="3"
                         Style="{StaticResource MainTabControl}"
                         SelectedIndex="{Binding SelectedTabIndex}">
 
@@ -211,6 +213,59 @@
                 </TabItem>
 
             </TabControl>
+
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- FOOTER / STATUS BAR                                              -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <Border Grid.Row="4"
+                    Background="{StaticResource BackgroundMediumBrush}"
+                    BorderBrush="{StaticResource BorderNormalBrush}"
+                    BorderThickness="0,1,0,0"
+                    Padding="12,6"
+                    CornerRadius="0,0,8,8">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Connection Status -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <Ellipse Width="8" Height="8" Margin="0,0,8,0" VerticalAlignment="Center">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Setter Property="Fill" Value="{StaticResource AccentRedBrush}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                            <Setter Property="Fill" Value="{StaticResource AccentGreenBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                        <TextBlock VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource SmallText}">
+                                    <Setter Property="Text" Value="Déconnecté"/>
+                                    <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                            <Setter Property="Text" Value="Connecté"/>
+                                            <Setter Property="Foreground" Value="{StaticResource AccentGreenBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <!-- Version info -->
+                    <TextBlock Grid.Column="1" 
+                               Text="Rust Control Panel v2.0" 
+                               Style="{StaticResource SmallTextMuted}"
+                               VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
 
         </Grid>
     </Border>

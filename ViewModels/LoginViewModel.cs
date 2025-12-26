@@ -12,6 +12,7 @@ using RustControlPanel.Core.Utils;
 using RustControlPanel.Models;
 using RustControlPanel.Services;
 using RustControlPanel.Views.Windows;
+
 namespace RustControlPanel.ViewModels
 {
     /// <summary>
@@ -174,7 +175,7 @@ namespace RustControlPanel.ViewModels
                     Port = Port,
                     Password = Password,
                     SaveCredentials = SaveCredentials,
-                    DisplayName = $"{Host}:{Port}"
+                    DisplayName = string.IsNullOrWhiteSpace(Host) ? $"Server {Port}" : Host
                 };
 
                 var success = await ConnectionService.Instance.ConnectAsync(config);
@@ -238,8 +239,18 @@ namespace RustControlPanel.ViewModels
         {
             Host = config.Host;
             Port = config.Port;
-            Password = config.Password;
-            SaveCredentials = config.SaveCredentials;
+            
+            // Load password only if credentials were saved
+            if (config.SaveCredentials && !string.IsNullOrEmpty(config.Password))
+            {
+                Password = config.Password;
+                SaveCredentials = true;
+            }
+            else
+            {
+                Password = string.Empty;
+                SaveCredentials = false;
+            }
         }
 
         #endregion

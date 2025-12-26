@@ -11,7 +11,7 @@ using System.Windows.Input;
 using RustControlPanel.Core.Utils;
 using RustControlPanel.Models;
 using RustControlPanel.Services;
-
+using RustControlPanel.Views.Windows;
 namespace RustControlPanel.ViewModels
 {
     /// <summary>
@@ -187,15 +187,18 @@ namespace RustControlPanel.ViewModels
                     // Close login window and open main window
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        // TODO: Open MainWindow
-                        // var mainWindow = new MainWindow();
-                        // mainWindow.Show();
+                        var mainWindow = new Views.Windows.MainWindow();
+                        mainWindow.Show();
 
                         // Close login window
-                        // Application.Current.MainWindow?.Close();
-
-                        MessageBox.Show("Connexion réussie !\n\n(MainWindow pas encore implémentée)", 
-                            "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
+                        foreach (Window window in Application.Current.Windows)
+                        {
+                            if (window is LoginWindow)
+                            {
+                                window.Close();
+                                break;
+                            }
+                        }
                     });
                 }
                 else

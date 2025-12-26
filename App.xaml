@@ -25,6 +25,7 @@
                 <ResourceDictionary Source="Styles/TextBoxes.xaml"/>
                 <ResourceDictionary Source="Styles/Panels.xaml"/>
                 <ResourceDictionary Source="Styles/ScrollBars.xaml"/>
+                <ResourceDictionary Source="Styles/TabControls.xaml"/>
                 
             </ResourceDictionary.MergedDictionaries>
             

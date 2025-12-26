@@ -37,6 +37,8 @@ namespace RustControlPanel.Core.Rpc.Handlers
         /// </summary>
         public void Handle(BridgeReader reader)
         {
+            Logger.Instance.Debug("ServerInfoHandler v2 - FIXED VERSION with all fields");
+
             try
             {
                 var info = new ServerInfo
@@ -54,7 +56,7 @@ namespace RustControlPanel.Core.Rpc.Handlers
                 reader.ReadString(); // GameTime
                 reader.ReadInt32(); // Uptime
                 reader.ReadString(); // Map
-                
+
                 info.Fps = reader.ReadFloat();
 
                 // Skip even more fields

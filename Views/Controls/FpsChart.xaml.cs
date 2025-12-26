@@ -1,5 +1,5 @@
 // ════════════════════════════════════════════════════════════════════
-// FpsChart.xaml.cs - Custom FPS chart control
+// FpsChart.xaml.cs - Compact FPS chart with neon style
 // ════════════════════════════════════════════════════════════════════
 
 using System;
@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using RustControlPanel.Services;
@@ -14,15 +15,14 @@ using RustControlPanel.Services;
 namespace RustControlPanel.Views.Controls
 {
     /// <summary>
-    /// Custom FPS chart control with real-time updates.
-    /// Lightweight Canvas-based implementation.
+    /// Compact FPS chart for TopBar with neon style and grid.
     /// </summary>
     public partial class FpsChart : UserControl
     {
         #region Constants
 
-        private const int MAX_DATA_POINTS = 60; // 60 seconds of data
-        private const double CHART_PADDING = 10;
+        private const int MAX_DATA_POINTS = 60; // 60 seconds
+        private const double GRID_LINES = 5;
 
         #endregion
 
@@ -30,10 +30,10 @@ namespace RustControlPanel.Views.Controls
 
         private readonly List<float> _fpsData = new();
         private readonly Polyline _chartLine;
-        private readonly TextBlock _currentFpsText;
-        private readonly TextBlock _avgFpsText;
-        private readonly TextBlock _minFpsText;
-        private readonly TextBlock _maxFpsText;
+        private readonly Polyline _chartGlow;
+        private readonly Path _chartArea;
+        private readonly Border _tooltip;
+        private readonly TextBlock _tooltipText;
 
         #endregion
 
@@ -43,31 +43,67 @@ namespace RustControlPanel.Views.Controls
         {
             InitializeComponent();
 
-            // Create chart line
+            // Create glow effect (wider line behind)
+            _chartGlow = new Polyline
+            {
+                Stroke = new SolidColorBrush(Color.FromArgb(100, 0, 255, 255)), // Cyan glow
+                StrokeThickness = 6,
+                StrokeLineJoin = PenLineJoin.Round
+            };
+
+            // Create filled area under the line
+            _chartArea = new Path
+            {
+                Fill = new LinearGradientBrush
+                {
+                    StartPoint = new Point(0, 0),
+                    EndPoint = new Point(0, 1),
+                    GradientStops = new GradientStopCollection
+                    {
+                        new GradientStop(Color.FromArgb(60, 0, 255, 255), 0),
+                        new GradientStop(Color.FromArgb(0, 0, 255, 255), 1)
+                    }
+                }
+            };
+
+            // Create main line
             _chartLine = new Polyline
             {
-                Stroke = new SolidColorBrush(Color.FromRgb(59, 130, 246)), // Blue
+                Stroke = new SolidColorBrush(Color.FromRgb(0, 255, 255)), // Neon cyan
                 StrokeThickness = 2,
                 StrokeLineJoin = PenLineJoin.Round
             };
 
+            // Create tooltip
+            _tooltipText = new TextBlock
+            {
+                Foreground = Brushes.White,
+                FontSize = 11,
+                FontWeight = FontWeights.SemiBold,
+                Padding = new Thickness(6, 3, 6, 3)
+            };
+
+            _tooltip = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(230, 26, 26, 26)),
+                BorderBrush = new SolidColorBrush(Color.FromRgb(0, 255, 255)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(3),
+                Child = _tooltipText,
+                Visibility = Visibility.Collapsed
+            };
+
+            ChartCanvas.Children.Add(_chartArea);
+            ChartCanvas.Children.Add(_chartGlow);
             ChartCanvas.Children.Add(_chartLine);
+            ChartCanvas.Children.Add(_tooltip);
 
-            // Create FPS labels
-            _currentFpsText = CreateLabel("-- FPS", 0, 0);
-            _avgFpsText = CreateLabel("Avg: --", 0, 20);
-            _minFpsText = CreateLabel("Min: --", 0, 40);
-            _maxFpsText = CreateLabel("Max: --", 0, 60);
+            // Mouse events for tooltip
+            ChartCanvas.MouseMove += OnCanvasMouseMove;
+            ChartCanvas.MouseLeave += OnCanvasMouseLeave;
 
-            ChartCanvas.Children.Add(_currentFpsText);
-            ChartCanvas.Children.Add(_avgFpsText);
-            ChartCanvas.Children.Add(_minFpsText);
-            ChartCanvas.Children.Add(_maxFpsText);
-
-            // Subscribe to server stats
+            // Subscribe to updates
             ServerStatsService.Instance.ServerInfoUpdated += OnServerInfoUpdated;
-            
-            // Subscribe to size changed to redraw
             ChartCanvas.SizeChanged += OnCanvasSizeChanged;
         }
 
@@ -75,31 +111,15 @@ namespace RustControlPanel.Views.Controls
 
         #region Private Methods
 
-        private TextBlock CreateLabel(string text, double left, double top)
-        {
-            return new TextBlock
-            {
-                Text = text,
-                Foreground = Brushes.White,
-                FontSize = 12,
-                FontWeight = FontWeights.SemiBold
-            };
-        }
-
         private void OnServerInfoUpdated(object? sender, Models.ServerInfo info)
         {
             Dispatcher.Invoke(() =>
             {
-                // Add new data
                 _fpsData.Add(info.Fps);
 
-                // Keep only last 60 points
                 while (_fpsData.Count > MAX_DATA_POINTS)
-                {
                     _fpsData.RemoveAt(0);
-                }
 
-                // Update chart
                 UpdateChart();
             });
         }
@@ -107,6 +127,34 @@ namespace RustControlPanel.Views.Controls
         private void OnCanvasSizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateChart();
+        }
+
+        private void OnCanvasMouseMove(object sender, MouseEventArgs e)
+        {
+            if (_fpsData.Count == 0)
+                return;
+
+            var pos = e.GetPosition(ChartCanvas);
+            var width = ChartCanvas.ActualWidth;
+            var xStep = width / (MAX_DATA_POINTS - 1);
+            var index = (int)(pos.X / xStep);
+
+            if (index >= 0 && index < _fpsData.Count)
+            {
+                var fps = _fpsData[index];
+                var secondsAgo = _fpsData.Count - index - 1;
+                
+                _tooltipText.Text = $"{fps:F0} FPS ({secondsAgo}s ago)";
+                _tooltip.Visibility = Visibility.Visible;
+
+                Canvas.SetLeft(_tooltip, Math.Min(pos.X + 10, width - _tooltip.ActualWidth - 5));
+                Canvas.SetTop(_tooltip, 5);
+            }
+        }
+
+        private void OnCanvasMouseLeave(object sender, MouseEventArgs e)
+        {
+            _tooltip.Visibility = Visibility.Collapsed;
         }
 
         private void UpdateChart()
@@ -117,38 +165,32 @@ namespace RustControlPanel.Views.Controls
             var width = ChartCanvas.ActualWidth;
             var height = ChartCanvas.ActualHeight;
 
-            // Calculate stats
-            var currentFps = _fpsData.Last();
-            var avgFps = _fpsData.Average();
+            // Calculate range
             var minFps = _fpsData.Min();
             var maxFps = _fpsData.Max();
-
-            // Update labels
-            _currentFpsText.Text = $"{currentFps:F0} FPS";
-            _avgFpsText.Text = $"Avg: {avgFps:F0}";
-            _minFpsText.Text = $"Min: {minFps:F0}";
-            _maxFpsText.Text = $"Max: {maxFps:F0}";
-
-            // Position labels in top-left
-            Canvas.SetLeft(_currentFpsText, CHART_PADDING);
-            Canvas.SetTop(_currentFpsText, CHART_PADDING);
-            Canvas.SetLeft(_avgFpsText, CHART_PADDING);
-            Canvas.SetTop(_avgFpsText, CHART_PADDING + 20);
-            Canvas.SetLeft(_minFpsText, CHART_PADDING);
-            Canvas.SetTop(_minFpsText, CHART_PADDING + 40);
-            Canvas.SetLeft(_maxFpsText, CHART_PADDING);
-            Canvas.SetTop(_maxFpsText, CHART_PADDING + 60);
-
-            // Calculate Y range
-            var yMin = Math.Max(0, minFps - 10);
-            var yMax = maxFps + 10;
+            var yMin = Math.Max(0, Math.Floor(minFps / 10) * 10 - 10);
+            var yMax = Math.Ceiling(maxFps / 10) * 10 + 10;
             var yRange = yMax - yMin;
 
-            if (yRange == 0)
-                yRange = 1;
+            if (yRange == 0) yRange = 1;
 
-            // Create points for polyline
+            // Clear existing grid lines
+            ChartCanvas.Children.RemoveRange(0, ChartCanvas.Children.Count);
+            
+            // Draw grid
+            DrawGrid(width, height, yMin, yMax);
+
+            // Re-add chart elements
+            ChartCanvas.Children.Add(_chartArea);
+            ChartCanvas.Children.Add(_chartGlow);
+            ChartCanvas.Children.Add(_chartLine);
+            ChartCanvas.Children.Add(_tooltip);
+
+            // Create points
             _chartLine.Points.Clear();
+            _chartGlow.Points.Clear();
+            var areaGeometry = new PathGeometry();
+            var areaFigure = new PathFigure { StartPoint = new Point(0, height) };
 
             var xStep = width / (MAX_DATA_POINTS - 1);
 
@@ -156,9 +198,61 @@ namespace RustControlPanel.Views.Controls
             {
                 var x = i * xStep;
                 var normalizedY = (_fpsData[i] - yMin) / yRange;
-                var y = height - (normalizedY * (height - CHART_PADDING * 2)) - CHART_PADDING;
+                var y = height - (normalizedY * height);
 
-                _chartLine.Points.Add(new Point(x, y));
+                var point = new Point(x, y);
+                _chartLine.Points.Add(point);
+                _chartGlow.Points.Add(point);
+                areaFigure.Segments.Add(new LineSegment(point, true));
+            }
+
+            // Close the area
+            if (_fpsData.Count > 0)
+            {
+                areaFigure.Segments.Add(new LineSegment(new Point((_fpsData.Count - 1) * xStep, height), true));
+            }
+
+            areaGeometry.Figures.Add(areaFigure);
+            _chartArea.Data = areaGeometry;
+        }
+
+        private void DrawGrid(double width, double height, double yMin, double yMax)
+        {
+            var gridBrush = new SolidColorBrush(Color.FromArgb(30, 255, 255, 255));
+
+            // Horizontal grid lines
+            for (int i = 0; i <= GRID_LINES; i++)
+            {
+                var y = (height / GRID_LINES) * i;
+                var line = new Line
+                {
+                    X1 = 0,
+                    Y1 = y,
+                    X2 = width,
+                    Y2 = y,
+                    Stroke = gridBrush,
+                    StrokeThickness = 1,
+                    StrokeDashArray = new DoubleCollection { 2, 2 }
+                };
+                ChartCanvas.Children.Add(line);
+            }
+
+            // Vertical grid lines
+            var verticalLines = 6;
+            for (int i = 0; i <= verticalLines; i++)
+            {
+                var x = (width / verticalLines) * i;
+                var line = new Line
+                {
+                    X1 = x,
+                    Y1 = 0,
+                    X2 = x,
+                    Y2 = height,
+                    Stroke = gridBrush,
+                    StrokeThickness = 1,
+                    StrokeDashArray = new DoubleCollection { 2, 2 }
+                };
+                ChartCanvas.Children.Add(line);
             }
         }
 

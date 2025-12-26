@@ -46,16 +46,27 @@ namespace RustControlPanel.Core.Rpc.Handlers
                     PlayerCount = reader.ReadInt32()
                 };
 
-                // Skip additional fields
+                // Skip additional fields that we don't need right now
                 reader.ReadInt32(); // Queued
                 reader.ReadInt32(); // Joining
-                reader.ReadInt32(); // Reserved
+                reader.ReadInt32(); // ReservedSlots
                 reader.ReadInt32(); // EntityCount
                 reader.ReadString(); // GameTime
                 reader.ReadInt32(); // Uptime
-                reader.ReadString(); // MapName
+                reader.ReadString(); // Map
                 
                 info.Fps = reader.ReadFloat();
+
+                // Skip even more fields
+                reader.ReadInt32(); // Memory
+                reader.ReadInt32(); // MemoryUsageSystem
+                reader.ReadInt32(); // Collections
+                reader.ReadInt32(); // NetworkIn
+                reader.ReadInt32(); // NetworkOut
+                reader.ReadBoolean(); // Restarting
+                reader.ReadString(); // SaveCreatedTime
+                reader.ReadInt32(); // Version
+                reader.ReadString(); // Protocol
 
                 Logger.Instance.Debug($"ServerInfo: {info.Hostname} | Players: {info.PlayerCount}/{info.MaxPlayers} | FPS: {info.Fps:F0}");
 

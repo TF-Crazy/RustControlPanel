@@ -1,0 +1,57 @@
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- Brushes.xaml - SolidColorBrush resources                            -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Merge Colors -->
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Colors.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- BACKGROUND BRUSHES                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <SolidColorBrush x:Key="BackgroundDarkBrush" Color="{StaticResource BackgroundDarkColor}"/>
+    <SolidColorBrush x:Key="BackgroundMediumBrush" Color="{StaticResource BackgroundMediumColor}"/>
+    <SolidColorBrush x:Key="BackgroundLightBrush" Color="{StaticResource BackgroundLightColor}"/>
+    <SolidColorBrush x:Key="BackgroundLighterBrush" Color="{StaticResource BackgroundLighterColor}"/>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TEXT BRUSHES                                                     -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}"/>
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}"/>
+    <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource TextMutedColor}"/>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- ACCENT BRUSHES                                                   -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <SolidColorBrush x:Key="AccentBlueBrush" Color="{StaticResource AccentBlueColor}"/>
+    <SolidColorBrush x:Key="AccentGreenBrush" Color="{StaticResource AccentGreenColor}"/>
+    <SolidColorBrush x:Key="AccentOrangeBrush" Color="{StaticResource AccentOrangeColor}"/>
+    <SolidColorBrush x:Key="AccentRedBrush" Color="{StaticResource AccentRedColor}"/>
+    <SolidColorBrush x:Key="AccentPurpleBrush" Color="{StaticResource AccentPurpleColor}"/>
+    <SolidColorBrush x:Key="AccentCyanBrush" Color="{StaticResource AccentCyanColor}"/>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- BORDER BRUSHES                                                   -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <SolidColorBrush x:Key="BorderNormalBrush" Color="{StaticResource BorderNormalColor}"/>
+    <SolidColorBrush x:Key="BorderFocusedBrush" Color="{StaticResource BorderFocusedColor}"/>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- STATUS BRUSHES                                                   -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <SolidColorBrush x:Key="StatusOnlineBrush" Color="{StaticResource StatusOnlineColor}"/>
+    <SolidColorBrush x:Key="StatusSleepingBrush" Color="{StaticResource StatusSleepingColor}"/>
+    <SolidColorBrush x:Key="StatusDeadBrush" Color="{StaticResource StatusDeadColor}"/>
+    <SolidColorBrush x:Key="StatusSelectedBrush" Color="{StaticResource StatusSelectedColor}"/>
+
+</ResourceDictionary>

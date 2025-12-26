@@ -31,7 +31,7 @@ namespace RustControlPanel.Services
 
         #region Constants
 
-        private const int SERVER_INFO_INTERVAL = 10000; // 10 seconds
+        private const int SERVER_INFO_INTERVAL = 1000; // 1 second
 
         #endregion
 

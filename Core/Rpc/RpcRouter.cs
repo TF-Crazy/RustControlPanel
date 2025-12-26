@@ -113,7 +113,18 @@ namespace RustControlPanel.Core.Rpc
 
                 if (handler != null)
                 {
-                    handler.Handle(reader);
+                    // Execute on UI thread
+                    System.Windows.Application.Current?.Dispatcher?.Invoke(() =>
+                    {
+                        try
+                        {
+                            handler.Handle(reader);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Instance.Error($"Handler error for RPC ID {rpcId}", ex);
+                        }
+                    });
                 }
                 else
                 {

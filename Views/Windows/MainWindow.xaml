@@ -104,36 +104,94 @@
                     Background="{StaticResource BackgroundLightBrush}"
                     BorderBrush="{StaticResource BorderNormalBrush}"
                     BorderThickness="0,1,0,1"
-                    Padding="16,8">
+                    Padding="16,10">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
+                        <!-- Server name -->
+                        <ColumnDefinition Width="*"/>
+                        <!-- Stats -->
+                        <ColumnDefinition Width="Auto"/>
+                        <!-- Actions -->
                     </Grid.ColumnDefinitions>
 
-                    <!-- Stats -->
-                    <StackPanel Grid.Column="0" Orientation="Horizontal">
-                        <StackPanel Orientation="Horizontal" Margin="0,0,24,0">
-                            <TextBlock Text="👥" FontSize="14" Margin="0,0,6,0"/>
-                            <TextBlock Style="{StaticResource BodyText}">
-                                <Run Text="{Binding PlayerCount}"/>/<Run Text="{Binding MaxPlayers}"/>
-                            </TextBlock>
-                        </StackPanel>
+                    <!-- Server Name -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,32,0">
+                        <TextBlock Text="🖥️" FontSize="16" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding ServerName}" 
+                                   Style="{StaticResource Heading3}"
+                                   VerticalAlignment="Center"
+                                   Foreground="{StaticResource AccentBlueBrush}"/>
+                    </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,0,24,0">
-                            <TextBlock Text="⚡" FontSize="14" Margin="0,0,6,0"/>
-                            <TextBlock Text="{Binding ServerFps, StringFormat={}{0:F0} FPS}" 
-                                       Style="{StaticResource BodyText}"/>
-                        </StackPanel>
+                    <!-- Stats -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <!-- Players -->
+                        <Border Background="{StaticResource BackgroundMediumBrush}"
+                                BorderBrush="{StaticResource BorderNormalBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Padding="12,6"
+                                Margin="0,0,12,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="👥" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Style="{StaticResource BodyText}" VerticalAlignment="Center">
+                                    <Run Text="{Binding PlayerCount}" Foreground="{StaticResource AccentGreenBrush}" FontWeight="SemiBold"/>
+                                    <Run Text="/" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <Run Text="{Binding MaxPlayers}" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- FPS -->
+                        <Border Background="{StaticResource BackgroundMediumBrush}"
+                                BorderBrush="{StaticResource BorderNormalBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Padding="12,6"
+                                Margin="0,0,12,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="⚡" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock" BasedOn="{StaticResource BodyText}">
+                                            <Setter Property="Text" Value="{Binding ServerFps, StringFormat={}{0:F0} FPS}"/>
+                                            <Setter Property="Foreground" Value="{StaticResource AccentGreenBrush}"/>
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ServerFps}" Value="0">
+                                                    <Setter Property="Text" Value="-- FPS"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
 
                     <!-- Actions -->
-                    <Button Grid.Column="1"
-                            Content="Disconnect"
-                            Style="{StaticResource SecondaryButton}"
-                            Command="{Binding DisconnectCommand}"
-                            Padding="12,6"
-                            Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <Button Content="🐛 Debug"
+                                Style="{StaticResource SecondaryButton}"
+                                Command="{Binding OpenDebugCommand}"
+                                Padding="12,6"
+                                Margin="0,0,8,0"/>
+                        
+                        <Button Content="🔄 Changer de serveur"
+                                Style="{StaticResource SecondaryButton}"
+                                Command="{Binding ChangeServerCommand}"
+                                Padding="12,6"
+                                Margin="0,0,8,0"
+                                Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        
+                        <Button Content="Déconnexion"
+                                Style="{StaticResource DangerButton}"
+                                Command="{Binding DisconnectCommand}"
+                                Padding="12,6"
+                                Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    </StackPanel>
                 </Grid>
             </Border>
 

@@ -44,6 +44,15 @@ namespace RustControlPanel.Core.Utils
 
         #endregion
 
+        #region Events
+
+        /// <summary>
+        /// Fired when a log entry is added.
+        /// </summary>
+        public event EventHandler<string>? LogEntryAdded;
+
+        #endregion
+
         #region Constructor
 
         private Logger()
@@ -139,6 +148,9 @@ namespace RustControlPanel.Core.Utils
                 {
                     // Silently fail if can't write to log file
                 }
+
+                // Fire event for debug window
+                LogEntryAdded?.Invoke(this, logEntry);
             }
         }
 

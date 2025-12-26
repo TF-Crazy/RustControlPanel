@@ -42,14 +42,20 @@ namespace RustControlPanel.Core.Rpc.Handlers
                 var info = new ServerInfo
                 {
                     Hostname = reader.ReadString(),
-                    PlayerCount = reader.ReadInt32(),
                     MaxPlayers = reader.ReadInt32(),
-                    Fps = reader.ReadFloat(),
-                    GameTime = reader.ReadFloat(),
-                    Uptime = reader.ReadFloat(),
-                    MapSize = reader.ReadInt32(),
-                    MapSeed = reader.ReadInt32()
+                    PlayerCount = reader.ReadInt32()
                 };
+
+                // Skip additional fields
+                reader.ReadInt32(); // Queued
+                reader.ReadInt32(); // Joining
+                reader.ReadInt32(); // Reserved
+                reader.ReadInt32(); // EntityCount
+                reader.ReadString(); // GameTime
+                reader.ReadInt32(); // Uptime
+                reader.ReadString(); // MapName
+                
+                info.Fps = reader.ReadFloat();
 
                 Logger.Instance.Debug($"ServerInfo: {info.Hostname} | Players: {info.PlayerCount}/{info.MaxPlayers} | FPS: {info.Fps:F0}");
 

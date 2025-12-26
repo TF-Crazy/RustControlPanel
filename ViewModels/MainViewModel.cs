@@ -123,6 +123,11 @@ namespace RustControlPanel.ViewModels
         /// </summary>
         public ICommand CloseCommand { get; }
 
+        /// <summary>
+        /// Command to open debug window.
+        /// </summary>
+        public ICommand OpenDebugCommand { get; }
+
         #endregion
 
         #region Constructor
@@ -138,6 +143,7 @@ namespace RustControlPanel.ViewModels
             MinimizeCommand = new RelayCommand(ExecuteMinimize);
             MaximizeCommand = new RelayCommand(ExecuteMaximize);
             CloseCommand = new RelayCommand(ExecuteClose);
+            OpenDebugCommand = new RelayCommand(ExecuteOpenDebug);
 
             // Subscribe to connection events
             ConnectionService.Instance.ConnectionStateChanged += OnConnectionStateChanged;
@@ -209,6 +215,12 @@ namespace RustControlPanel.ViewModels
         private void ExecuteClose(object? parameter)
         {
             Application.Current.MainWindow?.Close();
+        }
+
+        private void ExecuteOpenDebug(object? parameter)
+        {
+            var debugWindow = new DebugWindow();
+            debugWindow.Show();
         }
 
         #endregion

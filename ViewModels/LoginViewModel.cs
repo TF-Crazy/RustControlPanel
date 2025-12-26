@@ -123,6 +123,11 @@ namespace RustControlPanel.ViewModels
         /// </summary>
         public ICommand RemoveServerCommand { get; }
 
+        /// <summary>
+        /// Command to quickly connect to a saved server.
+        /// </summary>
+        public ICommand QuickConnectCommand { get; }
+
         #endregion
 
         #region Constructor
@@ -138,6 +143,8 @@ namespace RustControlPanel.ViewModels
             // Initialize commands
             ConnectCommand = new AsyncRelayCommand(ExecuteConnectAsync, CanExecuteConnect);
             RemoveServerCommand = new RelayCommand(ExecuteRemoveServer);
+            QuickConnectCommand = new AsyncRelayCommand(ExecuteQuickConnectAsync);
+            QuickConnectCommand = new AsyncRelayCommand(ExecuteQuickConnectAsync);
 
             // Load last connected server
             var lastHost = SettingsService.Instance.LastConnectedHost;
@@ -188,7 +195,7 @@ namespace RustControlPanel.ViewModels
                     // Close login window and open main window
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        var mainWindow = new Views.Windows.MainWindow();
+                        var mainWindow = new MainWindow();
                         mainWindow.Show();
 
                         // Close login window
@@ -228,6 +235,18 @@ namespace RustControlPanel.ViewModels
                 SavedServers.Remove(config);
                 SettingsService.Instance.RemoveServer(config.Host, config.Port);
                 Logger.Instance.Info($"Removed saved server: {config.Host}:{config.Port}");
+            }
+        }
+
+        private async Task ExecuteQuickConnectAsync(object? parameter)
+        {
+            if (parameter is ServerConfig config)
+            {
+                // Load config into fields
+                LoadServerConfig(config);
+                
+                // Auto-connect (le password sera chargé si SaveCredentials = true)
+                await ExecuteConnectAsync(null);
             }
         }
 

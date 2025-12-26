@@ -104,6 +104,11 @@ namespace RustControlPanel.ViewModels
         public ICommand DisconnectCommand { get; }
 
         /// <summary>
+        /// Command to change server (disconnect and return to login).
+        /// </summary>
+        public ICommand ChangeServerCommand { get; }
+
+        /// <summary>
         /// Command to minimize window.
         /// </summary>
         public ICommand MinimizeCommand { get; }
@@ -129,6 +134,7 @@ namespace RustControlPanel.ViewModels
         {
             // Initialize commands
             DisconnectCommand = new AsyncRelayCommand(ExecuteDisconnectAsync);
+            ChangeServerCommand = new AsyncRelayCommand(ExecuteChangeServerAsync);
             MinimizeCommand = new RelayCommand(ExecuteMinimize);
             MaximizeCommand = new RelayCommand(ExecuteMaximize);
             CloseCommand = new RelayCommand(ExecuteClose);
@@ -136,8 +142,21 @@ namespace RustControlPanel.ViewModels
             // Subscribe to connection events
             ConnectionService.Instance.ConnectionStateChanged += OnConnectionStateChanged;
 
+            // Subscribe to server stats updates
+            ServerStatsService.Instance.ServerInfoUpdated += OnServerInfoUpdated;
+
             // Update initial connection state
             IsConnected = ConnectionService.Instance.IsConnected;
+            
+            // Load server name if connected
+            if (IsConnected)
+            {
+                var config = ConnectionService.Instance.CurrentConfig;
+                if (config != null)
+                {
+                    ServerName = config.DisplayName ?? $"{config.Host}:{config.Port}";
+                }
+            }
 
             Logger.Instance.Debug("MainViewModel created");
         }
@@ -153,7 +172,7 @@ namespace RustControlPanel.ViewModels
             // Return to login window
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var loginWindow = new Views.Windows.LoginWindow();
+                var loginWindow = new LoginWindow();
                 loginWindow.Show();
                 
                 // Close MainWindow
@@ -166,6 +185,12 @@ namespace RustControlPanel.ViewModels
                     }
                 }
             });
+        }
+
+        private async System.Threading.Tasks.Task ExecuteChangeServerAsync(object? parameter)
+        {
+            // Same as disconnect but for clarity
+            await ExecuteDisconnectAsync(parameter);
         }
 
         private void ExecuteMinimize(object? parameter)
@@ -213,6 +238,31 @@ namespace RustControlPanel.ViewModels
                 MaxPlayers = 0;
                 ServerFps = 0f;
             }
+        }
+
+        private void OnServerInfoUpdated(object? sender, Models.ServerInfo info)
+        {
+            // Update server name if changed
+            if (!string.IsNullOrEmpty(info.Hostname))
+            {
+                ServerName = info.Hostname;
+                
+                // Update config if hostname changed
+                var config = ConnectionService.Instance.CurrentConfig;
+                if (config != null && config.DisplayName != info.Hostname)
+                {
+                    config.DisplayName = info.Hostname;
+                    if (config.SaveCredentials)
+                    {
+                        SettingsService.Instance.AddOrUpdateServer(config);
+                    }
+                }
+            }
+
+            // Update stats
+            PlayerCount = info.PlayerCount;
+            MaxPlayers = info.MaxPlayers;
+            ServerFps = info.Fps;
         }
 
         #endregion

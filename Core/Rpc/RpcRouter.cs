@@ -123,12 +123,18 @@ namespace RustControlPanel.Core.Rpc
                         catch (Exception ex)
                         {
                             Logger.Instance.Error($"Handler error for RPC ID {rpcId}", ex);
+                            
+                            // Log raw data for debugging
+                            Handlers.RawRpcLogger.LogRawData(rpcId, data, 8);
                         }
                     });
                 }
                 else
                 {
                     Logger.Instance.Warning($"No handler registered for RPC ID: {rpcId}");
+                    
+                    // Log raw data for unknown RPC
+                    Handlers.RawRpcLogger.LogRawData(rpcId, data, 8);
                 }
             }
             catch (Exception ex)

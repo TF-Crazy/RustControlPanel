@@ -50,12 +50,13 @@
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Auto">
                 <TextBox x:Name="LogTextBox"
-                         Style="{StaticResource MonospaceText}"
                          Background="Transparent"
                          Foreground="{StaticResource TextPrimaryBrush}"
                          BorderThickness="0"
                          IsReadOnly="True"
                          TextWrapping="NoWrap"
+                         FontFamily="Consolas"
+                         FontSize="12"
                          VerticalScrollBarVisibility="Auto"
                          HorizontalScrollBarVisibility="Auto"/>
             </ScrollViewer>

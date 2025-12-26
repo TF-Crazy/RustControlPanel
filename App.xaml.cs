@@ -4,7 +4,9 @@
 
 using System;
 using System.Windows;
+using RustControlPanel.Core.Rpc;
 using RustControlPanel.Core.Utils;
+using RustControlPanel.Services;
 
 namespace RustControlPanel
 {
@@ -30,6 +32,10 @@ namespace RustControlPanel
             Logger.Instance.Info("========================================");
             Logger.Instance.Info("Rust Control Panel - Application Started");
             Logger.Instance.Info("========================================");
+
+            // Initialize critical singletons early
+            _ = RpcRouter.Instance;
+            _ = ServerStatsService.Instance;
         }
 
         /// <summary>

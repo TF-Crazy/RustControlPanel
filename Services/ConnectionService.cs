@@ -94,8 +94,8 @@ namespace RustControlPanel.Services
             // Build WebSocket URI
             var uri = config.GetWebSocketUri();
 
-            // Attempt connection
-            var success = await BridgeClient.Instance.ConnectAsync(uri);
+            // Attempt connection with password
+            var success = await BridgeClient.Instance.ConnectAsync(uri, config.Password);
 
             if (success)
             {

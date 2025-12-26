@@ -7,168 +7,170 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:RustControlPanel.ViewModels"
         Title="Rust Control Panel - Connexion" 
-        Height="600" Width="450"
-        MinHeight="600" MinWidth="450"
-        MaxHeight="600" MaxWidth="450"
+        Height="650" Width="500"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource BackgroundDarkBrush}"
-        ResizeMode="NoResize">
+        ResizeMode="CanMinimize">
 
     <Window.DataContext>
         <vm:LoginViewModel/>
     </Window.DataContext>
 
-    <Grid Margin="40">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <!-- Logo/Title -->
-            <RowDefinition Height="40"/>
-            <!-- Spacer -->
-            <RowDefinition Height="Auto"/>
-            <!-- Connection form -->
-            <RowDefinition Height="30"/>
-            <!-- Spacer -->
-            <RowDefinition Height="*"/>
-            <!-- Saved servers -->
-            <RowDefinition Height="Auto"/>
-            <!-- Status -->
-        </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="40">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Logo/Title -->
+                <RowDefinition Height="30"/>
+                <!-- Spacer -->
+                <RowDefinition Height="Auto"/>
+                <!-- Connection form -->
+                <RowDefinition Height="20"/>
+                <!-- Spacer -->
+                <RowDefinition Height="Auto"/>
+                <!-- Saved servers -->
+                <RowDefinition Height="20"/>
+                <!-- Spacer -->
+                <RowDefinition Height="Auto"/>
+                <!-- Status -->
+            </Grid.RowDefinitions>
 
-        <!-- ═══════════════════════════════════════════════════════════════ -->
-        <!-- LOGO / TITLE                                                     -->
-        <!-- ═══════════════════════════════════════════════════════════════ -->
-        <StackPanel Grid.Row="0" HorizontalAlignment="Center">
-            <TextBlock Text="🎮" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-            <TextBlock Text="Rust Control Panel" 
-                       Style="{StaticResource Heading1}" 
-                       HorizontalAlignment="Center"/>
-            <Border Height="2" Width="100" 
-                    Background="{StaticResource AccentBlueBrush}" 
-                    Margin="0,10,0,0"/>
-        </StackPanel>
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- LOGO / TITLE                                                     -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <StackPanel Grid.Row="0" HorizontalAlignment="Center">
+                <TextBlock Text="🎮" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <TextBlock Text="Rust Control Panel" 
+                           Style="{StaticResource Heading1}" 
+                           HorizontalAlignment="Center"/>
+                <Border Height="2" Width="100" 
+                        Background="{StaticResource AccentBlueBrush}" 
+                        Margin="0,10,0,0"/>
+            </StackPanel>
 
-        <!-- ═══════════════════════════════════════════════════════════════ -->
-        <!-- CONNECTION FORM                                                  -->
-        <!-- ═══════════════════════════════════════════════════════════════ -->
-        <Border Grid.Row="2" Style="{StaticResource CardPanel}">
-            <StackPanel>
-                <!-- Host -->
-                <TextBlock Text="IP / Host" Style="{StaticResource LabelText}" Margin="0,0,0,6"/>
-                <TextBox Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}" 
-                         Style="{StaticResource ModernTextBox}" 
-                         Margin="0,0,0,16"/>
-
-                <!-- Port -->
-                <TextBlock Text="Port" Style="{StaticResource LabelText}" Margin="0,0,0,6"/>
-                <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" 
-                         Style="{StaticResource ModernTextBox}" 
-                         Margin="0,0,0,16"/>
-
-                <!-- Password -->
-                <TextBlock Text="Mot de passe" Style="{StaticResource LabelText}" Margin="0,0,0,6"/>
-                <PasswordBox x:Name="PasswordBox"
-                             Style="{StaticResource ModernPasswordBox}" 
-                             PasswordChanged="OnPasswordChanged"
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- CONNECTION FORM                                                  -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <Border Grid.Row="2" Style="{StaticResource CardPanel}">
+                <StackPanel>
+                    <!-- Host -->
+                    <TextBlock Text="IP / Host" Style="{StaticResource LabelText}" Margin="0,0,0,6"/>
+                    <TextBox Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}" 
+                             Style="{StaticResource ModernTextBox}" 
                              Margin="0,0,0,16"/>
 
-                <!-- Save credentials -->
-                <CheckBox IsChecked="{Binding SaveCredentials}" 
-                          Foreground="{StaticResource TextSecondaryBrush}"
-                          Margin="0,0,0,20">
-                    <TextBlock Text="Sauvegarder les identifiants" 
-                               Style="{StaticResource BodyText}"/>
-                </CheckBox>
+                    <!-- Port -->
+                    <TextBlock Text="Port" Style="{StaticResource LabelText}" Margin="0,0,0,6"/>
+                    <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" 
+                             Style="{StaticResource ModernTextBox}" 
+                             Margin="0,0,0,16"/>
 
-                <!-- Connect button -->
-                <Button Content="Se connecter" 
-                        Style="{StaticResource PrimaryButton}" 
-                        Command="{Binding ConnectCommand}"
-                        IsEnabled="{Binding IsConnecting, Converter={StaticResource InverseBoolConverter}}"
-                        Height="40"
-                        FontSize="16"/>
-            </StackPanel>
-        </Border>
+                    <!-- Password -->
+                    <TextBlock Text="Mot de passe" Style="{StaticResource LabelText}" Margin="0,0,0,6"/>
+                    <PasswordBox x:Name="PasswordBox"
+                                 Style="{StaticResource ModernPasswordBox}" 
+                                 PasswordChanged="OnPasswordChanged"
+                                 Margin="0,0,0,16"/>
 
-        <!-- ═══════════════════════════════════════════════════════════════ -->
-        <!-- SAVED SERVERS                                                    -->
-        <!-- ═══════════════════════════════════════════════════════════════ -->
-        <Border Grid.Row="4" Style="{StaticResource CardPanel}" Margin="0,20,0,0">
-            <StackPanel>
-                <TextBlock Text="Serveurs sauvegardés" 
-                           Style="{StaticResource Heading3}" 
-                           Margin="0,0,0,12"/>
+                    <!-- Save credentials -->
+                    <CheckBox IsChecked="{Binding SaveCredentials}" 
+                              Foreground="{StaticResource TextSecondaryBrush}"
+                              Margin="0,0,0,20">
+                        <TextBlock Text="Sauvegarder les identifiants" 
+                                   Style="{StaticResource BodyText}"/>
+                    </CheckBox>
 
-                <ListBox ItemsSource="{Binding SavedServers}"
-                         SelectedItem="{Binding SelectedServer}"
-                         Background="Transparent"
-                         BorderThickness="0"
-                         MaxHeight="150"
-                         ScrollViewer.VerticalScrollBarVisibility="Auto">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="0,4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+                    <!-- Connect button -->
+                    <Button Content="Se connecter" 
+                            Style="{StaticResource PrimaryButton}" 
+                            Command="{Binding ConnectCommand}"
+                            Height="40"
+                            FontSize="16"/>
+                </StackPanel>
+            </Border>
 
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="{Binding DisplayName}" 
-                                               Style="{StaticResource BodyText}"/>
-                                    <TextBlock Style="{StaticResource SmallTextMuted}">
-                                        <Run Text="{Binding Host}"/>:<Run Text="{Binding Port}"/>
-                                    </TextBlock>
-                                </StackPanel>
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- SAVED SERVERS                                                    -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <Border Grid.Row="4" Style="{StaticResource CardPanel}">
+                <StackPanel>
+                    <TextBlock Text="Serveurs sauvegardés" 
+                               Style="{StaticResource Heading3}" 
+                               Margin="0,0,0,12"/>
 
-                                <Button Grid.Column="1" 
-                                        Content="✕" 
-                                        Style="{StaticResource IconButton}"
-                                        Command="{Binding DataContext.RemoveServerCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                        CommandParameter="{Binding}"
-                                        ToolTip="Supprimer"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
-                            <Setter Property="Padding" Value="8"/>
-                            <Setter Property="Margin" Value="0,2"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ListBoxItem">
-                                        <Border Background="{TemplateBinding Background}"
-                                                BorderBrush="{StaticResource BorderNormalBrush}"
-                                                BorderThickness="1"
-                                                CornerRadius="6"
-                                                Padding="{TemplateBinding Padding}">
-                                            <ContentPresenter/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="{StaticResource BackgroundLightBrush}"/>
-                                </Trigger>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="{StaticResource BackgroundLighterBrush}"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                </ListBox>
-            </StackPanel>
-        </Border>
+                    <ListBox ItemsSource="{Binding SavedServers}"
+                             SelectedItem="{Binding SelectedServer}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             MaxHeight="180"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-        <!-- ═══════════════════════════════════════════════════════════════ -->
-        <!-- STATUS MESSAGE                                                   -->
-        <!-- ═══════════════════════════════════════════════════════════════ -->
-        <TextBlock Grid.Row="5" 
-                   Text="{Binding StatusMessage}"
-                   Style="{StaticResource BodyTextSecondary}"
-                   HorizontalAlignment="Center"
-                   Margin="0,20,0,0"/>
-    </Grid>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding DisplayName}" 
+                                                   Style="{StaticResource BodyText}"/>
+                                        <TextBlock Style="{StaticResource SmallTextMuted}">
+                                            <Run Text="{Binding Host}"/>:<Run Text="{Binding Port}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <Button Grid.Column="1" 
+                                            Content="✕" 
+                                            Style="{StaticResource IconButton}"
+                                            Command="{Binding DataContext.RemoveServerCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding}"
+                                            ToolTip="Supprimer"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                <Setter Property="Padding" Value="8"/>
+                                <Setter Property="Margin" Value="0,2"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    BorderBrush="{StaticResource BorderNormalBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="6"
+                                                    Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource BackgroundLightBrush}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource BackgroundLighterBrush}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </StackPanel>
+            </Border>
+
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- STATUS MESSAGE                                                   -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <TextBlock Grid.Row="6" 
+                       Text="{Binding StatusMessage}"
+                       Style="{StaticResource BodyTextSecondary}"
+                       HorizontalAlignment="Center"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center"/>
+        </Grid>
+    </ScrollViewer>
 </Window>

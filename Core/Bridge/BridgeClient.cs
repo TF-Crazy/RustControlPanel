@@ -95,12 +95,18 @@ namespace RustControlPanel.Core.Bridge
         /// Connects to the Carbon Bridge server.
         /// </summary>
         /// <param name="uri">WebSocket URI (e.g. ws://127.0.0.1:3050)</param>
+        /// <param name="password">Connection password</param>
         /// <returns>True if connection successful</returns>
-        public async Task<bool> ConnectAsync(string uri)
+        public async Task<bool> ConnectAsync(string uri, string password)
         {
             try
             {
-                Logger.Instance.Info($"Connecting to {uri}...");
+                // Add password to URI path if provided
+                var fullUri = string.IsNullOrEmpty(password) 
+                    ? uri 
+                    : $"{uri}/{password}";
+
+                Logger.Instance.Info($"Connecting to {fullUri}...");
 
                 // Disconnect if already connected
                 await DisconnectAsync();
@@ -111,7 +117,7 @@ namespace RustControlPanel.Core.Bridge
                     _cancellationTokenSource = new CancellationTokenSource();
                 }
 
-                await _webSocket.ConnectAsync(new Uri(uri), _cancellationTokenSource.Token);
+                await _webSocket.ConnectAsync(new Uri(fullUri), _cancellationTokenSource.Token);
 
                 Logger.Instance.Info("Connected successfully");
                 ConnectionStateChanged?.Invoke(this, true);

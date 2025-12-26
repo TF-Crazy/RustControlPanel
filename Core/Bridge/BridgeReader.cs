@@ -64,11 +64,22 @@ namespace RustControlPanel.Core.Bridge
 
         /// <summary>
         /// Reads a string value.
+        /// Rust/Carbon uses UInt32 for length prefix, NOT 7-bit encoded int!
         /// </summary>
         /// <returns>String value</returns>
         public string ReadString()
         {
-            return _reader.ReadString();
+            // Read length as UInt32 (NOT 7-bit encoded like .NET BinaryReader.ReadString())
+            var length = _reader.ReadUInt32();
+
+            if (length == 0)
+                return string.Empty;
+
+            // Read the bytes
+            var bytes = _reader.ReadBytes((int)length);
+
+            // Decode as UTF-8
+            return System.Text.Encoding.UTF8.GetString(bytes);
         }
 
         /// <summary>

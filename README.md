@@ -1,66 +1,94 @@
-# 🎮 Rust Control Panel - Phase 1 Complete ✅
+# 🎮 Rust Control Panel - Phase 2 Complete ✅
 
 ## 📦 Ce qui a été créé
 
-### ✅ Structure du projet
-Tous les dossiers selon l'architecture définie :
-- `Core/` (Bridge, Rpc, Utils)
-- `Services/`
-- `Models/`
-- `ViewModels/`
-- `Views/` (Windows, Pages, Components, Controls)
-- `Styles/`
-- `Converters/`
-- `Resources/`
-- `Config/`
+### Phase 1 - Foundation ✅
+- Structure du projet
+- Fichiers de styles XAML (7 fichiers)
+- BaseViewModel + RelayCommand
+- Logger singleton
+- App.xaml + App.xaml.cs
 
-### ✅ Fichiers de styles XAML
-- **Colors.xaml** - Palette complète (#1A1A1A, #3B82F6, etc.)
-- **Brushes.xaml** - SolidColorBrush pour toutes les couleurs
-- **Typography.xaml** - Styles de texte (Heading1-3, Body, Small, Monospace)
-- **Buttons.xaml** - Styles de boutons (Primary, Secondary, Danger, Success, Icon)
-- **TextBoxes.xaml** - Styles d'inputs (TextBox, PasswordBox)
-- **Panels.xaml** - Styles de panneaux (Card, Section, Header, Content)
-- **ScrollBars.xaml** - Scrollbar moderne
+### Phase 2 - Connection ✅
 
-### ✅ Classes C# de base
-- **BaseViewModel.cs** - INotifyPropertyChanged + SetProperty
-- **RelayCommand.cs** - ICommand + AsyncRelayCommand
-- **Logger.cs** - Singleton de logging (console + fichier)
+#### 🔧 Core/Utils
+- **RpcHelper.cs** - Calcul MD5 des RPC IDs
 
-### ✅ Application WPF
-- **App.xaml** - Fusion des dictionnaires de styles
-- **App.xaml.cs** - Entry point + gestion d'erreurs globale
-- **AssemblyInfo.cs** - Configuration assembly
-- **RustControlPanel.csproj** - Projet .NET 8 WPF
+#### 🌐 Core/Bridge
+- **BridgeWriter.cs** - Écriture binaire des messages RPC
+- **BridgeReader.cs** - Lecture binaire des réponses RPC
+- **BridgeClient.cs** - Client WebSocket singleton
 
----
+#### 📡 Core/Rpc
+- **RpcNames.cs** - Constantes pour tous les RPC
+- **IRpcHandler.cs** - Interface pour les handlers
+- **RpcRouter.cs** - Routage des messages RPC vers handlers
 
-## 🚀 Prochaines étapes - Phase 2
+#### 🔌 Services
+- **SettingsService.cs** - Persistence des paramètres (singleton)
+- **ConnectionService.cs** - Gestion de la connexion (singleton)
 
-1. **BridgeClient.cs** - WebSocket client
-2. **BridgeReader.cs** / **BridgeWriter.cs** - Binary RPC protocol
-3. **RpcRouter.cs** - Message routing
-4. **LoginWindow** - Fenêtre de connexion
-5. **ConnectionService** - Gestion de la connexion
+#### 📊 Models
+- **ServerConfig.cs** - Configuration de connexion serveur
+
+#### 🖥️ Views
+- **LoginWindow.xaml** - Interface de connexion moderne
+- **LoginWindow.xaml.cs** - Code-behind
+- **LoginViewModel.cs** - ViewModel avec logique de connexion
+
+#### 🔄 Converters
+- **BoolConverters.cs** - InverseBoolConverter, BoolToVisibility, etc.
 
 ---
 
-## 🔧 Comment tester
+## 🚀 Comment tester
 
-```bash
-# Ouvrir le projet dans Visual Studio 2022
-# Compiler (Ctrl+Shift+B)
-# Pour l'instant, l'app va crash car LoginWindow n'existe pas encore
+1. **Compiler** le projet (Ctrl+Shift+B)
+2. **Lancer** l'application (F5)
+3. La **LoginWindow** s'ouvre
+4. Entrer les infos de connexion (127.0.0.1:3050)
+5. Cliquer sur "Se connecter"
+
+### ⚠️ Notes
+- Pour tester la connexion, il faut un serveur Rust avec Carbon WebControlPanel actif
+- Si connexion réussie, un message s'affiche (MainWindow pas encore implémentée)
+- Les serveurs sont sauvegardés dans `Config/appsettings.json`
+- Les logs sont dans `RustControlPanel.log`
+
+---
+
+## 🎯 Prochaines étapes - Phase 3
+
+1. **MainWindow** - Fenêtre principale avec custom titlebar
+2. **Navigation sidebar** - Onglets Map, Stats, Plugins, etc.
+3. **TopBar** - Infos serveur + mini stats
+4. **ConnectionOverlay** - Overlay de reconnexion
+
+---
+
+## 📝 Architecture actuelle
+
+```
+✅ BridgeClient (WebSocket)
+    ↓
+✅ RpcRouter (Routing)
+    ↓
+❌ RPC Handlers (à créer en Phase 4)
+    ↓
+❌ Services (PlayerService, etc.)
+    ↓
+❌ ViewModels (MapViewModel, etc.)
 ```
 
 ---
 
-## 📝 Notes
+## ✅ Statut
 
-- Tous les fichiers sont **documentés** avec XML docs
-- Architecture **MVVM stricte**
-- Styles **centralisés** dans /Styles/
-- Code **propre** et **maintenable**
+- **Phase 1** : Foundation ✅
+- **Phase 2** : Connection ✅
+- **Phase 3** : Main Window ⏳
+- **Phase 4** : Map Page ⏳
+- **Phase 5** : Console & Chat ⏳
 
-✅ **Phase 1 terminée !**
+**Prêt pour la Phase 3 !** 🚀
+

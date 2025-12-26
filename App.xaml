@@ -27,6 +27,14 @@
                 <ResourceDictionary Source="Styles/ScrollBars.xaml"/>
                 
             </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Converters -->
+            <converters:InverseBoolConverter x:Key="InverseBoolConverter" 
+                                            xmlns:converters="clr-namespace:RustControlPanel.Converters"/>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" 
+                                                 xmlns:converters="clr-namespace:RustControlPanel.Converters"/>
+            <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" 
+                                                        xmlns:converters="clr-namespace:RustControlPanel.Converters"/>
         </ResourceDictionary>
     </Application.Resources>
     

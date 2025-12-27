@@ -242,35 +242,24 @@ namespace RustControlPanel.ViewModels
 
             Logger.Instance.Debug("MainViewModel created");
 
-            // Subscribe to logger events to populate DebugLog
-            Logger.Instance.LogEntryAdded += (sender, entry) =>
+            // Subscribe to logger
+            Logger.Instance.LogEntryAdded += (sender, logMessage) =>
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    var timestamp = entry.Timestamp.ToString("HH:mm:ss.fff");
-                    var level = entry.Level.ToString().ToUpper().PadRight(7);
-                    var newLine = $"[{timestamp}] [{level}] {entry.Message}";
-
                     if (!string.IsNullOrEmpty(DebugLog))
-                    {
-                        DebugLog += Environment.NewLine + newLine;
-                    }
+                        DebugLog += Environment.NewLine + logMessage;
                     else
-                    {
-                        DebugLog = newLine;
-                    }
+                        DebugLog = logMessage;
 
-                    // Limit to last 500 lines to avoid memory issues
+                    // Limit 500 lines
                     var lines = DebugLog.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                     if (lines.Length > 500)
-                    {
                         DebugLog = string.Join(Environment.NewLine, lines.Skip(lines.Length - 500));
-                    }
                 });
             };
 
-            // Initial test log
-            Logger.Instance.Info("Debug panel initialized and ready");
+            Logger.Instance.Info("Debug panel ready");
         }
 
         #endregion
@@ -383,12 +372,11 @@ namespace RustControlPanel.ViewModels
 
         private void OnServerInfoUpdated(object? sender, Models.ServerInfo info)
         {
-            // Update server name if changed
+            // Update server name
             if (!string.IsNullOrEmpty(info.Hostname))
             {
                 ServerName = info.Hostname;
-                
-                // Update config if hostname changed
+
                 var config = ConnectionService.Instance.CurrentConfig;
                 if (config != null && config.DisplayName != info.Hostname)
                 {
@@ -400,10 +388,27 @@ namespace RustControlPanel.ViewModels
                 }
             }
 
-            // Update stats
+            // Update ALL stats ✅
             PlayerCount = info.PlayerCount;
             MaxPlayers = info.MaxPlayers;
             ServerFps = info.Fps;
+
+            // NEW: Queue & Joining
+            QueueCount = info.QueuedPlayers;
+            JoiningCount = info.JoiningPlayers;
+
+            // NEW: Entity time (convert entity count to pseudo "time" or just display count)
+            EntityTime = info.EntityCount; // Or calculate some metric
+
+            // GameTime (already string "HH:mm" from server)
+            GameTime = info.GameTime;
+
+            // Uptime (convert seconds to "Xd Xh Xm")
+            var totalSeconds = info.Uptime;
+            var days = totalSeconds / 86400;
+            var hours = (totalSeconds % 86400) / 3600;
+            var mins = (totalSeconds % 3600) / 60;
+            Uptime = $"{days}d {hours}h {mins}m";
         }
 
         #endregion

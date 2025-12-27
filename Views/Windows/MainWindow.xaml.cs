@@ -15,22 +15,37 @@ namespace RustControlPanel.Views.Windows
     public partial class MainWindow : Window
     {
         private bool _isDebugVisible = false;
+        private ScrollViewer? _debugScrollViewer;
+        private bool _isUserScrolling = false;
         private const double DebugPanelHeight = 200;
 
         public MainWindow()
         {
             InitializeComponent();
-            
-            // Subscribe to ToggleDebugCommand
+
+            // Find ScrollViewer in debug panel
+            this.Loaded += (s, e) =>
+            {
+                _debugScrollViewer = FindScrollViewer(DebugPanel);
+                if (_debugScrollViewer != null)
+                {
+                    _debugScrollViewer.ScrollChanged += OnDebugScrollChanged;
+                }
+            };
+
+            // Subscribe to ViewModel
             if (DataContext is MainViewModel vm)
             {
-                // Le command existe déjà dans le ViewModel !
-                // On écoute juste le changement de ShowDebugPanel
                 vm.PropertyChanged += (s, e) =>
                 {
                     if (e.PropertyName == nameof(vm.ShowDebugPanel))
                     {
                         ToggleDebugPanel();
+                    }
+                    // Auto-scroll on DebugLog change
+                    else if (e.PropertyName == nameof(vm.DebugLog))
+                    {
+                        AutoScrollDebug();
                     }
                 };
             }
@@ -184,6 +199,46 @@ namespace RustControlPanel.Views.Windows
             {
                 vm.ShowDebugPanel = false;
             }
+        }
+
+        private void OnDebugScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (_debugScrollViewer == null) return;
+
+            // User scrolled manually
+            if (e.ExtentHeightChange == 0)
+            {
+                // Check if at bottom
+                var atBottom = Math.Abs(_debugScrollViewer.VerticalOffset - _debugScrollViewer.ScrollableHeight) < 1.0;
+                _isUserScrolling = !atBottom;
+            }
+        }
+
+        private void AutoScrollDebug()
+        {
+            if (_debugScrollViewer == null || _isUserScrolling) return;
+
+            // Scroll to bottom
+            _debugScrollViewer.Dispatcher.InvokeAsync(() =>
+            {
+                _debugScrollViewer.ScrollToEnd();
+            }, System.Windows.Threading.DispatcherPriority.Background);
+        }
+
+        private ScrollViewer? FindScrollViewer(DependencyObject parent)
+        {
+            if (parent == null) return null;
+
+            int childCount = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < childCount; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                if (child is ScrollViewer sv) return sv;
+
+                var result = FindScrollViewer(child);
+                if (result != null) return result;
+            }
+            return null;
         }
 
         #endregion

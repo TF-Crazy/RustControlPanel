@@ -1,5 +1,5 @@
 // ════════════════════════════════════════════════════════════════════
-// ServerInfoHandler.cs - Handles ServerInfo RPC responses
+// ServerInfoHandler.cs - FIXED - Parse ALL data
 // ════════════════════════════════════════════════════════════════════
 
 using System;
@@ -10,35 +10,14 @@ using RustControlPanel.Models;
 
 namespace RustControlPanel.Core.Rpc.Handlers
 {
-    /// <summary>
-    /// Handles ServerInfo RPC responses.
-    /// Updates server information (hostname, FPS, players, etc.).
-    /// </summary>
     public class ServerInfoHandler : IRpcHandler
     {
-        #region Events
-
-        /// <summary>
-        /// Fired when server info is received.
-        /// </summary>
         public event EventHandler<ServerInfo>? ServerInfoReceived;
 
-        #endregion
-
-        #region IRpcHandler Implementation
-
-        /// <summary>
-        /// Gets the RPC ID for ServerInfo.
-        /// </summary>
         public uint RpcId => RpcHelper.GetRpcId(RpcNames.SERVER_INFO);
 
-        /// <summary>
-        /// Handles the ServerInfo RPC response.
-        /// </summary>
         public void Handle(BridgeReader reader)
         {
-            Logger.Instance.Debug("ServerInfoHandler v3 - Using EXACT old C# structure");
-
             try
             {
                 var info = new ServerInfo();
@@ -46,18 +25,17 @@ namespace RustControlPanel.Core.Rpc.Handlers
                 info.Hostname = reader.ReadString();
                 info.MaxPlayers = reader.ReadInt32();
                 info.PlayerCount = reader.ReadInt32();
-                reader.ReadInt32(); // Queued
-                reader.ReadInt32(); // Joining
+                info.QueuedPlayers = reader.ReadInt32();      // ✅ PARSE
+                info.JoiningPlayers = reader.ReadInt32();     // ✅ PARSE
                 reader.ReadInt32(); // Reserved
-                int entityCount = reader.ReadInt32(); // EntityCount
-                reader.ReadString(); // GameTime
-                int uptime = reader.ReadInt32(); // Uptime
-                string mapName = reader.ReadString(); // MapName
-                info.Fps = reader.ReadFloat(); // Framerate
+                info.EntityCount = reader.ReadInt32();        // ✅ PARSE
+                info.GameTime = reader.ReadString();          // ✅ PARSE (string)
+                info.Uptime = reader.ReadInt32();             // ✅ PARSE (seconds)
+                info.MapName = reader.ReadString();           // ✅ PARSE
+                info.Fps = reader.ReadFloat();
 
-                Logger.Instance.Info($"✅ ServerInfo: {info.Hostname} | Players: {info.PlayerCount}/{info.MaxPlayers} | FPS: {info.Fps:F0}");
+                Logger.Instance.Debug($"ServerInfo: {info.Hostname} | {info.PlayerCount}/{info.MaxPlayers} | Queue:{info.QueuedPlayers} | Join:{info.JoiningPlayers} | Entities:{info.EntityCount} | Time:{info.GameTime} | Uptime:{info.Uptime}s | FPS:{info.Fps:F0}");
 
-                // Fire event
                 ServerInfoReceived?.Invoke(this, info);
             }
             catch (Exception ex)
@@ -65,7 +43,5 @@ namespace RustControlPanel.Core.Rpc.Handlers
                 Logger.Instance.Error($"Failed to parse ServerInfo", ex);
             }
         }
-
-        #endregion
     }
 }

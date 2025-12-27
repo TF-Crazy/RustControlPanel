@@ -27,8 +27,8 @@
                 <ResourceDictionary Source="Styles/ScrollBars.xaml"/>
                 <ResourceDictionary Source="Styles/TabControls.xaml"/>
                 
-                <!-- Theme (default: GlassMorphism) -->
-                <ResourceDictionary Source="Styles/Themes/Theme.GlassMorphism.xaml"/>
+                <!-- Theme (must be loaded after base styles) -->
+                <ResourceDictionary Source="Styles/Theme.xaml"/>
                 
             </ResourceDictionary.MergedDictionaries>
             

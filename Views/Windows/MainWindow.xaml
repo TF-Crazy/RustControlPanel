@@ -20,8 +20,8 @@
         <vm:MainViewModel/>
     </Window.DataContext>
 
-    <Border Background="{StaticResource BackgroundDarkBrush}"
-            BorderBrush="{StaticResource BorderNormalBrush}"
+    <Border Background="{DynamicResource ThemeBackground}"
+            BorderBrush="{DynamicResource ThemeCardBorder}"
             BorderThickness="1"
             CornerRadius="8">
         
@@ -39,30 +39,11 @@
                 <!-- Footer / Status bar -->
             </Grid.RowDefinitions>
 
-            <!-- DEV: THEME SWITCHER -->
-            <Border Grid.Row="0" Background="#FF0000" Padding="4" HorizontalAlignment="Center" 
-        VerticalAlignment="Top" CornerRadius="0,0,4,4" Margin="0,-1,0,0" Panel.ZIndex="999">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="DEV THEME:" Foreground="White" FontSize="10" FontWeight="Bold" 
-                   Margin="0,0,8,0" VerticalAlignment="Center"/>
-                    <Button Content="Glass" Click="SwitchToGlass" Padding="8,2" Margin="2,0" 
-                Background="#00D9FF" BorderThickness="0" Foreground="Black" 
-                FontSize="10" FontWeight="Bold"/>
-                    <Button Content="Neuro" Click="SwitchToNeuro" Padding="8,2" Margin="2,0" 
-                Background="#6366F1" BorderThickness="0" Foreground="White" 
-                FontSize="10" FontWeight="Bold"/>
-                    <Button Content="Fluent" Click="SwitchToFluent" Padding="8,2" Margin="2,0" 
-                Background="#0078D4" BorderThickness="0" Foreground="White" 
-                FontSize="10" FontWeight="Bold"/>
-                </StackPanel>
-            </Border>
-
-
             <!-- ═══════════════════════════════════════════════════════════════ -->
             <!-- CUSTOM TITLEBAR                                                  -->
             <!-- ═══════════════════════════════════════════════════════════════ -->
             <Border Grid.Row="0" 
-                    Background="{StaticResource BackgroundMediumBrush}"
+                    Background="{DynamicResource ThemeTitleBar}"
                     CornerRadius="8,8,0,0"
                     MouseLeftButtonDown="OnTitleBarMouseDown">
                 <Grid>
@@ -73,10 +54,29 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Logo + Title -->
-                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="16,0">
-                        <TextBlock Text="🎮" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20,0">
+                        <!-- Logo SVG (hexagon with R) -->
+                        <Viewbox Width="26" Height="26" Margin="0,0,12,0">
+                            <Canvas Width="32" Height="32">
+                                <!-- Hexagon with gradient -->
+                                <Path Data="M16,2 L28,9 L28,23 L16,30 L4,23 L4,9 Z">
+                                    <Path.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#3B82F6" Offset="0"/>
+                                            <GradientStop Color="#6366F1" Offset="0.5"/>
+                                            <GradientStop Color="#8B5CF6" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Path.Fill>
+                                </Path>
+                                <!-- Letter R (simplified) -->
+                                <Path Data="M12,10 L12,22 M12,10 L17,10 Q19,10 19,12 Q19,14 17,14 L12,14 M17,14 L20,22"
+                                      Stroke="White" StrokeThickness="2.2" StrokeLineJoin="Round"/>
+                            </Canvas>
+                        </Viewbox>
+                        
                         <TextBlock Text="Rust Control Panel" 
-                                   Style="{StaticResource BodyText}"
+                                   Foreground="{DynamicResource ThemeText}"
+                                   FontSize="14"
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
@@ -107,8 +107,8 @@
             <!-- SERVER INFO BAR                                                  -->
             <!-- ═══════════════════════════════════════════════════════════════ -->
             <Border Grid.Row="1" 
-                    Background="{StaticResource BackgroundLightBrush}"
-                    BorderBrush="{StaticResource BorderNormalBrush}"
+                    Background="{DynamicResource ThemeTopBar}"
+                    BorderBrush="{DynamicResource ThemeCardBorder}"
                     BorderThickness="0,1,0,1"
                     Padding="16,10">
                 <Grid>
@@ -127,14 +127,14 @@
                         <TextBlock Text="{Binding ServerName}" 
                                    Style="{StaticResource Heading3}"
                                    VerticalAlignment="Center"
-                                   Foreground="{StaticResource AccentBlueBrush}"/>
+                                   Foreground="{DynamicResource ThemeAccent}"/>
                     </StackPanel>
 
                     <!-- Stats -->
                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left">
                         <!-- Players -->
-                        <Border Background="{StaticResource BackgroundMediumBrush}"
-                                BorderBrush="{StaticResource BorderNormalBrush}"
+                        <Border Background="{DynamicResource ThemeCard}"
+                                BorderBrush="{DynamicResource ThemeCardBorder}"
                                 BorderThickness="1"
                                 CornerRadius="4"
                                 Padding="10,6"
@@ -142,16 +142,16 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="👥" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center"/>
                                 <TextBlock Style="{StaticResource BodyText}" VerticalAlignment="Center" FontSize="13">
-                                    <Run Text="{Binding PlayerCount}" Foreground="{StaticResource AccentGreenBrush}" FontWeight="SemiBold"/>
-                                    <Run Text="/" Foreground="{StaticResource TextMutedBrush}"/>
-                                    <Run Text="{Binding MaxPlayers}" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <Run Text="{Binding PlayerCount}" Foreground="{DynamicResource ThemeAccent}" FontWeight="SemiBold"/>
+                                    <Run Text="/" Foreground="{DynamicResource ThemeTextMuted}"/>
+                                    <Run Text="{Binding MaxPlayers}" Foreground="{DynamicResource ThemeText}"/>
                                 </TextBlock>
                             </StackPanel>
                         </Border>
 
                         <!-- FPS Text -->
-                        <Border Background="{StaticResource BackgroundMediumBrush}"
-                                BorderBrush="{StaticResource BorderNormalBrush}"
+                        <Border Background="{DynamicResource ThemeCard}"
+                                BorderBrush="{DynamicResource ThemeCardBorder}"
                                 BorderThickness="1"
                                 CornerRadius="4"
                                 Padding="10,6"
@@ -162,13 +162,13 @@
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock" BasedOn="{StaticResource BodyText}">
                                             <Setter Property="Text" Value="{Binding ServerFps, StringFormat={}{0:F0} FPS}"/>
-                                            <Setter Property="Foreground" Value="{StaticResource AccentGreenBrush}"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource ThemeAccent}"/>
                                             <Setter Property="FontWeight" Value="SemiBold"/>
                                             <Setter Property="FontSize" Value="13"/>
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding ServerFps}" Value="0">
                                                     <Setter Property="Text" Value="-- FPS"/>
-                                                    <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}"/>
+                                                    <Setter Property="Foreground" Value="{DynamicResource ThemeTextMuted}"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -220,12 +220,12 @@
                             <TextBlock Text="Map"/>
                         </StackPanel>
                     </TabItem.Header>
-                    <Grid Background="{StaticResource BackgroundDarkBrush}">
+                    <Grid Background="{DynamicResource ThemeBackground}">
                         <TextBlock Text="Map Page (Coming Soon)" 
                                    Style="{StaticResource Heading2}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Foreground="{StaticResource TextMutedBrush}"/>
+                                   Foreground="{DynamicResource ThemeTextMuted}"/>
                     </Grid>
                 </TabItem>
 
@@ -237,12 +237,12 @@
                             <TextBlock Text="Stats"/>
                         </StackPanel>
                     </TabItem.Header>
-                    <Grid Background="{StaticResource BackgroundDarkBrush}">
+                    <Grid Background="{DynamicResource ThemeBackground}">
                         <TextBlock Text="Stats Page (Coming Soon)" 
                                    Style="{StaticResource Heading2}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Foreground="{StaticResource TextMutedBrush}"/>
+                                   Foreground="{DynamicResource ThemeTextMuted}"/>
                     </Grid>
                 </TabItem>
 
@@ -254,12 +254,12 @@
                             <TextBlock Text="Stats"/>
                         </StackPanel>
                     </TabItem.Header>
-                    <Grid Background="{StaticResource BackgroundDarkBrush}">
+                    <Grid Background="{DynamicResource ThemeBackground}">
                         <TextBlock Text="Stats Page (Coming Soon)" 
                                    Style="{StaticResource Heading2}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Foreground="{StaticResource TextMutedBrush}"/>
+                                   Foreground="{DynamicResource ThemeTextMuted}"/>
                     </Grid>
                 </TabItem>
 
@@ -271,12 +271,12 @@
                             <TextBlock Text="Plugins"/>
                         </StackPanel>
                     </TabItem.Header>
-                    <Grid Background="{StaticResource BackgroundDarkBrush}">
+                    <Grid Background="{DynamicResource ThemeBackground}">
                         <TextBlock Text="Plugins Page (Coming Soon)" 
                                    Style="{StaticResource Heading2}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Foreground="{StaticResource TextMutedBrush}"/>
+                                   Foreground="{DynamicResource ThemeTextMuted}"/>
                     </Grid>
                 </TabItem>
 
@@ -288,12 +288,12 @@
                             <TextBlock Text="Settings"/>
                         </StackPanel>
                     </TabItem.Header>
-                    <Grid Background="{StaticResource BackgroundDarkBrush}">
+                    <Grid Background="{DynamicResource ThemeBackground}">
                         <TextBlock Text="Settings Page (Coming Soon)" 
                                    Style="{StaticResource Heading2}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Foreground="{StaticResource TextMutedBrush}"/>
+                                   Foreground="{DynamicResource ThemeTextMuted}"/>
                     </Grid>
                 </TabItem>
 
@@ -303,8 +303,8 @@
             <!-- FOOTER / STATUS BAR                                              -->
             <!-- ═══════════════════════════════════════════════════════════════ -->
             <Border Grid.Row="4"
-                    Background="{StaticResource BackgroundMediumBrush}"
-                    BorderBrush="{StaticResource BorderNormalBrush}"
+                    Background="{DynamicResource ThemeCard}"
+                    BorderBrush="{DynamicResource ThemeCardBorder}"
                     BorderThickness="0,1,0,0"
                     Padding="12,6"
                     CornerRadius="0,0,8,8">
@@ -322,7 +322,7 @@
                                     <Setter Property="Fill" Value="{StaticResource AccentRedBrush}"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                            <Setter Property="Fill" Value="{StaticResource AccentGreenBrush}"/>
+                                            <Setter Property="Fill" Value="{DynamicResource ThemeAccent}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -332,11 +332,11 @@
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock" BasedOn="{StaticResource SmallText}">
                                     <Setter Property="Text" Value="Déconnecté"/>
-                                    <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource ThemeTextMuted}"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsConnected}" Value="True">
                                             <Setter Property="Text" Value="Connecté"/>
-                                            <Setter Property="Foreground" Value="{StaticResource AccentGreenBrush}"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource ThemeAccent}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>

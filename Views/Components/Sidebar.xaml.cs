@@ -1,7 +1,3 @@
-// ════════════════════════════════════════════════════════════════════
-// Sidebar.xaml.cs - V3 avec chevron rotate
-// ════════════════════════════════════════════════════════════════════
-
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +21,7 @@ namespace RustControlPanel.Views.Components
         public Sidebar()
         {
             InitializeComponent();
+            SetActiveTab(0); // Map par défaut
         }
 
         private void OnToggleClick(object sender, RoutedEventArgs e)
@@ -70,38 +67,49 @@ namespace RustControlPanel.Views.Components
 
         private void OnMapClick(object sender, MouseButtonEventArgs e)
         {
-            UpdateSelectedTab(MapItem);
+            SetActiveTab(0);
             MapClicked?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnStatsClick(object sender, MouseButtonEventArgs e)
         {
-            UpdateSelectedTab(StatsItem);
+            SetActiveTab(1);
             StatsClicked?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnPlayersClick(object sender, MouseButtonEventArgs e)
         {
-            UpdateSelectedTab(PlayersItem);
+            SetActiveTab(2);
             PlayersClicked?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnConsoleClick(object sender, MouseButtonEventArgs e)
         {
-            UpdateSelectedTab(ConsoleItem);
+            SetActiveTab(3);
             ConsoleClicked?.Invoke(this, EventArgs.Empty);
         }
 
-        private void UpdateSelectedTab(Border selectedItem)
+        private void SetActiveTab(int index)
         {
             // Reset all
-            MapItem.Background = System.Windows.Media.Brushes.Transparent;
-            StatsItem.Background = System.Windows.Media.Brushes.Transparent;
-            PlayersItem.Background = System.Windows.Media.Brushes.Transparent;
-            ConsoleItem.Background = System.Windows.Media.Brushes.Transparent;
+            MapItem.Background = Brushes.Transparent;
+            StatsItem.Background = Brushes.Transparent;
+            PlayersItem.Background = Brushes.Transparent;
+            ConsoleItem.Background = Brushes.Transparent;
 
-            // Highlight selected
-            selectedItem.Background = (System.Windows.Media.Brush)Application.Current.Resources["ThemeAccentBackground"];
+            // Set active
+            switch (index)
+            {
+                case 0: MapItem.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#2800D9FF")); break;
+                case 1: StatsItem.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#2800D9FF")); break;
+                case 2: PlayersItem.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#2800D9FF")); break;
+                case 3: ConsoleItem.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#2800D9FF")); break;
+            }
+        }
+
+        public void SetActive(int index)
+        {
+            SetActiveTab(index);
         }
     }
 }

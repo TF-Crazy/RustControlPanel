@@ -1,7 +1,3 @@
-// ════════════════════════════════════════════════════════════════════
-// TopBar.xaml.cs
-// ════════════════════════════════════════════════════════════════════
-
 using System.Windows.Controls;
 
 namespace RustControlPanel.Views.Components

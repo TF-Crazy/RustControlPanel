@@ -25,25 +25,6 @@ namespace RustControlPanel.Views.Components
             _isCollapsed = !_isCollapsed;
             this.Width = _isCollapsed ? 64 : 200;
             UpdateVisibility();
-            AnimateChevron(); // ✅ Animate chevron
-            AnimateChevron(); // ✅ Animate chevron
-        }
-
-        /// <summary>
-        /// Animates chevron rotation (0° expanded, 180° collapsed).
-        /// </summary>
-        private void AnimateChevron()
-        {
-            if (ChevronRotate != null)
-            {
-                var animation = new DoubleAnimation
-                {
-                    To = _isCollapsed ? 180 : 0,
-                    Duration = TimeSpan.FromMilliseconds(250),
-                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
-                };
-                ChevronRotate.BeginAnimation(RotateTransform.AngleProperty, animation);
-            }
         }
 
         private void UpdateVisibility()
@@ -99,20 +80,3 @@ namespace RustControlPanel.Views.Components
         }
     }
 }
-
-        /// <summary>
-        /// Animates chevron rotation (0° expanded, 180° collapsed).
-        /// </summary>
-        private void AnimateChevron()
-        {
-            if (ChevronRotate != null)
-            {
-                var animation = new DoubleAnimation
-                {
-                    To = _isCollapsed ? 180 : 0,
-                    Duration = TimeSpan.FromMilliseconds(250),
-                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
-                };
-                ChevronRotate.BeginAnimation(RotateTransform.AngleProperty, animation);
-            }
-        }

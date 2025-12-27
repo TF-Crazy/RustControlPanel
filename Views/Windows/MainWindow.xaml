@@ -134,11 +134,12 @@
                 </Grid>
 
                 <!-- ═══════════════════════════════════════════════════════════════ -->
-                <!-- CONNECTION LOST OVERLAY                                          -->
+                <!-- CONNECTION LOST OVERLAY (only if disconnected)                   -->
                 <!-- ═══════════════════════════════════════════════════════════════ -->
                 <Border Grid.ColumnSpan="2"
                         Background="#DD000000"
-                        Visibility="{Binding IsDisconnected, Converter={StaticResource BoolToVisibilityConverter}}"
+                        x:Name="ConnectionOverlay"
+                        Visibility="Collapsed"
                         Panel.ZIndex="999">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <TextBlock Text="⚠️" 
@@ -156,7 +157,7 @@
                         
                         <TextBlock HorizontalAlignment="Center"
                                    Foreground="{DynamicResource ThemeTextMuted}"
-                                   FontSize="12">
+                                   FontSize="13">
                             <Run Text="Reconnecting in"/>
                             <Run Text="{Binding ReconnectCountdown, FallbackValue=5}" 
                                  Foreground="{DynamicResource ThemeAccent}"
@@ -167,11 +168,11 @@
                         <Button Content="Reconnect Now"
                                 Command="{Binding ReconnectCommand}"
                                 Margin="0,24,0,0"
-                                Padding="16,8"
+                                Padding="16,10"
                                 Background="{DynamicResource ThemeAccent}"
                                 Foreground="White"
                                 BorderThickness="0"
-                                FontSize="12"
+                                FontSize="13"
                                 FontWeight="SemiBold"
                                 Cursor="Hand"
                                 Effect="{DynamicResource GlassGlow}">

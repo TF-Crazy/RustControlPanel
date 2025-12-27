@@ -1,5 +1,5 @@
 <!-- ════════════════════════════════════════════════════════════════════ -->
-<!-- LoginWindow.xaml - 2-column layout (servers | form)                 -->
+<!-- LoginWindow.xaml - FIXED (placeholders visibles + textes lisibles)  -->
 <!-- ════════════════════════════════════════════════════════════════════ -->
 
 <Window x:Class="RustControlPanel.Views.Windows.LoginWindow"
@@ -7,7 +7,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:RustControlPanel.ViewModels"
         Title="Rust Control Panel" 
-        Height="500" Width="750"
+        Height="520" Width="800"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -18,18 +18,17 @@
         <vm:LoginViewModel/>
     </Window.DataContext>
 
-    <!-- NO BORDER -->
     <Border Background="{DynamicResource ThemeBackground}"
             CornerRadius="8"
             Effect="{DynamicResource CardShadowOuter}">
         
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="32"/>    <!-- TitleBar -->
-                <RowDefinition Height="*"/>     <!-- Content -->
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- TitleBar (NO "Login" text) -->
+            <!-- TitleBar -->
             <Border Grid.Row="0" 
                     Background="{DynamicResource ThemeTitleBar}"
                     CornerRadius="8,8,0,0"
@@ -37,7 +36,6 @@
                     BorderThickness="0,0,0,1"
                     MouseLeftButtonDown="OnTitleBarMouseDown">
                 <Grid Margin="12,0">
-                    <!-- Logo + Title -->
                     <StackPanel Orientation="Horizontal">
                         <Viewbox Width="18" Height="18" Margin="0,0,8,0">
                             <Canvas Width="32" Height="32">
@@ -49,11 +47,11 @@
                         </Viewbox>
                         <TextBlock Text="Rust Control Panel" 
                                    Foreground="{DynamicResource ThemeText}"
-                                   FontSize="12"
+                                   FontSize="13"
+                                   FontWeight="Medium"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
 
-                    <!-- Close button (WORKS) -->
                     <Button Content="✕" 
                             Click="OnCloseClick"
                             HorizontalAlignment="Right"
@@ -67,13 +65,11 @@
             <!-- 2-COLUMN LAYOUT -->
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="280"/>     <!-- Left: Servers -->
-                    <ColumnDefinition Width="*"/>       <!-- Right: Form -->
+                    <ColumnDefinition Width="280"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- ═══════════════════════════════════════════════════════════════ -->
-                <!-- LEFT: SAVED SERVERS (darker background)                          -->
-                <!-- ═══════════════════════════════════════════════════════════════ -->
+                <!-- LEFT: SAVED SERVERS -->
                 <Border Grid.Column="0"
                         Background="{DynamicResource ThemeSidebarDark}"
                         BorderBrush="{DynamicResource ThemeCardBorder}"
@@ -85,19 +81,16 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Header -->
                         <TextBlock Text="Saved Servers"
-                                   FontSize="13"
+                                   FontSize="14"
                                    FontWeight="SemiBold"
                                    Foreground="{DynamicResource ThemeText}"
                                    Margin="0,0,0,12"/>
 
-                        <!-- Server list (THIN SCROLLBAR) -->
                         <ScrollViewer Grid.Row="1"
                                       VerticalScrollBarVisibility="Auto"
                                       HorizontalScrollBarVisibility="Disabled">
                             <ScrollViewer.Resources>
-                                <!-- Thin scrollbar style -->
                                 <Style TargetType="ScrollBar">
                                     <Setter Property="Width" Value="6"/>
                                     <Setter Property="Background" Value="Transparent"/>
@@ -168,10 +161,10 @@
                                             </Button.Style>
                                             <StackPanel>
                                                 <TextBlock Text="{Binding Name}" 
-                                                           FontSize="12"
+                                                           FontSize="13"
                                                            FontWeight="SemiBold"
                                                            Foreground="{DynamicResource ThemeText}"/>
-                                                <TextBlock FontSize="10"
+                                                <TextBlock FontSize="11"
                                                            Foreground="{DynamicResource ThemeTextMuted}"
                                                            Margin="0,2,0,0">
                                                     <Run Text="{Binding Host}"/>:<Run Text="{Binding Port}"/>
@@ -185,13 +178,11 @@
                     </Grid>
                 </Border>
 
-                <!-- ═══════════════════════════════════════════════════════════════ -->
-                <!-- RIGHT: CONNECTION FORM                                            -->
-                <!-- ═══════════════════════════════════════════════════════════════ -->
+                <!-- RIGHT: FORM -->
                 <Grid Grid.Column="1" Margin="40,30">
-                    <StackPanel VerticalAlignment="Center" MaxWidth="320">
+                    <StackPanel VerticalAlignment="Center" MaxWidth="340">
                         
-                        <!-- Logo (big, centered) -->
+                        <!-- Logo -->
                         <Viewbox Width="64" Height="64" Margin="0,0,0,24">
                             <Canvas Width="32" Height="32">
                                 <Path Data="M16,2 L28,9 L28,23 L16,30 L4,23 L4,9 Z"
@@ -204,136 +195,154 @@
 
                         <!-- Title -->
                         <TextBlock Text="Connect"
-                                   FontSize="18"
+                                   FontSize="20"
                                    FontWeight="SemiBold"
                                    Foreground="{DynamicResource ThemeText}"
                                    HorizontalAlignment="Center"
                                    Margin="0,0,0,32"/>
 
-                        <!-- Host -->
+                        <!-- Host with placeholder -->
                         <TextBlock Text="HOST"
-                                   FontSize="10"
+                                   FontSize="11"
                                    FontWeight="SemiBold"
                                    Foreground="{DynamicResource ThemeTextMuted}"
                                    Margin="0,0,0,6"/>
-                        <TextBox Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}"
-                                 Height="36"
-                                 Padding="12,8"
-                                 FontSize="12"
-                                 Margin="0,0,0,16"
-                                 Background="{DynamicResource ThemeCard}"
-                                 Foreground="{DynamicResource ThemeText}"
-                                 BorderBrush="{DynamicResource ThemeCardBorder}"
-                                 BorderThickness="1"
-                                 Tag="Enter host address">
-                            <TextBox.Style>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="TextBox">
-                                                <Border Background="{TemplateBinding Background}"
-                                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                                        CornerRadius="4"
-                                                        Padding="{TemplateBinding Padding}">
-                                                    <Grid>
-                                                        <ScrollViewer x:Name="PART_ContentHost"/>
-                                                        <TextBlock Text="{TemplateBinding Tag}"
-                                                                   Foreground="{DynamicResource ThemeTextMuted}"
-                                                                   IsHitTestVisible="False"
-                                                                   Visibility="Collapsed"
-                                                                   VerticalAlignment="Center"/>
-                                                    </Grid>
-                                                </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="Text" Value="">
-                                                        <Setter TargetName="PART_ContentHost" Property="Visibility" Value="Collapsed"/>
-                                                    </Trigger>
-                                                    <Trigger Property="Text" Value="">
-                                                        <Setter Property="Visibility" Value="Visible" TargetName="PART_ContentHost"/>
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </TextBox.Style>
-                        </TextBox>
-
-                        <!-- Port -->
-                        <TextBlock Text="PORT"
-                                   FontSize="10"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource ThemeTextMuted}"
-                                   Margin="0,0,0,6"/>
-                        <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"
-                                 Height="36"
-                                 Padding="12,8"
-                                 FontSize="12"
-                                 Margin="0,0,0,16"
-                                 Background="{DynamicResource ThemeCard}"
-                                 Foreground="{DynamicResource ThemeText}"
-                                 BorderBrush="{DynamicResource ThemeCardBorder}"
-                                 BorderThickness="1"
-                                 Tag="28016">
-                            <TextBox.Style>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="TextBox">
-                                                <Border Background="{TemplateBinding Background}"
-                                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                                        CornerRadius="4"
-                                                        Padding="{TemplateBinding Padding}">
-                                                    <ScrollViewer x:Name="PART_ContentHost"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </TextBox.Style>
-                        </TextBox>
-
-                        <!-- Password -->
-                        <TextBlock Text="PASSWORD"
-                                   FontSize="10"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource ThemeTextMuted}"
-                                   Margin="0,0,0,6"/>
-                        <PasswordBox x:Name="PasswordBox"
-                                     Height="36"
-                                     Padding="12,8"
-                                     FontSize="12"
-                                     Margin="0,0,0,24"
+                        <Grid Margin="0,0,0,16">
+                            <TextBox x:Name="HostTextBox"
+                                     Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}"
+                                     Height="38"
+                                     Padding="12,10"
+                                     FontSize="13"
                                      Background="{DynamicResource ThemeCard}"
                                      Foreground="{DynamicResource ThemeText}"
                                      BorderBrush="{DynamicResource ThemeCardBorder}"
-                                     BorderThickness="1">
-                            <PasswordBox.Style>
-                                <Style TargetType="PasswordBox">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="PasswordBox">
-                                                <Border Background="{TemplateBinding Background}"
-                                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                                        CornerRadius="4"
-                                                        Padding="{TemplateBinding Padding}">
-                                                    <ScrollViewer x:Name="PART_ContentHost"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </PasswordBox.Style>
-                        </PasswordBox>
+                                     BorderThickness="1"
+                                     TextChanged="OnHostTextChanged">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="TextBox">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="4"
+                                                            Padding="{TemplateBinding Padding}">
+                                                        <ScrollViewer x:Name="PART_ContentHost"
+                                                                      VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                            <TextBlock x:Name="HostPlaceholder"
+                                       Text="127.0.0.1 or example.com"
+                                       FontSize="13"
+                                       Foreground="#606873"
+                                       IsHitTestVisible="False"
+                                       Margin="13,0,0,0"
+                                       VerticalAlignment="Center"
+                                       Visibility="Visible"/>
+                        </Grid>
 
-                        <!-- Connect button (NOT FLASHI, 36px) -->
+                        <!-- Port with placeholder -->
+                        <TextBlock Text="PORT"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource ThemeTextMuted}"
+                                   Margin="0,0,0,6"/>
+                        <Grid Margin="0,0,0,16">
+                            <TextBox x:Name="PortTextBox"
+                                     Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"
+                                     Height="38"
+                                     Padding="12,10"
+                                     FontSize="13"
+                                     Background="{DynamicResource ThemeCard}"
+                                     Foreground="{DynamicResource ThemeText}"
+                                     BorderBrush="{DynamicResource ThemeCardBorder}"
+                                     BorderThickness="1"
+                                     TextChanged="OnPortTextChanged">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="TextBox">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="4"
+                                                            Padding="{TemplateBinding Padding}">
+                                                        <ScrollViewer x:Name="PART_ContentHost"
+                                                                      VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                            <TextBlock x:Name="PortPlaceholder"
+                                       Text="28016"
+                                       FontSize="13"
+                                       Foreground="#606873"
+                                       IsHitTestVisible="False"
+                                       Margin="13,0,0,0"
+                                       VerticalAlignment="Center"
+                                       Visibility="Visible"/>
+                        </Grid>
+
+                        <!-- Password with placeholder -->
+                        <TextBlock Text="PASSWORD"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource ThemeTextMuted}"
+                                   Margin="0,0,0,6"/>
+                        <Grid Margin="0,0,0,24">
+                            <PasswordBox x:Name="PasswordBox"
+                                         Height="38"
+                                         Padding="12,10"
+                                         FontSize="13"
+                                         Background="{DynamicResource ThemeCard}"
+                                         Foreground="{DynamicResource ThemeText}"
+                                         BorderBrush="{DynamicResource ThemeCardBorder}"
+                                         BorderThickness="1"
+                                         PasswordChanged="OnPasswordChanged">
+                                <PasswordBox.Style>
+                                    <Style TargetType="PasswordBox">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="PasswordBox">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="4"
+                                                            Padding="{TemplateBinding Padding}">
+                                                        <ScrollViewer x:Name="PART_ContentHost"
+                                                                      VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </PasswordBox.Style>
+                            </PasswordBox>
+                            <TextBlock x:Name="PasswordPlaceholder"
+                                       Text="Your RCON password"
+                                       FontSize="13"
+                                       Foreground="#606873"
+                                       IsHitTestVisible="False"
+                                       Margin="13,0,0,0"
+                                       VerticalAlignment="Center"
+                                       Visibility="Visible"/>
+                        </Grid>
+
+                        <!-- Connect button -->
                         <Button Command="{Binding ConnectCommand}"
                                 CommandParameter="{Binding ElementName=PasswordBox}"
-                                Height="36"
-                                FontSize="12"
+                                Height="38"
+                                FontSize="13"
                                 FontWeight="SemiBold"
                                 Background="{DynamicResource ThemeAccent}"
                                 Foreground="White"
@@ -370,7 +379,7 @@
                         <!-- Error -->
                         <TextBlock Text="{Binding ErrorMessage}"
                                    Foreground="{DynamicResource ThemeAccentWarning}"
-                                   FontSize="10"
+                                   FontSize="11"
                                    TextWrapping="Wrap"
                                    HorizontalAlignment="Center"
                                    Margin="0,12,0,0"

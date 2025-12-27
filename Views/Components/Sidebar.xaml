@@ -43,15 +43,16 @@
                     </Style>
                 </Button.Style>
                 <StackPanel Orientation="Horizontal">
-                    <!-- Icon SVG -->
+                    <!-- Better map icon (compass/location) -->
                     <Viewbox Width="20" Height="20" Margin="0,0,12,0">
                         <Canvas Width="24" Height="24">
-                            <Path Data="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" 
+                            <Path Data="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z" 
                                   Fill="{DynamicResource ThemeAccent}"/>
                         </Canvas>
                     </Viewbox>
                     <TextBlock Text="Map" 
-                               FontSize="13"
+                               FontSize="14"
+                               FontWeight="Medium"
                                Foreground="{DynamicResource ThemeText}"
                                VerticalAlignment="Center"/>
                 </StackPanel>
@@ -95,7 +96,8 @@
                         </Canvas>
                     </Viewbox>
                     <TextBlock Text="Stats" 
-                               FontSize="13"
+                               FontSize="14"
+                               FontWeight="Medium"
                                Foreground="{DynamicResource ThemeText}"
                                VerticalAlignment="Center"/>
                 </StackPanel>
@@ -139,7 +141,8 @@
                         </Canvas>
                     </Viewbox>
                     <TextBlock Text="Players" 
-                               FontSize="13"
+                               FontSize="14"
+                               FontWeight="Medium"
                                Foreground="{DynamicResource ThemeText}"
                                VerticalAlignment="Center"/>
                 </StackPanel>
@@ -183,7 +186,8 @@
                         </Canvas>
                     </Viewbox>
                     <TextBlock Text="Console" 
-                               FontSize="13"
+                               FontSize="14"
+                               FontWeight="Medium"
                                Foreground="{DynamicResource ThemeText}"
                                VerticalAlignment="Center"/>
                 </StackPanel>

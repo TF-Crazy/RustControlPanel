@@ -1,5 +1,5 @@
 // ════════════════════════════════════════════════════════════════════
-// LoginWindow.xaml.cs - Login window code-behind
+// LoginWindow.xaml.cs - Login window code-behind with placeholders
 // ════════════════════════════════════════════════════════════════════
 
 using System.Windows;
@@ -15,6 +15,9 @@ namespace RustControlPanel.Views.Windows
         public LoginWindow()
         {
             InitializeComponent();
+            
+            // Initialize placeholders
+            UpdatePlaceholders();
         }
 
         private void OnTitleBarMouseDown(object sender, MouseButtonEventArgs e)
@@ -30,12 +33,46 @@ namespace RustControlPanel.Views.Windows
             Application.Current.Shutdown();
         }
 
+        private void OnHostTextChanged(object sender, TextChangedEventArgs e)
+        {
+            HostPlaceholder.Visibility = string.IsNullOrEmpty(HostTextBox.Text) 
+                ? Visibility.Visible 
+                : Visibility.Collapsed;
+        }
+
+        private void OnPortTextChanged(object sender, TextChangedEventArgs e)
+        {
+            PortPlaceholder.Visibility = string.IsNullOrEmpty(PortTextBox.Text) 
+                ? Visibility.Visible 
+                : Visibility.Collapsed;
+        }
+
         private void OnPasswordChanged(object sender, RoutedEventArgs e)
         {
-            if (DataContext is LoginViewModel vm && sender is PasswordBox pb)
+            if (sender is PasswordBox pb)
             {
-                vm.Password = pb.Password;
+                PasswordPlaceholder.Visibility = string.IsNullOrEmpty(pb.Password) 
+                    ? Visibility.Visible 
+                    : Visibility.Collapsed;
+
+                if (DataContext is LoginViewModel vm)
+                {
+                    vm.Password = pb.Password;
+                }
             }
+        }
+
+        private void UpdatePlaceholders()
+        {
+            HostPlaceholder.Visibility = string.IsNullOrEmpty(HostTextBox.Text) 
+                ? Visibility.Visible 
+                : Visibility.Collapsed;
+            PortPlaceholder.Visibility = string.IsNullOrEmpty(PortTextBox.Text) 
+                ? Visibility.Visible 
+                : Visibility.Collapsed;
+            PasswordPlaceholder.Visibility = string.IsNullOrEmpty(PasswordBox.Password) 
+                ? Visibility.Visible 
+                : Visibility.Collapsed;
         }
 
         private void OnServerDoubleClick(object sender, MouseButtonEventArgs e)

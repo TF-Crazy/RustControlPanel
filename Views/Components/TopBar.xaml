@@ -79,7 +79,7 @@
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Text="ENTITY" FontSize="9" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextMuted}"/>
                             <TextBlock FontSize="12" FontWeight="Medium" Foreground="{DynamicResource ThemeText}">
-                                <Run Text="{Binding EntityTime, StringFormat={}{0:F1}, FallbackValue=0.0}"/><Run Text="ms" FontSize="10" Foreground="{DynamicResource ThemeTextMuted}"/>
+                                <Run Text="{Binding EntityTime, StringFormat={}{0:F0}, FallbackValue=0}"/><Run Text="" FontSize="10" Foreground="{DynamicResource ThemeTextMuted}"/>
                             </TextBlock>
                         </StackPanel>
                     </Border>

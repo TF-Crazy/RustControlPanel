@@ -31,7 +31,15 @@
                 <ResourceDictionary Source="Styles/Theme.xaml"/>
                 
             </ResourceDictionary.MergedDictionaries>
-            <FontFamily x:Key="MainFont">pack://application:,,,/Fonts/#Azonix</FontFamily>
+            <FontFamily x:Key="MainFont">pack://application:,,,/Fonts/#Roboto Condensed Light</FontFamily>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="FontFamily" Value="{StaticResource MainFont}" />
+            </Style>
+
+            <Style TargetType="{x:Type Control}">
+                <Setter Property="FontFamily" Value="{StaticResource MainFont}" />
+            </Style>
+
             <!-- Converters -->
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" 
                                             xmlns:converters="clr-namespace:RustControlPanel.Converters"/>

@@ -70,7 +70,6 @@
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
     <Style x:Key="MonospaceText" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Consolas, Courier New"/>
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
     </Style>

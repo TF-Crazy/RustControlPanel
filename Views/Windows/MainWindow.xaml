@@ -223,7 +223,6 @@
                          IsReadOnly="True"
                          Background="Transparent"
                          BorderThickness="0"
-                         FontFamily="Consolas, Courier New"
                          FontSize="11"
                          Foreground="{DynamicResource ThemeTextSecondary}"/>
                         </ScrollViewer>

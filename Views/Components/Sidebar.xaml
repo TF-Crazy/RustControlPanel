@@ -1,0 +1,194 @@
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- Sidebar.xaml - Vertical navigation with icons + text                -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+
+<UserControl x:Class="RustControlPanel.Views.Components.Sidebar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="180">
+
+    <Border Background="{DynamicResource ThemeTitleBar}"
+            BorderBrush="{DynamicResource ThemeCardBorder}"
+            BorderThickness="0,0,1,0">
+        <StackPanel Margin="0,12">
+            
+            <!-- Map -->
+            <Button x:Name="BtnMap"
+                    Click="OnMapClick"
+                    Height="44"
+                    Margin="8,0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    HorizontalContentAlignment="Left"
+                    Padding="12,0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            CornerRadius="6"
+                                            Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#20FFFFFF"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+                <StackPanel Orientation="Horizontal">
+                    <!-- Icon SVG -->
+                    <Viewbox Width="20" Height="20" Margin="0,0,12,0">
+                        <Canvas Width="24" Height="24">
+                            <Path Data="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" 
+                                  Fill="{DynamicResource ThemeAccent}"/>
+                        </Canvas>
+                    </Viewbox>
+                    <TextBlock Text="Map" 
+                               FontSize="13"
+                               Foreground="{DynamicResource ThemeText}"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            
+            <!-- Stats -->
+            <Button x:Name="BtnStats"
+                    Click="OnStatsClick"
+                    Height="44"
+                    Margin="8,4,8,0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    HorizontalContentAlignment="Left"
+                    Padding="12,0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            CornerRadius="6"
+                                            Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#20FFFFFF"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+                <StackPanel Orientation="Horizontal">
+                    <Viewbox Width="20" Height="20" Margin="0,0,12,0">
+                        <Canvas Width="24" Height="24">
+                            <Path Data="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z" 
+                                  Fill="{DynamicResource ThemeAccent}"/>
+                        </Canvas>
+                    </Viewbox>
+                    <TextBlock Text="Stats" 
+                               FontSize="13"
+                               Foreground="{DynamicResource ThemeText}"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            
+            <!-- Players -->
+            <Button x:Name="BtnPlayers"
+                    Click="OnPlayersClick"
+                    Height="44"
+                    Margin="8,4,8,0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    HorizontalContentAlignment="Left"
+                    Padding="12,0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            CornerRadius="6"
+                                            Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#20FFFFFF"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+                <StackPanel Orientation="Horizontal">
+                    <Viewbox Width="20" Height="20" Margin="0,0,12,0">
+                        <Canvas Width="24" Height="24">
+                            <Path Data="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" 
+                                  Fill="{DynamicResource ThemeAccent}"/>
+                        </Canvas>
+                    </Viewbox>
+                    <TextBlock Text="Players" 
+                               FontSize="13"
+                               Foreground="{DynamicResource ThemeText}"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            
+            <!-- Console -->
+            <Button x:Name="BtnConsole"
+                    Click="OnConsoleClick"
+                    Height="44"
+                    Margin="8,4,8,0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    HorizontalContentAlignment="Left"
+                    Padding="12,0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            CornerRadius="6"
+                                            Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#20FFFFFF"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+                <StackPanel Orientation="Horizontal">
+                    <Viewbox Width="20" Height="20" Margin="0,0,12,0">
+                        <Canvas Width="24" Height="24">
+                            <Path Data="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm-7 14H4v-4h9v4zm0-5H4V9h9v4zm0-5H4V4h9v4zm7 10h-5V4h5v14z" 
+                                  Fill="{DynamicResource ThemeAccent}"/>
+                        </Canvas>
+                    </Viewbox>
+                    <TextBlock Text="Console" 
+                               FontSize="13"
+                               Foreground="{DynamicResource ThemeText}"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Border>
+    
+</UserControl>

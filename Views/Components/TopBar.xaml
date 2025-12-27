@@ -1,0 +1,160 @@
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- TopBar.xaml - Compact top bar with fixed sizes & cyan glow          -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+
+<UserControl x:Class="RustControlPanel.Views.Components.TopBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:RustControlPanel.Views.Controls"
+             Height="48">
+
+    <Border Background="{DynamicResource ThemeTopBar}"
+            BorderBrush="{DynamicResource ThemeCardBorder}"
+            BorderThickness="0,0,0,1">
+        <Grid Margin="12,6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Stats (FIXED SIZES) -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                
+                <!-- Players (FIXED 80px) -->
+                <Border Background="{DynamicResource ThemeCard}"
+                        BorderBrush="{DynamicResource ThemeCardBorder}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Width="80"
+                        Height="36"
+                        Padding="8,0"
+                        Margin="0,0,8,0"
+                        Effect="{DynamicResource GlassGlow}">
+                    <Grid>
+                        <TextBlock Text="👥" 
+                                   FontSize="14" 
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"/>
+                        <StackPanel HorizontalAlignment="Right" 
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <TextBlock Text="{Binding PlayerCount, FallbackValue=0}" 
+                                       Foreground="{DynamicResource ThemeAccent}" 
+                                       FontWeight="SemiBold"
+                                       FontSize="11"/>
+                            <TextBlock Text="/" 
+                                       Foreground="{DynamicResource ThemeTextMuted}"
+                                       FontSize="11"
+                                       Margin="2,0"/>
+                            <TextBlock Text="{Binding MaxPlayers, FallbackValue=50}" 
+                                       Foreground="{DynamicResource ThemeTextSecondary}"
+                                       FontSize="11"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- FPS (FIXED 70px, ALIGNED) -->
+                <Border Background="{DynamicResource ThemeCard}"
+                        BorderBrush="{DynamicResource ThemeCardBorder}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Width="70"
+                        Height="36"
+                        Padding="8,0"
+                        Margin="0,0,8,0"
+                        Effect="{DynamicResource GlassGlow}">
+                    <Grid>
+                        <TextBlock Text="⚡" 
+                                   FontSize="14" 
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"/>
+                        <TextBlock Text="{Binding ServerFps, StringFormat={}{0:F0}, FallbackValue=60}"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource ThemeAccentSuccess}"/>
+                    </Grid>
+                </Border>
+
+                <!-- FPS Chart (FIXED 280x36) -->
+                <Border Background="{DynamicResource ThemeCard}"
+                        BorderBrush="{DynamicResource ThemeCardBorder}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Width="280"
+                        Height="36"
+                        Effect="{DynamicResource GlassGlow}">
+                    <controls:FpsChart Margin="4"/>
+                </Border>
+            </StackPanel>
+
+            <!-- Actions (with smooth hover) -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Content="🐛"
+                        Command="{Binding OpenDebugCommand}"
+                        Width="32" Height="32"
+                        FontSize="14"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Foreground="{DynamicResource ThemeTextMuted}"
+                        Cursor="Hand"
+                        ToolTip="Debug"
+                        Margin="0,0,6,0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="4">
+                                            <ContentPresenter HorizontalAlignment="Center" 
+                                                              VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#20FFFFFF"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                
+                <Button Content="🔌"
+                        Command="{Binding DisconnectCommand}"
+                        Width="32" Height="32"
+                        FontSize="14"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Foreground="{DynamicResource ThemeTextMuted}"
+                        Cursor="Hand"
+                        ToolTip="Disconnect">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="4">
+                                            <ContentPresenter HorizontalAlignment="Center" 
+                                                              VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#20FFFFFF"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+    
+</UserControl>

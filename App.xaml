@@ -7,7 +7,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="Views/Windows/LoginWindow.xaml">
     
-    <Application.Resources>
+    <Application.Resources>        
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 
@@ -31,7 +31,7 @@
                 <ResourceDictionary Source="Styles/Theme.xaml"/>
                 
             </ResourceDictionary.MergedDictionaries>
-            
+            <FontFamily x:Key="MainFont">pack://application:,,,/Fonts/#Azonix</FontFamily>
             <!-- Converters -->
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" 
                                             xmlns:converters="clr-namespace:RustControlPanel.Converters"/>
@@ -39,7 +39,6 @@
                                                  xmlns:converters="clr-namespace:RustControlPanel.Converters"/>
             <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" 
                                                         xmlns:converters="clr-namespace:RustControlPanel.Converters"/>
-        </ResourceDictionary>
-    </Application.Resources>
-    
+        </ResourceDictionary>      
+    </Application.Resources>    
 </Application>

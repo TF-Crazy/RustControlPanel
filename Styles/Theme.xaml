@@ -1,5 +1,5 @@
 <!-- ════════════════════════════════════════════════════════════════════ -->
-<!-- Theme.xaml - Compact Cyan Theme (Tailles fixes)                     -->
+<!-- Theme.xaml - Compact Cyan Theme (Final)                             -->
 <!-- ════════════════════════════════════════════════════════════════════ -->
 
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -16,6 +16,7 @@
     <Color x:Key="CyanDark">#00B8D4</Color>
     <Color x:Key="Green">#10B981</Color>
     <Color x:Key="Orange">#FF6B35</Color>
+    <Color x:Key="Red">#EF4444</Color>
     
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!-- BACKGROUNDS                                                        -->
@@ -45,6 +46,12 @@
         <GradientStop Color="#212830" Offset="1"/>
     </LinearGradientBrush>
     
+    <!-- Login sidebar (darker) -->
+    <LinearGradientBrush x:Key="ThemeSidebarDark" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#0A0F14" Offset="0"/>
+        <GradientStop Color="#0D1117" Offset="1"/>
+    </LinearGradientBrush>
+    
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!-- BORDERS                                                            -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -59,6 +66,7 @@
     <SolidColorBrush x:Key="ThemeAccent" Color="{StaticResource Cyan}"/>
     <SolidColorBrush x:Key="ThemeAccentSuccess" Color="{StaticResource Green}"/>
     <SolidColorBrush x:Key="ThemeAccentWarning" Color="{StaticResource Orange}"/>
+    <SolidColorBrush x:Key="ThemeAccentDanger" Color="{StaticResource Red}"/>
     
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!-- TEXT                                                               -->
@@ -69,18 +77,18 @@
     <SolidColorBrush x:Key="ThemeTextMuted" Color="#7D8590"/>
     
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!-- EFFECTS (shadows pour effet incrusté)                              -->
+    <!-- EFFECTS                                                            -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
-    <!-- Outer shadow (dark, below) -->
+    <!-- Outer shadow -->
     <DropShadowEffect x:Key="CardShadowOuter" 
                       Color="#000000" 
-                      BlurRadius="8" 
-                      ShadowDepth="2" 
-                      Opacity="0.6"
+                      BlurRadius="12" 
+                      ShadowDepth="3" 
+                      Opacity="0.5"
                       Direction="315"/>
     
-    <!-- Inner shadow (for inset effect) -->
+    <!-- Inner shadow (for inset) -->
     <DropShadowEffect x:Key="CardShadowInner" 
                       Color="#000000" 
                       BlurRadius="4" 
@@ -88,7 +96,7 @@
                       Opacity="0.3"
                       Direction="135"/>
     
-    <!-- Cyan glow -->
+    <!-- Cyan glow (like FPS chart) -->
     <DropShadowEffect x:Key="GlassGlow" 
                       Color="{StaticResource Cyan}" 
                       BlurRadius="16" 
@@ -101,5 +109,12 @@
                       BlurRadius="12" 
                       ShadowDepth="0" 
                       Opacity="0.5"/>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- ANIMATIONS                                                         -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <Duration x:Key="FastDuration">0:0:0.15</Duration>
+    <Duration x:Key="MediumDuration">0:0:0.25</Duration>
 
 </ResourceDictionary>

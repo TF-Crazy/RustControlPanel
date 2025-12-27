@@ -274,7 +274,8 @@ namespace RustControlPanel.Views.Windows
         private bool MatchesFilter(LogEntry entry)
         {
             if (_currentFilter == "All") return true;
-            return entry.Level.Contains(_currentFilter.ToUpper());
+            // ✅ FIX: Exact comparison instead of Contains
+            return entry.Level.Equals(_currentFilter.ToUpper(), StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>

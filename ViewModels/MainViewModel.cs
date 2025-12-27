@@ -2,12 +2,13 @@
 // MainViewModel.cs - ViewModel for MainWindow
 // ════════════════════════════════════════════════════════════════════
 
-using System;
-using System.Windows;
-using System.Windows.Input;
 using RustControlPanel.Core.Utils;
 using RustControlPanel.Services;
 using RustControlPanel.Views.Windows;
+using System;
+using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 
 namespace RustControlPanel.ViewModels
 {
@@ -240,6 +241,36 @@ namespace RustControlPanel.ViewModels
             }
 
             Logger.Instance.Debug("MainViewModel created");
+
+            // Subscribe to logger events to populate DebugLog
+            Logger.Instance.LogEntryAdded += (sender, entry) =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var timestamp = entry.Timestamp.ToString("HH:mm:ss.fff");
+                    var level = entry.Level.ToString().ToUpper().PadRight(7);
+                    var newLine = $"[{timestamp}] [{level}] {entry.Message}";
+
+                    if (!string.IsNullOrEmpty(DebugLog))
+                    {
+                        DebugLog += Environment.NewLine + newLine;
+                    }
+                    else
+                    {
+                        DebugLog = newLine;
+                    }
+
+                    // Limit to last 500 lines to avoid memory issues
+                    var lines = DebugLog.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                    if (lines.Length > 500)
+                    {
+                        DebugLog = string.Join(Environment.NewLine, lines.Skip(lines.Length - 500));
+                    }
+                });
+            };
+
+            // Initial test log
+            Logger.Instance.Info("Debug panel initialized and ready");
         }
 
         #endregion

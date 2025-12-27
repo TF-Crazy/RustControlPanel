@@ -15,7 +15,7 @@ namespace RustControlPanel.Views.Windows
         public LoginWindow()
         {
             InitializeComponent();
-            
+
             // Initialize placeholders
             UpdatePlaceholders();
         }
@@ -35,25 +35,34 @@ namespace RustControlPanel.Views.Windows
 
         private void OnHostTextChanged(object sender, TextChangedEventArgs e)
         {
-            HostPlaceholder.Visibility = string.IsNullOrEmpty(HostTextBox.Text) 
-                ? Visibility.Visible 
-                : Visibility.Collapsed;
+            if (HostPlaceholder != null)
+            {
+                HostPlaceholder.Visibility = string.IsNullOrEmpty(HostTextBox.Text)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
         }
 
         private void OnPortTextChanged(object sender, TextChangedEventArgs e)
         {
-            PortPlaceholder.Visibility = string.IsNullOrEmpty(PortTextBox.Text) 
-                ? Visibility.Visible 
-                : Visibility.Collapsed;
+            if (PortPlaceholder != null)
+            {
+                PortPlaceholder.Visibility = string.IsNullOrEmpty(PortTextBox.Text)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
         }
 
         private void OnPasswordChanged(object sender, RoutedEventArgs e)
         {
             if (sender is PasswordBox pb)
             {
-                PasswordPlaceholder.Visibility = string.IsNullOrEmpty(pb.Password) 
-                    ? Visibility.Visible 
-                    : Visibility.Collapsed;
+                if (PasswordPlaceholder != null)
+                {
+                    PasswordPlaceholder.Visibility = string.IsNullOrEmpty(pb.Password)
+                        ? Visibility.Visible
+                        : Visibility.Collapsed;
+                }
 
                 if (DataContext is LoginViewModel vm)
                 {
@@ -64,15 +73,26 @@ namespace RustControlPanel.Views.Windows
 
         private void UpdatePlaceholders()
         {
-            HostPlaceholder.Visibility = string.IsNullOrEmpty(HostTextBox.Text) 
-                ? Visibility.Visible 
-                : Visibility.Collapsed;
-            PortPlaceholder.Visibility = string.IsNullOrEmpty(PortTextBox.Text) 
-                ? Visibility.Visible 
-                : Visibility.Collapsed;
-            PasswordPlaceholder.Visibility = string.IsNullOrEmpty(PasswordBox.Password) 
-                ? Visibility.Visible 
-                : Visibility.Collapsed;
+            if (HostPlaceholder != null)
+            {
+                HostPlaceholder.Visibility = string.IsNullOrEmpty(HostTextBox.Text)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
+
+            if (PortPlaceholder != null)
+            {
+                PortPlaceholder.Visibility = string.IsNullOrEmpty(PortTextBox.Text)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
+
+            if (PasswordPlaceholder != null && PasswordBox != null)
+            {
+                PasswordPlaceholder.Visibility = string.IsNullOrEmpty(PasswordBox.Password)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
         }
 
         private void OnServerDoubleClick(object sender, MouseButtonEventArgs e)

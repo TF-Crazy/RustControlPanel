@@ -5,6 +5,7 @@
 using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace RustControlPanel.Views.Windows
 {
@@ -88,10 +89,11 @@ namespace RustControlPanel.Views.Windows
             PageContent.Content = new System.Windows.Controls.TextBlock
             {
                 Text = "🗺️ Map Page",
-                Style = (Style)FindResource("Heading2"),
+                FontSize = 20,
+                FontWeight = FontWeights.SemiBold,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = (System.Windows.Media.Brush)FindResource("ThemeTextMuted")
+                Foreground = new SolidColorBrush(Color.FromRgb(125, 133, 144))
             };
         }
 
@@ -100,10 +102,11 @@ namespace RustControlPanel.Views.Windows
             PageContent.Content = new System.Windows.Controls.TextBlock
             {
                 Text = "📊 Stats Page",
-                Style = (Style)FindResource("Heading2"),
+                FontSize = 20,
+                FontWeight = FontWeights.SemiBold,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = (System.Windows.Media.Brush)FindResource("ThemeTextMuted")
+                Foreground = new SolidColorBrush(Color.FromRgb(125, 133, 144))
             };
         }
 
@@ -112,10 +115,11 @@ namespace RustControlPanel.Views.Windows
             PageContent.Content = new System.Windows.Controls.TextBlock
             {
                 Text = "👥 Players Page",
-                Style = (Style)FindResource("Heading2"),
+                FontSize = 20,
+                FontWeight = FontWeights.SemiBold,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = (System.Windows.Media.Brush)FindResource("ThemeTextMuted")
+                Foreground = new SolidColorBrush(Color.FromRgb(125, 133, 144))
             };
         }
 
@@ -124,10 +128,11 @@ namespace RustControlPanel.Views.Windows
             PageContent.Content = new System.Windows.Controls.TextBlock
             {
                 Text = "💻 Console Page",
-                Style = (Style)FindResource("Heading2"),
+                FontSize = 20,
+                FontWeight = FontWeights.SemiBold,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = (System.Windows.Media.Brush)FindResource("ThemeTextMuted")
+                Foreground = new SolidColorBrush(Color.FromRgb(125, 133, 144))
             };
         }
 

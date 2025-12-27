@@ -132,6 +132,7 @@ namespace RustControlPanel.ViewModels
             set => SetProperty(ref _uptime, value);
         }
 
+        // Debug panel
         public bool ShowDebugPanel
         {
             get => _showDebugPanel;
@@ -309,7 +310,15 @@ namespace RustControlPanel.ViewModels
 
         private async System.Threading.Tasks.Task ExecuteReconnectAsync(object? parameter)
         {
-            await ConnectionService.Instance.ReconnectAsync();
+            // Disconnect then reconnect with same config
+            var currentConfig = ConnectionService.Instance.CurrentConfig;
+            
+            if (currentConfig != null)
+            {
+                await ConnectionService.Instance.DisconnectAsync();
+                await System.Threading.Tasks.Task.Delay(1000); // Wait 1 second
+                await ConnectionService.Instance.ConnectAsync(currentConfig);
+            }
         }
 
         #endregion

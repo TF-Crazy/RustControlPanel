@@ -1,32 +1,42 @@
 // ════════════════════════════════════════════════════════════════════
-// MainWindow.xaml.cs - Main window code-behind (FIXED)
+// MainWindow.xaml.cs - Main window with debug panel
 // ════════════════════════════════════════════════════════════════════
 
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using RustControlPanel.ViewModels;
 
 namespace RustControlPanel.Views.Windows
 {
-    /// <summary>
-    /// Main application window
-    /// </summary>
     public partial class MainWindow : Window
     {
-        #region Constructor
+        private bool _isDebugVisible = false;
+        private const double DebugPanelHeight = 200;
 
         public MainWindow()
         {
             InitializeComponent();
             
-            // Load default page
-            NavigateToStats();
+            // Subscribe to ToggleDebugCommand
+            if (DataContext is MainViewModel vm)
+            {
+                // Le command existe déjà dans le ViewModel !
+                // On écoute juste le changement de ShowDebugPanel
+                vm.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(vm.ShowDebugPanel))
+                    {
+                        ToggleDebugPanel();
+                    }
+                };
+            }
         }
 
-        #endregion
-
-        #region TitleBar
+        #region Window Controls
 
         private void OnTitleBarMouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -38,19 +48,19 @@ namespace RustControlPanel.Views.Windows
 
         private void OnMinimizeClick(object sender, RoutedEventArgs e)
         {
-            this.WindowState = WindowState.Minimized;
+            WindowState = WindowState.Minimized;
         }
 
         private void OnMaximizeClick(object sender, RoutedEventArgs e)
         {
-            if (this.WindowState == WindowState.Maximized)
+            if (WindowState == WindowState.Maximized)
             {
-                this.WindowState = WindowState.Normal;
+                WindowState = WindowState.Normal;
                 MaximizeButton.Content = "☐";
             }
             else
             {
-                this.WindowState = WindowState.Maximized;
+                WindowState = WindowState.Maximized;
                 MaximizeButton.Content = "❐";
             }
         }
@@ -64,22 +74,22 @@ namespace RustControlPanel.Views.Windows
 
         #region Navigation
 
-        private void OnNavigateToMap(object? sender, EventArgs e)
+        private void OnMapClicked(object sender, EventArgs e)
         {
             NavigateToMap();
         }
 
-        private void OnNavigateToStats(object? sender, EventArgs e)
+        private void OnStatsClicked(object sender, EventArgs e)
         {
             NavigateToStats();
         }
 
-        private void OnNavigateToPlayers(object? sender, EventArgs e)
+        private void OnPlayersClicked(object sender, EventArgs e)
         {
             NavigateToPlayers();
         }
 
-        private void OnNavigateToConsole(object? sender, EventArgs e)
+        private void OnConsoleClicked(object sender, EventArgs e)
         {
             NavigateToConsole();
         }
@@ -134,6 +144,46 @@ namespace RustControlPanel.Views.Windows
                 VerticalAlignment = VerticalAlignment.Center,
                 Foreground = new SolidColorBrush(Color.FromRgb(125, 133, 144))
             };
+        }
+
+        #endregion
+
+        #region Debug Panel
+
+        private void ToggleDebugPanel()
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                _isDebugVisible = vm.ShowDebugPanel;
+                AnimateDebugPanel(_isDebugVisible ? DebugPanelHeight : 0);
+            }
+        }
+
+        private void AnimateDebugPanel(double targetHeight)
+        {
+            var animation = new DoubleAnimation
+            {
+                To = targetHeight,
+                Duration = TimeSpan.FromMilliseconds(300),
+                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
+            };
+            DebugPanel.BeginAnimation(HeightProperty, animation);
+        }
+
+        private void OnClearDebugClick(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                vm.ClearDebugCommand?.Execute(null);
+            }
+        }
+
+        private void OnCloseDebugClick(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                vm.ShowDebugPanel = false;
+            }
         }
 
         #endregion

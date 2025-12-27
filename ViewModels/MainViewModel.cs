@@ -26,6 +26,14 @@ namespace RustControlPanel.ViewModels
         private int _playerCount = 0;
         private int _maxPlayers = 0;
         private float _serverFps = 0f;
+        private int _queueCount = 0;
+        private int _joiningCount = 0;
+        private double _entityTime = 0;
+        private string _gameTime = "00:00";
+        private string _uptime = "0d 0h 0m";
+        private bool _showDebugPanel = false;
+        private string _debugLog = "";
+        private int _reconnectCountdown = 0;
 
         #endregion
 
@@ -94,6 +102,54 @@ namespace RustControlPanel.ViewModels
             set => SetProperty(ref _serverFps, value);
         }
 
+        public int QueueCount
+        {
+            get => _queueCount;
+            set => SetProperty(ref _queueCount, value);
+        }
+
+        public int JoiningCount
+        {
+            get => _joiningCount;
+            set => SetProperty(ref _joiningCount, value);
+        }
+
+        public double EntityTime
+        {
+            get => _entityTime;
+            set => SetProperty(ref _entityTime, value);
+        }
+
+        public string GameTime
+        {
+            get => _gameTime;
+            set => SetProperty(ref _gameTime, value);
+        }
+
+        public string Uptime
+        {
+            get => _uptime;
+            set => SetProperty(ref _uptime, value);
+        }
+
+        public bool ShowDebugPanel
+        {
+            get => _showDebugPanel;
+            set => SetProperty(ref _showDebugPanel, value);
+        }
+
+        public string DebugLog
+        {
+            get => _debugLog;
+            set => SetProperty(ref _debugLog, value);
+        }
+
+        public int ReconnectCountdown
+        {
+            get => _reconnectCountdown;
+            set => SetProperty(ref _reconnectCountdown, value);
+        }
+
         #endregion
 
         #region Commands
@@ -128,6 +184,21 @@ namespace RustControlPanel.ViewModels
         /// </summary>
         public ICommand OpenDebugCommand { get; }
 
+        /// <summary>
+        /// Command to toggle debug panel.
+        /// </summary>
+        public ICommand ToggleDebugCommand { get; }
+
+        /// <summary>
+        /// Command to clear debug log.
+        /// </summary>
+        public ICommand ClearDebugCommand { get; }
+
+        /// <summary>
+        /// Command to reconnect to server.
+        /// </summary>
+        public ICommand ReconnectCommand { get; }
+
         #endregion
 
         #region Constructor
@@ -144,6 +215,9 @@ namespace RustControlPanel.ViewModels
             MaximizeCommand = new RelayCommand(ExecuteMaximize);
             CloseCommand = new RelayCommand(ExecuteClose);
             OpenDebugCommand = new RelayCommand(ExecuteOpenDebug);
+            ToggleDebugCommand = new RelayCommand(ExecuteToggleDebug);
+            ClearDebugCommand = new RelayCommand(ExecuteClearDebug);
+            ReconnectCommand = new AsyncRelayCommand(ExecuteReconnectAsync);
 
             // Subscribe to connection events
             ConnectionService.Instance.ConnectionStateChanged += OnConnectionStateChanged;
@@ -219,8 +293,23 @@ namespace RustControlPanel.ViewModels
 
         private void ExecuteOpenDebug(object? parameter)
         {
-            var debugWindow = new DebugWindow();
-            debugWindow.Show();
+            // Toggle debug panel instead of opening window
+            ShowDebugPanel = !ShowDebugPanel;
+        }
+
+        private void ExecuteToggleDebug(object? parameter)
+        {
+            ShowDebugPanel = !ShowDebugPanel;
+        }
+
+        private void ExecuteClearDebug(object? parameter)
+        {
+            DebugLog = "";
+        }
+
+        private async System.Threading.Tasks.Task ExecuteReconnectAsync(object? parameter)
+        {
+            await ConnectionService.Instance.ReconnectAsync();
         }
 
         #endregion

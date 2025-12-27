@@ -47,6 +47,10 @@
                                                  xmlns:converters="clr-namespace:RustControlPanel.Converters"/>
             <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" 
                                                         xmlns:converters="clr-namespace:RustControlPanel.Converters"/>
+            <converters:HealthToWidthConverter x:Key="HealthToWidthConverter" 
+                                              xmlns:converters="clr-namespace:RustControlPanel.Converters"/>
+            <converters:HealthToColorConverter x:Key="HealthToColorConverter" 
+                                              xmlns:converters="clr-namespace:RustControlPanel.Converters"/>
         </ResourceDictionary>      
     </Application.Resources>    
 </Application>

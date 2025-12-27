@@ -171,6 +171,25 @@
     </Style>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- ROUNDED BUTTON                                                  -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <Style x:Key="RoundedButtonStyle" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!-- ICON BUTTON (Small, square)                                      -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     

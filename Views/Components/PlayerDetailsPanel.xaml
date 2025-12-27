@@ -1,0 +1,224 @@
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- PlayerDetailsPanel.xaml - Selected player details                   -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+
+<UserControl x:Class="RustControlPanel.Views.Components.PlayerDetailsPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Border Background="{DynamicResource ThemeCard}"
+            BorderBrush="{DynamicResource ThemeCardBorder}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Effect="{DynamicResource CardShadowInner}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>  <!-- Header -->
+                <RowDefinition Height="*"/>     <!-- Content -->
+            </Grid.RowDefinitions>
+
+            <!-- ══════ HEADER ══════ -->
+            <Border Grid.Row="0"
+                    Background="{DynamicResource ThemeTitleBar}"
+                    BorderBrush="{DynamicResource ThemeCardBorder}"
+                    BorderThickness="0,0,0,1"
+                    CornerRadius="8,8,0,0"
+                    Padding="12,10">
+                <TextBlock Text="Détails Joueur" 
+                           FontWeight="SemiBold" 
+                           FontSize="14"
+                           Foreground="{DynamicResource ThemeText}"/>
+            </Border>
+
+            <!-- ══════ CONTENT ══════ -->
+            <ScrollViewer Grid.Row="1" 
+                          VerticalScrollBarVisibility="Auto"
+                          Padding="12">
+                <StackPanel>
+                    <!-- Player selected -->
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedPlayer}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+
+                        <!-- Player Name -->
+                        <TextBlock Text="{Binding SelectedPlayer.DisplayName}" 
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource ThemeText}"
+                                   Margin="0,0,0,12"/>
+
+                        <!-- Stats Grid -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Status -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" 
+                                       Text="Status:" 
+                                       FontSize="11"
+                                       Foreground="{DynamicResource ThemeTextMuted}"
+                                       Margin="0,0,8,6"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" 
+                                       FontSize="11"
+                                       Foreground="{DynamicResource ThemeText}"
+                                       Margin="0,0,0,6">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="🟢 En ligne"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SelectedPlayer.IsOnline}" Value="False">
+                                                <Setter Property="Text" Value="🟠 Dormeur"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding SelectedPlayer.IsDead}" Value="True">
+                                                <Setter Property="Text" Value="💀 Mort"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <!-- Health -->
+                            <TextBlock Grid.Row="1" Grid.Column="0" 
+                                       Text="Santé:" 
+                                       FontSize="11"
+                                       Foreground="{DynamicResource ThemeTextMuted}"
+                                       Margin="0,0,8,6"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" 
+                                       Text="{Binding SelectedPlayer.Health, StringFormat='{}{0:F0}/100'}" 
+                                       FontSize="11"
+                                       Foreground="{DynamicResource ThemeText}"
+                                       Margin="0,0,0,6"/>
+
+                            <!-- Ping -->
+                            <TextBlock Grid.Row="2" Grid.Column="0" 
+                                       Text="Ping:" 
+                                       FontSize="11"
+                                       Foreground="{DynamicResource ThemeTextMuted}"
+                                       Margin="0,0,8,6"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" 
+                                       Text="{Binding SelectedPlayer.Ping, StringFormat='{}{0}ms'}" 
+                                       FontSize="11"
+                                       Foreground="{DynamicResource ThemeText}"
+                                       Margin="0,0,0,6"/>
+
+                            <!-- Position -->
+                            <TextBlock Grid.Row="3" Grid.Column="0" 
+                                       Text="Position:" 
+                                       FontSize="11"
+                                       Foreground="{DynamicResource ThemeTextMuted}"
+                                       Margin="0,0,8,6"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" 
+                                       Text="{Binding SelectedPlayer.Position}" 
+                                       FontSize="11"
+                                       Foreground="{DynamicResource ThemeText}"
+                                       Margin="0,0,0,6"/>
+
+                            <!-- Team -->
+                            <TextBlock Grid.Row="4" Grid.Column="0" 
+                                       Text="Team:" 
+                                       FontSize="11"
+                                       Foreground="{DynamicResource ThemeTextMuted}"
+                                       Margin="0,0,8,6"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" 
+                                       FontSize="11"
+                                       Foreground="{DynamicResource ThemeText}"
+                                       Margin="0,0,0,6">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="Aucune team"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SelectedPlayer.HasTeam}" Value="True">
+                                                <Setter Property="Text" Value="👥 En team"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+
+                        <!-- Actions -->
+                        <StackPanel Margin="0,16,0,0">
+                            <TextBlock Text="Actions" 
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource ThemeText}"
+                                       Margin="0,0,0,8"/>
+                            
+                            <Button Content="Téléporter vers"
+                                    Padding="10,6"
+                                    Margin="0,0,0,4"
+                                    Background="{DynamicResource ThemeAccent}"
+                                    Foreground="White"
+                                    BorderThickness="0"
+                                    Style="{StaticResource RoundedButtonStyle}"
+                                    FontSize="11"
+                                    Cursor="Hand"/>
+                            
+                            <Button Content="Kick"
+                                    Padding="10,6"
+                                    Margin="0,0,0,4"
+                                    Background="{DynamicResource ThemeAccentWarning}"
+                                    Foreground="White"
+                                    BorderThickness="0"
+                                    Style="{StaticResource RoundedButtonStyle}"
+                                    FontSize="11"
+                                    Cursor="Hand"/>
+                            
+                            <Button Content="Ban"
+                                    Padding="10,6"
+                                    Background="{DynamicResource ThemeAccentDanger}"
+                                    Foreground="White"
+                                    BorderThickness="0"
+                                    Style="{StaticResource RoundedButtonStyle}"
+                                    FontSize="11"
+                                    Cursor="Hand"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- No player selected -->
+                    <StackPanel HorizontalAlignment="Center" 
+                                VerticalAlignment="Center"
+                                Margin="0,40,0,0">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedPlayer}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+
+                        <TextBlock Text="👤" 
+                                   FontSize="32"
+                                   HorizontalAlignment="Center"
+                                   Foreground="{DynamicResource ThemeTextMuted}"
+                                   Margin="0,0,0,8"/>
+                        <TextBlock Text="Sélectionnez un joueur" 
+                                   FontSize="12"
+                                   HorizontalAlignment="Center"
+                                   Foreground="{DynamicResource ThemeTextMuted}"/>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>

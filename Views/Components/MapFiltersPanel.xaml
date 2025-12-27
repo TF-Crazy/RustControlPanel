@@ -1,0 +1,50 @@
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- MapFiltersPanel.xaml - Map display filters                          -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+
+<UserControl x:Class="RustControlPanel.Views.Components.MapFiltersPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Border Background="{DynamicResource ThemeCard}"
+            BorderBrush="{DynamicResource ThemeCardBorder}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Padding="10"
+            Effect="{DynamicResource CardShadowInner}">
+        <StackPanel>
+            <!-- Title -->
+            <TextBlock Text="Filtres" 
+                       FontSize="11"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource ThemeText}"
+                       Margin="0,0,0,8"/>
+
+            <!-- Show Grid -->
+            <CheckBox IsChecked="{Binding ShowGrid}"
+                      Foreground="{DynamicResource ThemeText}"
+                      FontSize="11"
+                      Margin="0,0,0,4"
+                      Cursor="Hand">
+                <TextBlock Text="Grille" Foreground="{DynamicResource ThemeText}"/>
+            </CheckBox>
+
+            <!-- Show Monuments -->
+            <CheckBox IsChecked="{Binding ShowMonuments}"
+                      Foreground="{DynamicResource ThemeText}"
+                      FontSize="11"
+                      Margin="0,0,0,4"
+                      Cursor="Hand">
+                <TextBlock Text="Monuments" Foreground="{DynamicResource ThemeText}"/>
+            </CheckBox>
+
+            <!-- Show Monument Labels -->
+            <CheckBox IsChecked="{Binding ShowMonumentLabels}"
+                      Foreground="{DynamicResource ThemeText}"
+                      FontSize="11"
+                      Cursor="Hand">
+                <TextBlock Text="Labels monuments" Foreground="{DynamicResource ThemeText}"/>
+            </CheckBox>
+        </StackPanel>
+    </Border>
+</UserControl>

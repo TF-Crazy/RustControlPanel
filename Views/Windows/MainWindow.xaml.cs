@@ -114,15 +114,15 @@ namespace RustControlPanel.Views.Windows
 
         private void NavigateToMap()
         {
-            PageContent.Content = new System.Windows.Controls.TextBlock
+            var mapPage = new Pages.MapPage();
+            var mapViewModel = new MapViewModel
             {
-                Text = "🗺️ Map Page",
-                FontSize = 20,
-                FontWeight = FontWeights.SemiBold,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Foreground = new SolidColorBrush(Color.FromRgb(125, 133, 144))
+                MapInfo = Services.MapService.Instance.MapInfo,
+                Entities = Services.MapService.Instance.Entities,
+                Players = Services.MapService.Instance.Players
             };
+            mapPage.DataContext = mapViewModel;
+            PageContent.Content = mapPage;
         }
 
         private void NavigateToStats()

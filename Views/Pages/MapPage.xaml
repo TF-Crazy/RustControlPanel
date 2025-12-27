@@ -1,0 +1,73 @@
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- MapPage.xaml - Map page with 3-column layout                        -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+
+<UserControl x:Class="RustControlPanel.Views.Pages.MapPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:RustControlPanel.Views.Controls"
+             xmlns:components="clr-namespace:RustControlPanel.Views.Components">
+
+    <Grid Margin="12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240"/>     <!-- Liste joueurs -->
+            <ColumnDefinition Width="*"/>       <!-- Map -->
+            <ColumnDefinition Width="340"/>     <!-- Détails joueur -->
+        </Grid.ColumnDefinitions>
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- COLONNE 1: LISTE JOUEURS                                       -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <components:PlayerListPanel Grid.Column="0" 
+                                    Margin="0,0,8,0"/>
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- COLONNE 2: MAP INTERACTIVE                                     -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <Grid Grid.Column="1" Margin="0,0,8,0">
+            <!-- Map Container -->
+            <Border Background="{DynamicResource ThemeCard}"
+                    BorderBrush="{DynamicResource ThemeCardBorder}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Effect="{DynamicResource CardShadowInner}">
+                <controls:InteractiveMapCanvas x:Name="MapCanvas"
+                    MapImage="{Binding MapInfo.ImageSource}"
+                    Entities="{Binding Entities}"
+                    Monuments="{Binding MapInfo.Monuments}"
+                    ShowGrid="{Binding ShowGrid}"
+                    ShowMonuments="{Binding ShowMonuments}"
+                    ZoomLevel="{Binding ZoomLevel, Mode=TwoWay}"
+                    WorldSize="{Binding MapInfo.WorldSize}"
+                    SelectedPlayer="{Binding SelectedPlayer}"
+                    ClipToBounds="True"
+                    EntityClicked="OnEntityClicked"/>
+            </Border>
+
+            <!-- Overlays sur la map -->
+            
+            <!-- Filtres entités (haut gauche) -->
+            <components:MapFiltersPanel 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top" 
+                Margin="12"/>
+
+            <!-- Contrôles map (bas centre) -->
+            <components:MapControlsPanel
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Bottom" 
+                Margin="12"/>
+
+            <!-- Légende (bas gauche) -->
+            <components:MapLegendPanel
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="12,0,0,60"/>
+        </Grid>
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- COLONNE 3: DÉTAILS JOUEUR                                      -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <components:PlayerDetailsPanel Grid.Column="2"/>
+    </Grid>
+</UserControl>

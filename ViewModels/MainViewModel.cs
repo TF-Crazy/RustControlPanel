@@ -370,9 +370,13 @@ namespace RustControlPanel.ViewModels
             }
         }
 
+        /// <summary>
+        /// Handles server info updates from ServerStatsService.
+        /// Updates all TopBar statistics in real-time.
+        /// </summary>
         private void OnServerInfoUpdated(object? sender, Models.ServerInfo info)
         {
-            // Update server name
+            // Update server name if changed
             if (!string.IsNullOrEmpty(info.Hostname))
             {
                 ServerName = info.Hostname;
@@ -388,36 +392,33 @@ namespace RustControlPanel.ViewModels
                 }
             }
 
-            // Update ALL stats
+            // Update player stats
             PlayerCount = info.PlayerCount;
             MaxPlayers = info.MaxPlayers;
-            ServerFps = info.Fps;
             QueueCount = info.QueuedPlayers;
             JoiningCount = info.JoiningPlayers;
-            EntityTime = info.EntityCount;
 
-            // GameTime - Parse DateTime and show only time since wipe
-            // Format: "10/03/1984 11:27:20" → Calculate days/hours since epoch
+            // Update performance stats
+            ServerFps = info.Fps;
+            EntityTime = info.EntityCount; // Entity count (not time)
+
+            // GameTime - This is in-game time (day/night cycle), not time since wipe!
+            // Format received: "10/03/1984 15:51:23" where date is fixed epoch, time is in-game hour
             if (DateTime.TryParse(info.GameTime, out var gameDateTime))
             {
-                var epoch = new DateTime(1984, 3, 10, 0, 0, 0); // Rust epoch
-                var elapsed = gameDateTime - epoch;
-                var days = (int)elapsed.TotalDays;
-                var hours = elapsed.Hours;
-                var mins = elapsed.Minutes;
-                GameTime = $"{days}d {hours}h {mins}m";
+                GameTime = gameDateTime.ToString("HH:mm"); // Just show in-game hour
             }
             else
             {
-                GameTime = info.GameTime; // Fallback
+                GameTime = info.GameTime;
             }
 
-            // Uptime (convert seconds to "Xd Xh Xm")
+            // Uptime - Time since server restart (in seconds)
             var totalSeconds = info.Uptime;
-            var days2 = totalSeconds / 86400;
-            var hours2 = (totalSeconds % 86400) / 3600;
-            var mins2 = (totalSeconds % 3600) / 60;
-            Uptime = $"{days2}d {hours2}h {mins2}m";
+            var days = totalSeconds / 86400;
+            var hours = (totalSeconds % 86400) / 3600;
+            var mins = (totalSeconds % 3600) / 60;
+            Uptime = $"{days}d {hours}h {mins}m";
         }
 
         #endregion

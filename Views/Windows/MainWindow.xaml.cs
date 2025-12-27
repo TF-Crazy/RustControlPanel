@@ -5,6 +5,7 @@
 using RustControlPanel.Core.Utils;
 using RustControlPanel.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,8 @@ namespace RustControlPanel.Views.Windows
         private bool _isUserScrolling = false;
         private const double DebugPanelHeight = 200;
         private string _currentFilter = "All";
+
+        private List<LogEntry> _logCache = new List<LogEntry>();
 
         public MainWindow()
         {
@@ -46,7 +49,7 @@ namespace RustControlPanel.Views.Windows
                     }
                 };
 
-                // Subscribe directly to Logger
+                // Subscribe to Logger
                 Logger.Instance.LogEntryAdded += OnLogEntryAdded;
             }
         }
@@ -193,54 +196,31 @@ namespace RustControlPanel.Views.Windows
             }
         }
 
+        /// <summary>
+        /// Handles new log entries from Logger.
+        /// Parses, caches, and displays with color coding.
+        /// </summary>
         private void OnLogEntryAdded(object? sender, string logMessage)
         {
             Dispatcher.InvokeAsync(() =>
             {
-                // Parse log: [HH:mm:ss.fff] [LEVEL  ] Message
-                var parts = logMessage.Split(new[] { "] [", "] " }, StringSplitOptions.None);
-                if (parts.Length < 3) return;
+                // Parse: [2025-12-27 12:45:30.123] [INFO   ] Message
+                var entry = ParseLogEntry(logMessage);
+                if (entry == null) return;
 
-                var timestamp = parts[0].Replace("[", "").Substring(9); // Keep only HH:mm:ss
-                var level = parts[1].Trim();
-                var message = string.Join("] ", parts.Skip(2));
+                // ✅ Add to cache
+                _logCache.Add(entry);
 
-                // Filter check
-                if (_currentFilter != "All" && !level.Contains(_currentFilter.ToUpper()))
-                    return;
-
-                // Color based on level
-                var color = level switch
+                // Limit cache to 1000 entries
+                if (_logCache.Count > 1000)
                 {
-                    "DEBUG  " => Colors.Gray,
-                    "INFO   " => Colors.LightGreen,
-                    "WARNING" => Colors.Orange,
-                    "ERROR  " => Colors.Red,
-                    "CRITICAL" => Colors.DarkRed,
-                    _ => Colors.White
-                };
-
-                // Add to RichTextBox
-                var paragraph = DebugTextBox.Document.Blocks.LastBlock as Paragraph;
-                if (paragraph == null)
-                {
-                    paragraph = new Paragraph();
-                    DebugTextBox.Document.Blocks.Add(paragraph);
+                    _logCache.RemoveAt(0);
                 }
 
-                // Timestamp (gray)
-                paragraph.Inlines.Add(new Run($"[{timestamp}] ") { Foreground = new SolidColorBrush(Colors.DarkGray) });
-
-                // Level (colored)
-                paragraph.Inlines.Add(new Run($"[{level}] ") { Foreground = new SolidColorBrush(color), FontWeight = FontWeights.Bold });
-
-                // Message
-                paragraph.Inlines.Add(new Run(message + "\n") { Foreground = new SolidColorBrush(Colors.LightGray) });
-
-                // Limit to 500 lines
-                while (DebugTextBox.Document.Blocks.Count > 500)
+                // Display if matches filter
+                if (MatchesFilter(entry))
                 {
-                    DebugTextBox.Document.Blocks.Remove(DebugTextBox.Document.Blocks.FirstBlock);
+                    AppendLogEntry(entry);
                 }
 
                 // Auto-scroll
@@ -251,6 +231,104 @@ namespace RustControlPanel.Views.Windows
             }, System.Windows.Threading.DispatcherPriority.Background);
         }
 
+        /// <summary>
+        /// Parses log message into LogEntry object.
+        /// Format: [YYYY-MM-DD HH:mm:ss.fff] [LEVEL  ] Message
+        /// </summary>
+        private LogEntry? ParseLogEntry(string logMessage)
+        {
+            try
+            {
+                // Split: [timestamp] [level] message
+                var firstClose = logMessage.IndexOf(']');
+                if (firstClose == -1) return null;
+
+                var timestamp = logMessage.Substring(1, firstClose - 1);
+                var rest = logMessage.Substring(firstClose + 1).TrimStart();
+
+                var secondClose = rest.IndexOf(']');
+                if (secondClose == -1) return null;
+
+                var level = rest.Substring(1, secondClose - 1).Trim();
+                var message = rest.Substring(secondClose + 1).TrimStart();
+
+                // Extract just time (HH:mm:ss)
+                var timePart = timestamp.Length >= 19 ? timestamp.Substring(11, 8) : timestamp;
+
+                return new LogEntry
+                {
+                    Timestamp = timePart,
+                    Level = level,
+                    Message = message
+                };
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Checks if log entry matches current filter.
+        /// </summary>
+        private bool MatchesFilter(LogEntry entry)
+        {
+            if (_currentFilter == "All") return true;
+            return entry.Level.Contains(_currentFilter.ToUpper());
+        }
+
+        /// <summary>
+        /// Appends log entry to RichTextBox with color coding.
+        /// </summary>
+        private void AppendLogEntry(LogEntry entry)
+        {
+            var paragraph = DebugTextBox.Document.Blocks.LastBlock as Paragraph;
+            if (paragraph == null)
+            {
+                paragraph = new Paragraph { Margin = new Thickness(0) };
+                DebugTextBox.Document.Blocks.Add(paragraph);
+            }
+
+            // Color based on level
+            var color = entry.Level switch
+            {
+                "DEBUG" => Colors.Gray,
+                "INFO" => Colors.LightGreen,
+                "WARNING" => Colors.Orange,
+                "ERROR" => Colors.Red,
+                "CRITICAL" => Colors.DarkRed,
+                _ => Colors.White
+            };
+
+            // [HH:mm:ss] (gray)
+            paragraph.Inlines.Add(new Run($"[{entry.Timestamp}] ")
+            {
+                Foreground = new SolidColorBrush(Colors.DarkGray)
+            });
+
+            // [LEVEL] (colored + bold)
+            paragraph.Inlines.Add(new Run($"[{entry.Level}] ")
+            {
+                Foreground = new SolidColorBrush(color),
+                FontWeight = FontWeights.Bold
+            });
+
+            // Message
+            paragraph.Inlines.Add(new Run(entry.Message + "\n")
+            {
+                Foreground = new SolidColorBrush(Colors.LightGray)
+            });
+
+            // Limit display to 500 lines
+            while (DebugTextBox.Document.Blocks.Count > 500)
+            {
+                DebugTextBox.Document.Blocks.Remove(DebugTextBox.Document.Blocks.FirstBlock);
+            }
+        }
+
+        /// <summary>
+        /// Handles debug scroll changes to detect manual scrolling.
+        /// </summary>
         private void OnDebugScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             if (_debugScrollViewer == null) return;
@@ -262,12 +340,15 @@ namespace RustControlPanel.Views.Windows
             }
         }
 
+        /// <summary>
+        /// Clears debug log cache and display.
+        /// </summary>
         private void OnClearDebugClick(object sender, RoutedEventArgs e)
         {
+            _logCache.Clear();
             DebugTextBox.Document.Blocks.Clear();
         }
 
-        // Filter clicks
         private void OnFilterAllClick(object sender, MouseButtonEventArgs e)
         {
             SetFilter("All", FilterAll);
@@ -293,11 +374,29 @@ namespace RustControlPanel.Views.Windows
             SetFilter("Error", FilterError);
         }
 
+        /// <summary>
+        /// Sets active filter and rebuilds log display from cache.
+        /// </summary>
         private void SetFilter(string filter, Border activeTab)
         {
             _currentFilter = filter;
 
             // Reset all tabs
+            ResetFilterTabs();
+
+            // Set active tab
+            activeTab.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2800D9FF"));
+            activeTab.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00D9FF"));
+
+            // Rebuild display from cache
+            RebuildLogWithFilter();
+        }
+
+        /// <summary>
+        /// Resets all filter tab styles.
+        /// </summary>
+        private void ResetFilterTabs()
+        {
             FilterAll.Background = Brushes.Transparent;
             FilterAll.BorderBrush = Brushes.Transparent;
             FilterDebug.Background = Brushes.Transparent;
@@ -308,20 +407,26 @@ namespace RustControlPanel.Views.Windows
             FilterWarning.BorderBrush = Brushes.Transparent;
             FilterError.Background = Brushes.Transparent;
             FilterError.BorderBrush = Brushes.Transparent;
-
-            // Set active
-            activeTab.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2800D9FF"));
-            activeTab.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00D9FF"));
-
-            // Rebuild log with filter
-            RebuildLogWithFilter();
         }
 
+        /// <summary>
+        /// Rebuilds log display from cache with current filter.
+        /// </summary>
         private void RebuildLogWithFilter()
         {
-            // Clear and rebuild from ViewModel.DebugLog if needed
-            // For now, just clear - new logs will be filtered automatically
             DebugTextBox.Document.Blocks.Clear();
+
+            // Display all cached entries that match filter
+            foreach (var entry in _logCache)
+            {
+                if (MatchesFilter(entry))
+                {
+                    AppendLogEntry(entry);
+                }
+            }
+
+            // Scroll to bottom
+            _debugScrollViewer?.ScrollToEnd();
         }
 
         private void AutoScrollDebug()
@@ -349,6 +454,16 @@ namespace RustControlPanel.Views.Windows
                 if (result != null) return result;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Represents a single log entry with parsed components.
+        /// </summary>
+        private class LogEntry
+        {
+            public string Timestamp { get; set; } = "";
+            public string Level { get; set; } = "";
+            public string Message { get; set; } = "";
         }
 
         #endregion

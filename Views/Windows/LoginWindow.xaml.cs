@@ -1,11 +1,10 @@
 // ════════════════════════════════════════════════════════════════════
-// LoginWindow.xaml.cs - Login window code-behind with placeholders
+// LoginWindow.xaml.cs - Login window with validation
 // ════════════════════════════════════════════════════════════════════
 
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using RustControlPanel.Models;
 using RustControlPanel.ViewModels;
 
 namespace RustControlPanel.Views.Windows
@@ -15,8 +14,6 @@ namespace RustControlPanel.Views.Windows
         public LoginWindow()
         {
             InitializeComponent();
-
-            // Initialize placeholders
             UpdatePlaceholders();
         }
 
@@ -33,12 +30,49 @@ namespace RustControlPanel.Views.Windows
             Application.Current.Shutdown();
         }
 
+        private void OnConnectClick(object sender, RoutedEventArgs e)
+        {
+            // Validation
+            if (string.IsNullOrWhiteSpace(HostTextBox.Text))
+            {
+                ShowError("Host is required");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(PortTextBox.Text))
+            {
+                ShowError("Port is required");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(PasswordBox.Password))
+            {
+                ShowError("Password is required");
+                return;
+            }
+
+            // Clear error
+            ErrorText.Visibility = Visibility.Collapsed;
+
+            // Call ViewModel connect
+            if (DataContext is LoginViewModel vm)
+            {
+                vm.ConnectCommand.Execute(PasswordBox);
+            }
+        }
+
+        private void ShowError(string message)
+        {
+            ErrorText.Text = message;
+            ErrorText.Visibility = Visibility.Visible;
+        }
+
         private void OnHostTextChanged(object sender, TextChangedEventArgs e)
         {
             if (HostPlaceholder != null)
             {
-                HostPlaceholder.Visibility = string.IsNullOrEmpty(HostTextBox.Text)
-                    ? Visibility.Visible
+                HostPlaceholder.Visibility = string.IsNullOrEmpty(HostTextBox.Text) 
+                    ? Visibility.Visible 
                     : Visibility.Collapsed;
             }
         }
@@ -47,8 +81,8 @@ namespace RustControlPanel.Views.Windows
         {
             if (PortPlaceholder != null)
             {
-                PortPlaceholder.Visibility = string.IsNullOrEmpty(PortTextBox.Text)
-                    ? Visibility.Visible
+                PortPlaceholder.Visibility = string.IsNullOrEmpty(PortTextBox.Text) 
+                    ? Visibility.Visible 
                     : Visibility.Collapsed;
             }
         }
@@ -59,8 +93,8 @@ namespace RustControlPanel.Views.Windows
             {
                 if (PasswordPlaceholder != null)
                 {
-                    PasswordPlaceholder.Visibility = string.IsNullOrEmpty(pb.Password)
-                        ? Visibility.Visible
+                    PasswordPlaceholder.Visibility = string.IsNullOrEmpty(pb.Password) 
+                        ? Visibility.Visible 
                         : Visibility.Collapsed;
                 }
 
@@ -75,34 +109,23 @@ namespace RustControlPanel.Views.Windows
         {
             if (HostPlaceholder != null)
             {
-                HostPlaceholder.Visibility = string.IsNullOrEmpty(HostTextBox.Text)
-                    ? Visibility.Visible
+                HostPlaceholder.Visibility = string.IsNullOrEmpty(HostTextBox.Text) 
+                    ? Visibility.Visible 
                     : Visibility.Collapsed;
             }
-
+            
             if (PortPlaceholder != null)
             {
-                PortPlaceholder.Visibility = string.IsNullOrEmpty(PortTextBox.Text)
-                    ? Visibility.Visible
+                PortPlaceholder.Visibility = string.IsNullOrEmpty(PortTextBox.Text) 
+                    ? Visibility.Visible 
                     : Visibility.Collapsed;
             }
-
+            
             if (PasswordPlaceholder != null && PasswordBox != null)
             {
-                PasswordPlaceholder.Visibility = string.IsNullOrEmpty(PasswordBox.Password)
-                    ? Visibility.Visible
+                PasswordPlaceholder.Visibility = string.IsNullOrEmpty(PasswordBox.Password) 
+                    ? Visibility.Visible 
                     : Visibility.Collapsed;
-            }
-        }
-
-        private void OnServerDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (DataContext is LoginViewModel vm && sender is FrameworkElement element)
-            {
-                if (element.DataContext is ServerConfig config)
-                {
-                    vm.QuickConnectCommand.Execute(config);
-                }
             }
         }
     }

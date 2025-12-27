@@ -28,7 +28,6 @@ namespace RustControlPanel.Views.Components
         {
             _isCollapsed = !_isCollapsed;
             AnimateWidth(_isCollapsed ? CollapsedWidth : ExpandedWidth);
-            AnimateChevron(_isCollapsed ? 180 : 0);
             UpdateVisibility();
         }
 
@@ -43,26 +42,14 @@ namespace RustControlPanel.Views.Components
             this.BeginAnimation(WidthProperty, animation);
         }
 
-        private void AnimateChevron(double targetAngle)
-        {
-            var rotateTransform = (RotateTransform)ChevronIcon.RenderTransform;
-            var animation = new DoubleAnimation
-            {
-                To = targetAngle,
-                Duration = TimeSpan.FromMilliseconds(250),
-                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
-            };
-            rotateTransform.BeginAnimation(RotateTransform.AngleProperty, animation);
-        }
-
         private void UpdateVisibility()
         {
             var visibility = _isCollapsed ? Visibility.Collapsed : Visibility.Visible;
             
-            MapText.Visibility = visibility;
-            StatsText.Visibility = visibility;
-            PlayersText.Visibility = visibility;
-            ConsoleText.Visibility = visibility;
+            if (MapText != null) MapText.Visibility = visibility;
+            if (StatsText != null) StatsText.Visibility = visibility;
+            if (PlayersText != null) PlayersText.Visibility = visibility;
+            if (ConsoleText != null) ConsoleText.Visibility = visibility;
         }
 
         private void OnMapClick(object sender, MouseButtonEventArgs e)
@@ -92,18 +79,19 @@ namespace RustControlPanel.Views.Components
         private void SetActiveTab(int index)
         {
             // Reset all
-            MapItem.Background = Brushes.Transparent;
-            StatsItem.Background = Brushes.Transparent;
-            PlayersItem.Background = Brushes.Transparent;
-            ConsoleItem.Background = Brushes.Transparent;
+            if (MapBorder != null) MapBorder.Background = Brushes.Transparent;
+            if (StatsBorder != null) StatsBorder.Background = Brushes.Transparent;
+            if (PlayersBorder != null) PlayersBorder.Background = Brushes.Transparent;
+            if (ConsoleBorder != null) ConsoleBorder.Background = Brushes.Transparent;
 
             // Set active
+            var activeBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2800D9FF"));
             switch (index)
             {
-                case 0: MapItem.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#2800D9FF")); break;
-                case 1: StatsItem.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#2800D9FF")); break;
-                case 2: PlayersItem.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#2800D9FF")); break;
-                case 3: ConsoleItem.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#2800D9FF")); break;
+                case 0: if (MapBorder != null) MapBorder.Background = activeBrush; break;
+                case 1: if (StatsBorder != null) StatsBorder.Background = activeBrush; break;
+                case 2: if (PlayersBorder != null) PlayersBorder.Background = activeBrush; break;
+                case 3: if (ConsoleBorder != null) ConsoleBorder.Background = activeBrush; break;
             }
         }
 

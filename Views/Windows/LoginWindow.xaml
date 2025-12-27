@@ -1,185 +1,218 @@
 <!-- ════════════════════════════════════════════════════════════════════ -->
-<!-- LoginWindow.xaml - Login window interface                           -->
+<!-- LoginWindow.xaml - Minimal compact login                            -->
 <!-- ════════════════════════════════════════════════════════════════════ -->
 
 <Window x:Class="RustControlPanel.Views.Windows.LoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:RustControlPanel.ViewModels"
-        Title="Rust Control Panel - Connexion" 
-        Height="650" Width="500"
+        Title="Login" 
+        Height="400" Width="450"
         WindowStartupLocation="CenterScreen"
-        Background="{StaticResource BackgroundDarkBrush}"
-        ResizeMode="CanMinimize">
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize">
 
     <Window.DataContext>
         <vm:LoginViewModel/>
     </Window.DataContext>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Margin="40">
+    <Border Background="{DynamicResource ThemeBackground}"
+            BorderBrush="{DynamicResource ThemeBorderAccent}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Effect="{DynamicResource CardShadowOuter}">
+        
+        <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <!-- Logo/Title -->
-                <RowDefinition Height="30"/>
-                <!-- Spacer -->
-                <RowDefinition Height="Auto"/>
-                <!-- Connection form -->
-                <RowDefinition Height="20"/>
-                <!-- Spacer -->
-                <RowDefinition Height="Auto"/>
-                <!-- Saved servers -->
-                <RowDefinition Height="20"/>
-                <!-- Spacer -->
-                <RowDefinition Height="Auto"/>
-                <!-- Status -->
+                <RowDefinition Height="32"/>    <!-- TitleBar -->
+                <RowDefinition Height="*"/>     <!-- Content -->
             </Grid.RowDefinitions>
 
-            <!-- ═══════════════════════════════════════════════════════════════ -->
-            <!-- LOGO / TITLE                                                     -->
-            <!-- ═══════════════════════════════════════════════════════════════ -->
-            <StackPanel Grid.Row="0" HorizontalAlignment="Center">
-                <TextBlock Text="🎮" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                <TextBlock Text="Rust Control Panel" 
-                           Style="{StaticResource Heading1}" 
-                           HorizontalAlignment="Center"/>
-                <Border Height="2" Width="100" 
-                        Background="{StaticResource AccentBlueBrush}" 
-                        Margin="0,10,0,0"/>
-            </StackPanel>
-
-            <!-- ═══════════════════════════════════════════════════════════════ -->
-            <!-- CONNECTION FORM                                                  -->
-            <!-- ═══════════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="2" Style="{StaticResource CardPanel}">
-                <StackPanel>
-                    <!-- Host -->
-                    <TextBlock Text="IP / Host" Style="{StaticResource LabelText}" Margin="0,0,0,6"/>
-                    <TextBox Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}" 
-                             Style="{StaticResource ModernTextBox}" 
-                             Margin="0,0,0,16"/>
-
-                    <!-- Port -->
-                    <TextBlock Text="Port" Style="{StaticResource LabelText}" Margin="0,0,0,6"/>
-                    <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" 
-                             Style="{StaticResource ModernTextBox}" 
-                             Margin="0,0,0,16"/>
-
-                    <!-- Password -->
-                    <TextBlock Text="Mot de passe" Style="{StaticResource LabelText}" Margin="0,0,0,6"/>
-                    <PasswordBox x:Name="PasswordBox"
-                                 Style="{StaticResource ModernPasswordBox}" 
-                                 PasswordChanged="OnPasswordChanged"
-                                 Margin="0,0,0,16"/>
-
-                    <!-- Save credentials -->
-                    <CheckBox IsChecked="{Binding SaveCredentials}" 
-                              Foreground="{StaticResource TextSecondaryBrush}"
-                              Margin="0,0,0,20">
-                        <TextBlock Text="Sauvegarder les identifiants" 
-                                   Style="{StaticResource BodyText}"/>
-                    </CheckBox>
-
-                    <!-- Connect button -->
-                    <Button Content="Se connecter" 
-                            Style="{StaticResource PrimaryButton}" 
-                            Command="{Binding ConnectCommand}"
-                            Height="40"
-                            FontSize="16"/>
-                </StackPanel>
+            <!-- TitleBar (minimal Windows style) -->
+            <Border Grid.Row="0" 
+                    Background="{DynamicResource ThemeTitleBar}"
+                    CornerRadius="8,8,0,0"
+                    BorderBrush="{DynamicResource ThemeCardBorder}"
+                    BorderThickness="0,0,0,1"
+                    MouseLeftButtonDown="OnTitleBarMouseDown">
+                <Grid Margin="12,0">
+                    <TextBlock Text="Rust Control Panel - Login" 
+                               Foreground="{DynamicResource ThemeText}"
+                               FontSize="12"
+                               VerticalAlignment="Center"/>
+                    
+                    <Button Content="✕" 
+                            Command="{Binding CloseCommand}"
+                            HorizontalAlignment="Right"
+                            Width="36" Height="32"
+                            FontSize="14"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{DynamicResource ThemeTextMuted}"
+                            Cursor="Hand"/>
+                </Grid>
             </Border>
 
-            <!-- ═══════════════════════════════════════════════════════════════ -->
-            <!-- SAVED SERVERS                                                    -->
-            <!-- ═══════════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="4" Style="{StaticResource CardPanel}">
-                <StackPanel>
-                    <TextBlock Text="Serveurs sauvegardés" 
-                               Style="{StaticResource Heading3}" 
-                               Margin="0,0,0,12"/>
+            <!-- Content (centered form) -->
+            <Grid Grid.Row="1" Margin="40,30">
+                <StackPanel VerticalAlignment="Center" MaxWidth="320">
+                    <!-- Logo -->
+                    <Viewbox Width="48" Height="48" Margin="0,0,0,20">
+                        <Canvas Width="32" Height="32">
+                            <Path Data="M16,2 L28,9 L28,23 L16,30 L4,23 L4,9 Z"
+                                  Fill="{DynamicResource ThemeAccent}"
+                                  Effect="{DynamicResource GlassGlow}"/>
+                            <Path Data="M12,10 L12,22 M12,10 L17,10 Q19,10 19,12 Q19,14 17,14 L12,14 M17,14 L20,22"
+                                  Stroke="White" StrokeThickness="2" StrokeLineJoin="Round"/>
+                        </Canvas>
+                    </Viewbox>
 
-                    <ListBox ItemsSource="{Binding SavedServers}"
-                             SelectedItem="{Binding SelectedServer}"
-                             Background="Transparent"
-                             BorderThickness="0"
-                             MaxHeight="180"
-                             ScrollViewer.VerticalScrollBarVisibility="Auto">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="0,4">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
+                    <!-- Title (compact) -->
+                    <TextBlock Text="Connect to Server"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource ThemeText}"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,24"/>
 
-                                    <StackPanel Grid.Column="0">
-                                        <TextBlock Text="{Binding DisplayName}" 
-                                                   Style="{StaticResource BodyText}"/>
-                                        <TextBlock Style="{StaticResource SmallTextMuted}">
-                                            <Run Text="{Binding Host}"/>:<Run Text="{Binding Port}"/>
-                                        </TextBlock>
-                                    </StackPanel>
+                    <!-- Host input (compact) -->
+                    <TextBlock Text="Host"
+                               FontSize="11"
+                               Foreground="{DynamicResource ThemeTextMuted}"
+                               Margin="0,0,0,4"/>
+                    <TextBox Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource ModernTextBox}"
+                             Height="36"
+                             Padding="10,8"
+                             FontSize="12"
+                             Margin="0,0,0,12"/>
 
-                                    <Button Grid.Column="1" 
-                                            Content="▶" 
-                                            Style="{StaticResource IconButton}"
-                                            Command="{Binding DataContext.QuickConnectCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding}"
-                                            ToolTip="Connexion rapide"
-                                            Margin="0,0,4,0"/>
+                    <!-- Port input (compact) -->
+                    <TextBlock Text="Port"
+                               FontSize="11"
+                               Foreground="{DynamicResource ThemeTextMuted}"
+                               Margin="0,0,0,4"/>
+                    <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource ModernTextBox}"
+                             Height="36"
+                             Padding="10,8"
+                             FontSize="12"
+                             Margin="0,0,0,12"/>
 
-                                    <Button Grid.Column="2" 
-                                            Content="✕" 
-                                            Style="{StaticResource IconButton}"
-                                            Command="{Binding DataContext.RemoveServerCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding}"
-                                            ToolTip="Supprimer"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
-                                <Setter Property="Padding" Value="8"/>
-                                <Setter Property="Margin" Value="0,2"/>
+                    <!-- Password input (compact) -->
+                    <TextBlock Text="Password"
+                               FontSize="11"
+                               Foreground="{DynamicResource ThemeTextMuted}"
+                               Margin="0,0,0,4"/>
+                    <PasswordBox x:Name="PasswordBox"
+                                 Style="{StaticResource ModernPasswordBox}"
+                                 Height="36"
+                                 Padding="10,8"
+                                 FontSize="12"
+                                 Margin="0,0,0,20"/>
+
+                    <!-- Connect button (compact) -->
+                    <Button Command="{Binding ConnectCommand}"
+                            CommandParameter="{Binding ElementName=PasswordBox}"
+                            Height="40"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Background="{DynamicResource ThemeAccent}"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Effect="{DynamicResource GlassGlow}">
+                        <Button.Style>
+                            <Style TargetType="Button">
                                 <Setter Property="Template">
                                     <Setter.Value>
-                                        <ControlTemplate TargetType="ListBoxItem">
+                                        <ControlTemplate TargetType="Button">
                                             <Border Background="{TemplateBinding Background}"
-                                                    BorderBrush="{StaticResource BorderNormalBrush}"
-                                                    BorderThickness="1"
                                                     CornerRadius="6"
-                                                    Padding="{TemplateBinding Padding}">
-                                                <ContentPresenter/>
+                                                    Effect="{TemplateBinding Effect}">
+                                                <ContentPresenter HorizontalAlignment="Center" 
+                                                                  VerticalAlignment="Center"/>
                                             </Border>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
+                                <Setter Property="Content" Value="Connect"/>
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="{StaticResource BackgroundLightBrush}"/>
+                                        <Setter Property="Opacity" Value="0.9"/>
                                     </Trigger>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter Property="Background" Value="{StaticResource BackgroundLighterBrush}"/>
-                                    </Trigger>
+                                    <DataTrigger Binding="{Binding IsConnecting}" Value="True">
+                                        <Setter Property="Content" Value="Connecting..."/>
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                        <Setter Property="Opacity" Value="0.6"/>
+                                    </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </ListBox.ItemContainerStyle>
-                    </ListBox>
-                </StackPanel>
-            </Border>
+                        </Button.Style>
+                    </Button>
 
-            <!-- ═══════════════════════════════════════════════════════════════ -->
-            <!-- STATUS MESSAGE                                                   -->
-            <!-- ═══════════════════════════════════════════════════════════════ -->
-            <TextBlock Grid.Row="6" 
-                       Text="{Binding StatusMessage}"
-                       Style="{StaticResource BodyTextSecondary}"
-                       HorizontalAlignment="Center"
-                       TextWrapping="Wrap"
-                       TextAlignment="Center"/>
+                    <!-- Error message (compact) -->
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               Foreground="{DynamicResource ThemeAccentWarning}"
+                               FontSize="11"
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Center"
+                               Margin="0,12,0,0"
+                               Visibility="{Binding HasError, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                    <!-- Quick connect (compact) -->
+                    <Border Background="{DynamicResource ThemeCard}"
+                            BorderBrush="{DynamicResource ThemeCardBorder}"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Padding="12,8"
+                            Margin="0,20,0,0"
+                            Effect="{DynamicResource CardShadowInner}">
+                        <StackPanel>
+                            <TextBlock Text="Quick Connect"
+                                       FontSize="10"
+                                       Foreground="{DynamicResource ThemeTextMuted}"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,6"/>
+                            <Button Command="{Binding QuickConnectCommand}"
+                                    Height="28"
+                                    FontSize="11"
+                                    Background="Transparent"
+                                    Foreground="{DynamicResource ThemeAccent}"
+                                    BorderBrush="{DynamicResource ThemeAccent}"
+                                    BorderThickness="1"
+                                    Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="4">
+                                                        <ContentPresenter HorizontalAlignment="Center" 
+                                                                          VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Content" Value="Connect to last server"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource ThemeCard}"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
         </Grid>
-    </ScrollViewer>
+    </Border>
+    
 </Window>

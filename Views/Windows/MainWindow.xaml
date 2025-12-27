@@ -1,5 +1,5 @@
 <!-- ════════════════════════════════════════════════════════════════════ -->
-<!-- MainWindow.xaml - Main application window                           -->
+<!-- MainWindow.xaml - Compact design with vertical navigation           -->
 <!-- ════════════════════════════════════════════════════════════════════ -->
 
 <Window x:Class="RustControlPanel.Views.Windows.MainWindow"
@@ -8,8 +8,8 @@
         xmlns:vm="clr-namespace:RustControlPanel.ViewModels"
         xmlns:controls="clr-namespace:RustControlPanel.Views.Controls"
         Title="Rust Control Panel" 
-        Height="900" Width="1600"
-        MinHeight="700" MinWidth="1200"
+        Height="800" Width="1400"
+        MinHeight="600" MinWidth="1100"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -21,337 +21,273 @@
     </Window.DataContext>
 
     <Border Background="{DynamicResource ThemeBackground}"
-            BorderBrush="{DynamicResource ThemeCardBorder}"
+            BorderBrush="{DynamicResource ThemeBorderAccent}"
             BorderThickness="1"
-            CornerRadius="8">
+            CornerRadius="8"
+            Effect="{DynamicResource CardShadowOuter}">
         
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <!-- Custom titlebar -->
-                <RowDefinition Height="Auto"/>
-                <!-- Server info bar -->
-                <RowDefinition Height="Auto"/>
-                <!-- Navigation tabs -->
-                <RowDefinition Height="*"/>
-                <!-- Content -->
-                <RowDefinition Height="Auto"/>
-                <!-- Footer / Status bar -->
+                <RowDefinition Height="32"/>        <!-- TitleBar (compact) -->
+                <RowDefinition Height="*"/>         <!-- Content + Sidebar -->
             </Grid.RowDefinitions>
 
             <!-- ═══════════════════════════════════════════════════════════════ -->
-            <!-- CUSTOM TITLEBAR                                                  -->
+            <!-- TITLEBAR (Windows style, compact)                                -->
             <!-- ═══════════════════════════════════════════════════════════════ -->
             <Border Grid.Row="0" 
                     Background="{DynamicResource ThemeTitleBar}"
                     CornerRadius="8,8,0,0"
+                    BorderBrush="{DynamicResource ThemeCardBorder}"
+                    BorderThickness="0,0,0,1"
                     MouseLeftButtonDown="OnTitleBarMouseDown">
-                <Grid>
+                <Grid Margin="12,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Logo + Title -->
-                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20,0">
-                        <!-- Logo SVG (hexagon with R) -->
-                        <Viewbox Width="26" Height="26" Margin="0,0,12,0">
+                    <!-- Logo + Title (compact) -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <Viewbox Width="18" Height="18" Margin="0,0,8,0">
                             <Canvas Width="32" Height="32">
-                                <!-- Hexagon with gradient -->
-                                <Path Data="M16,2 L28,9 L28,23 L16,30 L4,23 L4,9 Z">
-                                    <Path.Fill>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="#3B82F6" Offset="0"/>
-                                            <GradientStop Color="#6366F1" Offset="0.5"/>
-                                            <GradientStop Color="#8B5CF6" Offset="1"/>
-                                        </LinearGradientBrush>
-                                    </Path.Fill>
-                                </Path>
-                                <!-- Letter R (simplified) -->
+                                <Path Data="M16,2 L28,9 L28,23 L16,30 L4,23 L4,9 Z"
+                                      Fill="{DynamicResource ThemeAccent}"/>
                                 <Path Data="M12,10 L12,22 M12,10 L17,10 Q19,10 19,12 Q19,14 17,14 L12,14 M17,14 L20,22"
-                                      Stroke="White" StrokeThickness="2.2" StrokeLineJoin="Round"/>
+                                      Stroke="White" StrokeThickness="2" StrokeLineJoin="Round"/>
                             </Canvas>
                         </Viewbox>
                         
                         <TextBlock Text="Rust Control Panel" 
                                    Foreground="{DynamicResource ThemeText}"
-                                   FontSize="14"
-                                   FontWeight="SemiBold"
+                                   FontSize="12"
+                                   FontWeight="Medium"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
 
-                    <!-- Window controls -->
+                    <!-- Window controls (compact) -->
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
                         <Button Content="━" 
-                                Style="{StaticResource IconButton}"
                                 Command="{Binding MinimizeCommand}"
-                                ToolTip="Minimize"
-                                Width="40" Height="40"/>
-                        <Button Content="□" 
-                                Style="{StaticResource IconButton}"
+                                Style="{StaticResource TitleBarButton}"
+                                Width="36" Height="32"
+                                FontSize="12"
+                                Foreground="{DynamicResource ThemeTextMuted}"/>
+                        
+                        <Button Content="▢" 
                                 Command="{Binding MaximizeCommand}"
-                                ToolTip="Maximize"
-                                Width="40" Height="40"/>
+                                Style="{StaticResource TitleBarButton}"
+                                Width="36" Height="32"
+                                FontSize="12"
+                                Foreground="{DynamicResource ThemeTextMuted}"/>
+                        
                         <Button Content="✕" 
-                                Style="{StaticResource IconButton}"
                                 Command="{Binding CloseCommand}"
-                                ToolTip="Close"
-                                Width="40" Height="40"
-                                Foreground="{StaticResource AccentRedBrush}"/>
+                                Style="{StaticResource TitleBarButton}"
+                                Width="36" Height="32"
+                                FontSize="14"
+                                Foreground="{DynamicResource ThemeTextMuted}"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
             <!-- ═══════════════════════════════════════════════════════════════ -->
-            <!-- SERVER INFO BAR                                                  -->
+            <!-- MAIN CONTENT with SIDEBAR                                         -->
             <!-- ═══════════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="1" 
-                    Background="{DynamicResource ThemeTopBar}"
-                    BorderBrush="{DynamicResource ThemeCardBorder}"
-                    BorderThickness="0,1,0,1"
-                    Padding="16,10">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <!-- Server name -->
-                        <ColumnDefinition Width="*"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>      <!-- Vertical navigation -->
+                    <ColumnDefinition Width="*"/>       <!-- Main content -->
+                </Grid.ColumnDefinitions>
+
+                <!-- ═══════════════════════════════════════════════════════════════ -->
+                <!-- VERTICAL NAVIGATION (Left sidebar)                                -->
+                <!-- ═══════════════════════════════════════════════════════════════ -->
+                <Border Grid.Column="0"
+                        Background="{DynamicResource ThemeTitleBar}"
+                        BorderBrush="{DynamicResource ThemeCardBorder}"
+                        BorderThickness="0,0,1,0">
+                    <StackPanel Margin="0,8">
+                        <!-- Map -->
+                        <Button ToolTip="Map"
+                                Width="48" Height="48"
+                                Margin="6,0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Cursor="Hand">
+                            <TextBlock Text="🗺️" FontSize="20"/>
+                        </Button>
+                        
                         <!-- Stats -->
-                        <ColumnDefinition Width="Auto"/>
-                        <!-- Actions -->
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Server Name -->
-                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,32,0">
-                        <TextBlock Text="🖥️" FontSize="16" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding ServerName}" 
-                                   Style="{StaticResource Heading3}"
-                                   VerticalAlignment="Center"
-                                   Foreground="{DynamicResource ThemeAccent}"/>
-                    </StackPanel>
-
-                    <!-- Stats -->
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button ToolTip="Stats"
+                                Width="48" Height="48"
+                                Margin="6,4,6,0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Cursor="Hand">
+                            <TextBlock Text="📊" FontSize="20"/>
+                        </Button>
+                        
                         <!-- Players -->
-                        <Border Background="{DynamicResource ThemeCard}"
-                                BorderBrush="{DynamicResource ThemeCardBorder}"
-                                BorderThickness="1"
-                                CornerRadius="4"
-                                Padding="10,6"
-                                Margin="0,0,8,0">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="👥" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                                <TextBlock Style="{StaticResource BodyText}" VerticalAlignment="Center" FontSize="13">
-                                    <Run Text="{Binding PlayerCount}" Foreground="{DynamicResource ThemeAccent}" FontWeight="SemiBold"/>
-                                    <Run Text="/" Foreground="{DynamicResource ThemeTextMuted}"/>
-                                    <Run Text="{Binding MaxPlayers}" Foreground="{DynamicResource ThemeText}"/>
-                                </TextBlock>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- FPS Text -->
-                        <Border Background="{DynamicResource ThemeCard}"
-                                BorderBrush="{DynamicResource ThemeCardBorder}"
-                                BorderThickness="1"
-                                CornerRadius="4"
-                                Padding="10,6"
-                                Margin="0,0,8,0">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="⚡" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                                <TextBlock VerticalAlignment="Center">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock" BasedOn="{StaticResource BodyText}">
-                                            <Setter Property="Text" Value="{Binding ServerFps, StringFormat={}{0:F0} FPS}"/>
-                                            <Setter Property="Foreground" Value="{DynamicResource ThemeAccent}"/>
-                                            <Setter Property="FontWeight" Value="SemiBold"/>
-                                            <Setter Property="FontSize" Value="13"/>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding ServerFps}" Value="0">
-                                                    <Setter Property="Text" Value="-- FPS"/>
-                                                    <Setter Property="Foreground" Value="{DynamicResource ThemeTextMuted}"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- FPS Chart -->
-                        <controls:FpsChart/>
-                    </StackPanel>
-
-                    <!-- Actions -->
-                    <StackPanel Grid.Column="2" Orientation="Horizontal">
-                        <Button Content="🐛 Debug"
-                                Style="{StaticResource SecondaryButton}"
-                                Command="{Binding OpenDebugCommand}"
-                                Padding="12,6"
-                                Margin="0,0,8,0"/>
+                        <Button ToolTip="Players"
+                                Width="48" Height="48"
+                                Margin="6,4,6,0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Cursor="Hand">
+                            <TextBlock Text="👥" FontSize="20"/>
+                        </Button>
                         
-                        <Button Content="🔄 Changer de serveur"
-                                Style="{StaticResource SecondaryButton}"
-                                Command="{Binding ChangeServerCommand}"
-                                Padding="12,6"
-                                Margin="0,0,8,0"
-                                Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        
-                        <Button Content="Déconnexion"
-                                Style="{StaticResource DangerButton}"
-                                Command="{Binding DisconnectCommand}"
-                                Padding="12,6"
-                                Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <!-- Console -->
+                        <Button ToolTip="Console"
+                                Width="48" Height="48"
+                                Margin="6,4,6,0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Cursor="Hand">
+                            <TextBlock Text="💻" FontSize="20"/>
+                        </Button>
                     </StackPanel>
+                </Border>
+
+                <!-- ═══════════════════════════════════════════════════════════════ -->
+                <!-- MAIN CONTENT AREA                                                 -->
+                <!-- ═══════════════════════════════════════════════════════════════ -->
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>    <!-- TopBar (compact) -->
+                        <RowDefinition Height="*"/>     <!-- Content -->
+                    </Grid.RowDefinitions>
+
+                    <!-- ═══════════════════════════════════════════════════════════════ -->
+                    <!-- TOPBAR (Stats + Actions, COMPACT)                                 -->
+                    <!-- ═══════════════════════════════════════════════════════════════ -->
+                    <Border Grid.Row="0" 
+                            Background="{DynamicResource ThemeTopBar}"
+                            BorderBrush="{DynamicResource ThemeCardBorder}"
+                            BorderThickness="0,0,0,1">
+                        <Grid Margin="12,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Stats (TAILLES FIXES) -->
+                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                <!-- Players (TAILLE FIXE 80px) -->
+                                <Border Background="{DynamicResource ThemeCard}"
+                                        BorderBrush="{DynamicResource ThemeCardBorder}"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Width="80"
+                                        Height="36"
+                                        Padding="6,0"
+                                        Margin="0,0,6,0"
+                                        Effect="{DynamicResource CardShadowInner}">
+                                    <Grid>
+                                        <TextBlock Text="👥" 
+                                                   FontSize="14" 
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Left"/>
+                                        <TextBlock VerticalAlignment="Center" 
+                                                   HorizontalAlignment="Right"
+                                                   FontSize="11">
+                                            <Run Text="{Binding PlayerCount}" 
+                                                 Foreground="{DynamicResource ThemeAccent}" 
+                                                 FontWeight="SemiBold"/>
+                                            <Run Text="/" 
+                                                 Foreground="{DynamicResource ThemeTextMuted}"/>
+                                            <Run Text="{Binding MaxPlayers}" 
+                                                 Foreground="{DynamicResource ThemeTextSecondary}"/>
+                                        </TextBlock>
+                                    </Grid>
+                                </Border>
+
+                                <!-- FPS (TAILLE FIXE 75px) -->
+                                <Border Background="{DynamicResource ThemeCard}"
+                                        BorderBrush="{DynamicResource ThemeCardBorder}"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Width="75"
+                                        Height="36"
+                                        Padding="6,0"
+                                        Margin="0,0,6,0"
+                                        Effect="{DynamicResource CardShadowInner}">
+                                    <Grid>
+                                        <TextBlock Text="⚡" 
+                                                   FontSize="14" 
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Left"/>
+                                        <TextBlock HorizontalAlignment="Right"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource ThemeAccentSuccess}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Text" Value="{Binding ServerFps, StringFormat={}{0:F0}}"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ServerFps}" Value="0">
+                                                            <Setter Property="Text" Value="--"/>
+                                                            <Setter Property="Foreground" Value="{DynamicResource ThemeTextMuted}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
+                                </Border>
+
+                                <!-- FPS Chart (TAILLE FIXE 280x36) -->
+                                <Border Background="{DynamicResource ThemeCard}"
+                                        BorderBrush="{DynamicResource ThemeCardBorder}"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Width="280"
+                                        Height="36"
+                                        Effect="{DynamicResource GlassGlow}">
+                                    <controls:FpsChart Margin="2"/>
+                                </Border>
+                            </StackPanel>
+
+                            <!-- Actions -->
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Button Content="🐛"
+                                        Command="{Binding OpenDebugCommand}"
+                                        Width="32" Height="32"
+                                        FontSize="14"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Foreground="{DynamicResource ThemeTextMuted}"
+                                        Cursor="Hand"
+                                        Margin="0,0,4,0"/>
+                                
+                                <Button Content="🔌"
+                                        Command="{Binding DisconnectCommand}"
+                                        Width="32" Height="32"
+                                        FontSize="14"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Foreground="{DynamicResource ThemeTextMuted}"
+                                        Cursor="Hand"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- ═══════════════════════════════════════════════════════════════ -->
+                    <!-- CONTENT AREA                                                      -->
+                    <!-- ═══════════════════════════════════════════════════════════════ -->
+                    <Grid Grid.Row="1" Background="{DynamicResource ThemeBackground}">
+                        <TextBlock Text="Content Area" 
+                                   Style="{StaticResource Heading2}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource ThemeTextMuted}"/>
+                    </Grid>
                 </Grid>
-            </Border>
-
-            <!-- ═══════════════════════════════════════════════════════════════ -->
-            <!-- NAVIGATION TABS                                                  -->
-            <!-- ═══════════════════════════════════════════════════════════════ -->
-            <TabControl Grid.Row="3"
-                        Style="{StaticResource MainTabControl}"
-                        SelectedIndex="{Binding SelectedTabIndex}">
-
-                <!-- Map Tab -->
-                <TabItem Style="{StaticResource MainTabItem}">
-                    <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🗺️" FontSize="14" Margin="0,0,8,0"/>
-                            <TextBlock Text="Map"/>
-                        </StackPanel>
-                    </TabItem.Header>
-                    <Grid Background="{DynamicResource ThemeBackground}">
-                        <TextBlock Text="Map Page (Coming Soon)" 
-                                   Style="{StaticResource Heading2}"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Foreground="{DynamicResource ThemeTextMuted}"/>
-                    </Grid>
-                </TabItem>
-
-                <!-- Stats Tab -->
-                <TabItem Style="{StaticResource MainTabItem}">
-                    <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📊" FontSize="14" Margin="0,0,8,0"/>
-                            <TextBlock Text="Stats"/>
-                        </StackPanel>
-                    </TabItem.Header>
-                    <Grid Background="{DynamicResource ThemeBackground}">
-                        <TextBlock Text="Stats Page (Coming Soon)" 
-                                   Style="{StaticResource Heading2}"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Foreground="{DynamicResource ThemeTextMuted}"/>
-                    </Grid>
-                </TabItem>
-
-                <!-- Stats Tab -->
-                <TabItem Style="{StaticResource MainTabItem}">
-                    <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📊" FontSize="14" Margin="0,0,8,0"/>
-                            <TextBlock Text="Stats"/>
-                        </StackPanel>
-                    </TabItem.Header>
-                    <Grid Background="{DynamicResource ThemeBackground}">
-                        <TextBlock Text="Stats Page (Coming Soon)" 
-                                   Style="{StaticResource Heading2}"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Foreground="{DynamicResource ThemeTextMuted}"/>
-                    </Grid>
-                </TabItem>
-
-                <!-- Plugins Tab -->
-                <TabItem Style="{StaticResource MainTabItem}">
-                    <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🔌" FontSize="14" Margin="0,0,8,0"/>
-                            <TextBlock Text="Plugins"/>
-                        </StackPanel>
-                    </TabItem.Header>
-                    <Grid Background="{DynamicResource ThemeBackground}">
-                        <TextBlock Text="Plugins Page (Coming Soon)" 
-                                   Style="{StaticResource Heading2}"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Foreground="{DynamicResource ThemeTextMuted}"/>
-                    </Grid>
-                </TabItem>
-
-                <!-- Settings Tab -->
-                <TabItem Style="{StaticResource MainTabItem}">
-                    <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="⚙️" FontSize="14" Margin="0,0,8,0"/>
-                            <TextBlock Text="Settings"/>
-                        </StackPanel>
-                    </TabItem.Header>
-                    <Grid Background="{DynamicResource ThemeBackground}">
-                        <TextBlock Text="Settings Page (Coming Soon)" 
-                                   Style="{StaticResource Heading2}"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Foreground="{DynamicResource ThemeTextMuted}"/>
-                    </Grid>
-                </TabItem>
-
-            </TabControl>
-
-            <!-- ═══════════════════════════════════════════════════════════════ -->
-            <!-- FOOTER / STATUS BAR                                              -->
-            <!-- ═══════════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="4"
-                    Background="{DynamicResource ThemeCard}"
-                    BorderBrush="{DynamicResource ThemeCardBorder}"
-                    BorderThickness="0,1,0,0"
-                    Padding="12,6"
-                    CornerRadius="0,0,8,8">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Connection Status -->
-                    <StackPanel Grid.Column="0" Orientation="Horizontal">
-                        <Ellipse Width="8" Height="8" Margin="0,0,8,0" VerticalAlignment="Center">
-                            <Ellipse.Style>
-                                <Style TargetType="Ellipse">
-                                    <Setter Property="Fill" Value="{StaticResource AccentRedBrush}"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                            <Setter Property="Fill" Value="{DynamicResource ThemeAccent}"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Ellipse.Style>
-                        </Ellipse>
-                        <TextBlock VerticalAlignment="Center">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock" BasedOn="{StaticResource SmallText}">
-                                    <Setter Property="Text" Value="Déconnecté"/>
-                                    <Setter Property="Foreground" Value="{DynamicResource ThemeTextMuted}"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                            <Setter Property="Text" Value="Connecté"/>
-                                            <Setter Property="Foreground" Value="{DynamicResource ThemeAccent}"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </StackPanel>
-
-                    <!-- Version info -->
-                    <TextBlock Grid.Column="1" 
-                               Text="Rust Control Panel v2.0" 
-                               Style="{StaticResource SmallTextMuted}"
-                               VerticalAlignment="Center"/>
-                </Grid>
-            </Border>
-
+            </Grid>
         </Grid>
     </Border>
+    
 </Window>

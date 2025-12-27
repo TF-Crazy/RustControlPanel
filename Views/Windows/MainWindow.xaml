@@ -39,6 +39,25 @@
                 <!-- Footer / Status bar -->
             </Grid.RowDefinitions>
 
+            <!-- DEV: THEME SWITCHER -->
+            <Border Grid.Row="0" Background="#FF0000" Padding="4" HorizontalAlignment="Center" 
+        VerticalAlignment="Top" CornerRadius="0,0,4,4" Margin="0,-1,0,0" Panel.ZIndex="999">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="DEV THEME:" Foreground="White" FontSize="10" FontWeight="Bold" 
+                   Margin="0,0,8,0" VerticalAlignment="Center"/>
+                    <Button Content="Glass" Click="SwitchToGlass" Padding="8,2" Margin="2,0" 
+                Background="#00D9FF" BorderThickness="0" Foreground="Black" 
+                FontSize="10" FontWeight="Bold"/>
+                    <Button Content="Neuro" Click="SwitchToNeuro" Padding="8,2" Margin="2,0" 
+                Background="#6366F1" BorderThickness="0" Foreground="White" 
+                FontSize="10" FontWeight="Bold"/>
+                    <Button Content="Fluent" Click="SwitchToFluent" Padding="8,2" Margin="2,0" 
+                Background="#0078D4" BorderThickness="0" Foreground="White" 
+                FontSize="10" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+
+
             <!-- ═══════════════════════════════════════════════════════════════ -->
             <!-- CUSTOM TITLEBAR                                                  -->
             <!-- ═══════════════════════════════════════════════════════════════ -->

@@ -1,0 +1,41 @@
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- Theme.Fluent.xaml - Microsoft Fluent Design theme                   -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Fluent Colors -->
+    <Color x:Key="FluentBase">#202020</Color>
+    <Color x:Key="FluentLight">#2B2B2B</Color>
+    <Color x:Key="FluentAccent">#0078D4</Color>
+    
+    <!-- Brushes -->
+    <SolidColorBrush x:Key="ThemeBackground" Color="{StaticResource FluentBase}"/>
+    <SolidColorBrush x:Key="ThemeTitleBar" Color="#2B2B2B"/>
+    
+    <LinearGradientBrush x:Key="ThemeTopBar" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#2B2B2B" Offset="0"/>
+        <GradientStop Color="#252525" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <SolidColorBrush x:Key="ThemeCard" Color="#2B2B2B"/>
+    <SolidColorBrush x:Key="ThemeCardBorder" Color="#3F3F3F"/>
+    <SolidColorBrush x:Key="ThemeAccent" Color="{StaticResource FluentAccent}"/>
+    <SolidColorBrush x:Key="ThemeText" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ThemeTextMuted" Color="#A0A0A0"/>
+    
+    <!-- Effects -->
+    <DropShadowEffect x:Key="GlassGlow" 
+                      Color="{StaticResource FluentAccent}" 
+                      BlurRadius="12" 
+                      ShadowDepth="0" 
+                      Opacity="0.4"/>
+    
+    <DropShadowEffect x:Key="CardShadow" 
+                      Color="#000000" 
+                      BlurRadius="8" 
+                      ShadowDepth="2" 
+                      Opacity="0.3"/>
+
+</ResourceDictionary>

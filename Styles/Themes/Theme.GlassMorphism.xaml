@@ -1,0 +1,45 @@
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- Theme.GlassMorphism.xaml - Modern glass morphism theme              -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Glass Morphism Colors -->
+    <Color x:Key="GlassBase">#1A1A1A</Color>
+    <Color x:Key="GlassLight">#2A2A2A</Color>
+    <Color x:Key="GlassAccent">#00D9FF</Color>
+    
+    <!-- Brushes -->
+    <SolidColorBrush x:Key="ThemeBackground" Color="#0A0A0A"/>
+    <SolidColorBrush x:Key="ThemeTitleBar" Color="#15151580" Opacity="0.5"/>
+    
+    <LinearGradientBrush x:Key="ThemeTopBar" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#2A2A2A80" Offset="0"/>
+        <GradientStop Color="#1A1A1A40" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="ThemeCard" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFF15" Offset="0"/>
+        <GradientStop Color="#FFFFFF08" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <SolidColorBrush x:Key="ThemeCardBorder" Color="#FFFFFF20"/>
+    <SolidColorBrush x:Key="ThemeAccent" Color="{StaticResource GlassAccent}"/>
+    <SolidColorBrush x:Key="ThemeText" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ThemeTextMuted" Color="#FFFFFF80"/>
+    
+    <!-- Effects -->
+    <DropShadowEffect x:Key="GlassGlow" 
+                      Color="{StaticResource GlassAccent}" 
+                      BlurRadius="20" 
+                      ShadowDepth="0" 
+                      Opacity="0.3"/>
+    
+    <DropShadowEffect x:Key="CardShadow" 
+                      Color="#000000" 
+                      BlurRadius="15" 
+                      ShadowDepth="5" 
+                      Opacity="0.4"/>
+
+</ResourceDictionary>

@@ -113,103 +113,119 @@
                 <!-- DEBUG PANEL (slide from bottom)                             -->
                 <!-- ═══════════════════════════════════════════════════════════ -->
                 <Border x:Name="DebugPanel"
-                        Grid.Row="1"
-                        Background="{DynamicResource ThemeCard}"
-                        BorderBrush="{DynamicResource ThemeCardBorder}"
-                        BorderThickness="0,1,0,0"
-                        Height="0"
-                        VerticalAlignment="Bottom">
+        Grid.Row="1"
+        Background="{DynamicResource ThemeCard}"
+        BorderBrush="{DynamicResource ThemeCardBorder}"
+        BorderThickness="0,1,0,0"
+        Height="0"
+        VerticalAlignment="Bottom">
                     <Grid Margin="12">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Debug Header -->
+                        <!-- Header -->
                         <Grid Grid.Row="0" Margin="0,0,0,8">
                             <TextBlock Text="Debug Logs"
-                                       FontSize="13"
-                                       FontWeight="SemiBold"
-                                       Foreground="{DynamicResource ThemeText}"
-                                       VerticalAlignment="Center"/>
-                            
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                <Button Content="Clear"
-                                        Click="OnClearDebugClick"
-                                        Padding="8,4"
-                                        FontSize="11"
-                                        Background="Transparent"
-                                        BorderBrush="{DynamicResource ThemeCardBorder}"
-                                        BorderThickness="1"
-                                        Foreground="{DynamicResource ThemeTextMuted}"
-                                        Cursor="Hand"
-                                        Margin="0,0,8,0">
-                                    <Button.Style>
-                                        <Style TargetType="Button">
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="Button">
-                                                        <Border Background="{TemplateBinding Background}"
-                                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                                CornerRadius="3"
-                                                                Padding="{TemplateBinding Padding}">
-                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        </Border>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="#20FFFFFF"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Style>
-                                </Button>
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource ThemeText}"
+                       VerticalAlignment="Center"/>
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Clear"
+                        Click="OnClearDebugClick"
+                        Padding="8,4"
+                        FontSize="11"
+                        Background="Transparent"
+                        BorderBrush="{DynamicResource ThemeCardBorder}"
+                        BorderThickness="1"
+                        Foreground="{DynamicResource ThemeTextMuted}"
+                        Cursor="Hand"
+                        Margin="0,0,8,0"/>
 
-                                <Button Content="✕"
-                                        Click="OnCloseDebugClick"
-                                        Width="24" Height="24"
-                                        FontSize="12"
-                                        Background="Transparent"
-                                        BorderThickness="0"
-                                        Foreground="{DynamicResource ThemeTextMuted}"
-                                        Cursor="Hand">
-                                    <Button.Style>
-                                        <Style TargetType="Button">
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="Button">
-                                                        <Border Background="{TemplateBinding Background}"
-                                                                CornerRadius="3">
-                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        </Border>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="#30FF0000"/>
-                                                    <Setter Property="Foreground" Value="{DynamicResource ThemeAccentDanger}"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Style>
-                                </Button>
-                            </StackPanel>
-                        </Grid>
+                <Button Content="✕"
+                        Click="OnCloseDebugClick"
+                        Width="24" Height="24"
+                        FontSize="12"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Foreground="{DynamicResource ThemeTextMuted}"
+                        Cursor="Hand"/>
+            </StackPanel>
+        </Grid>
 
-                        <!-- Debug Content -->
-                        <ScrollViewer Grid.Row="1"
-                                      VerticalScrollBarVisibility="Auto"
-                                      HorizontalScrollBarVisibility="Disabled">
-                            <TextBlock x:Name="DebugText"
-                                       Text="{Binding DebugLog, FallbackValue=Debug logs will appear here...}"
-                                       FontFamily="Consolas, Courier New"
-                                       FontSize="11"
-                                       Foreground="{DynamicResource ThemeTextSecondary}"
-                                       TextWrapping="Wrap"/>
+                        <!-- Filter Tabs -->
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
+                            <Border x:Name="FilterAll" 
+                    Background="#2800D9FF"
+                    BorderBrush="#00D9FF"
+                    BorderThickness="0,0,0,2"
+                    Padding="12,4"
+                    Margin="0,0,8,0"
+                    Cursor="Hand"
+                    MouseLeftButtonDown="OnFilterAllClick">
+                                <TextBlock Text="All" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource ThemeText}"/>
+                            </Border>
+
+                            <Border x:Name="FilterDebug"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    BorderThickness="0,0,0,2"
+                    Padding="12,4"
+                    Margin="0,0,8,0"
+                    Cursor="Hand"
+                    MouseLeftButtonDown="OnFilterDebugClick">
+                                <TextBlock Text="Debug" FontSize="11" Foreground="{DynamicResource ThemeTextMuted}"/>
+                            </Border>
+
+                            <Border x:Name="FilterInfo"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    BorderThickness="0,0,0,2"
+                    Padding="12,4"
+                    Margin="0,0,8,0"
+                    Cursor="Hand"
+                    MouseLeftButtonDown="OnFilterInfoClick">
+                                <TextBlock Text="Info" FontSize="11" Foreground="{DynamicResource ThemeTextMuted}"/>
+                            </Border>
+
+                            <Border x:Name="FilterWarning"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    BorderThickness="0,0,0,2"
+                    Padding="12,4"
+                    Margin="0,0,8,0"
+                    Cursor="Hand"
+                    MouseLeftButtonDown="OnFilterWarningClick">
+                                <TextBlock Text="Warning" FontSize="11" Foreground="{DynamicResource ThemeTextMuted}"/>
+                            </Border>
+
+                            <Border x:Name="FilterError"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    BorderThickness="0,0,0,2"
+                    Padding="12,4"
+                    Cursor="Hand"
+                    MouseLeftButtonDown="OnFilterErrorClick">
+                                <TextBlock Text="Error" FontSize="11" Foreground="{DynamicResource ThemeTextMuted}"/>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Debug Content - RichTextBox pour couleurs + sélection -->
+                        <ScrollViewer x:Name="DebugScrollViewer"
+                      Grid.Row="2"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+                            <RichTextBox x:Name="DebugTextBox"
+                         IsReadOnly="True"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         FontFamily="Consolas, Courier New"
+                         FontSize="11"
+                         Foreground="{DynamicResource ThemeTextSecondary}"/>
                         </ScrollViewer>
                     </Grid>
                 </Border>
@@ -347,6 +363,5 @@
                 </StackPanel>
             </Border>
         </Grid>
-    </Border>
-    
+    </Border>    
 </Window>

@@ -388,27 +388,36 @@ namespace RustControlPanel.ViewModels
                 }
             }
 
-            // Update ALL stats ✅
+            // Update ALL stats
             PlayerCount = info.PlayerCount;
             MaxPlayers = info.MaxPlayers;
             ServerFps = info.Fps;
-
-            // NEW: Queue & Joining
             QueueCount = info.QueuedPlayers;
             JoiningCount = info.JoiningPlayers;
+            EntityTime = info.EntityCount;
 
-            // NEW: Entity time (convert entity count to pseudo "time" or just display count)
-            EntityTime = info.EntityCount; // Or calculate some metric
-
-            // GameTime (already string "HH:mm" from server)
-            GameTime = info.GameTime;
+            // GameTime - Parse DateTime and show only time since wipe
+            // Format: "10/03/1984 11:27:20" → Calculate days/hours since epoch
+            if (DateTime.TryParse(info.GameTime, out var gameDateTime))
+            {
+                var epoch = new DateTime(1984, 3, 10, 0, 0, 0); // Rust epoch
+                var elapsed = gameDateTime - epoch;
+                var days = (int)elapsed.TotalDays;
+                var hours = elapsed.Hours;
+                var mins = elapsed.Minutes;
+                GameTime = $"{days}d {hours}h {mins}m";
+            }
+            else
+            {
+                GameTime = info.GameTime; // Fallback
+            }
 
             // Uptime (convert seconds to "Xd Xh Xm")
             var totalSeconds = info.Uptime;
-            var days = totalSeconds / 86400;
-            var hours = (totalSeconds % 86400) / 3600;
-            var mins = (totalSeconds % 3600) / 60;
-            Uptime = $"{days}d {hours}h {mins}m";
+            var days2 = totalSeconds / 86400;
+            var hours2 = (totalSeconds % 86400) / 3600;
+            var mins2 = (totalSeconds % 3600) / 60;
+            Uptime = $"{days2}d {hours2}h {mins2}m";
         }
 
         #endregion

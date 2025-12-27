@@ -167,7 +167,7 @@
                                     Background="{DynamicResource ThemeAccent}"
                                     Foreground="White"
                                     BorderThickness="0"
-                                    Style="{StaticResource RoundedButtonStyle}"
+                                    CornerRadius="4"
                                     FontSize="11"
                                     Cursor="Hand"/>
                             
@@ -177,7 +177,7 @@
                                     Background="{DynamicResource ThemeAccentWarning}"
                                     Foreground="White"
                                     BorderThickness="0"
-                                    Style="{StaticResource RoundedButtonStyle}"
+                                    CornerRadius="4"
                                     FontSize="11"
                                     Cursor="Hand"/>
                             
@@ -186,7 +186,7 @@
                                     Background="{DynamicResource ThemeAccentDanger}"
                                     Foreground="White"
                                     BorderThickness="0"
-                                    Style="{StaticResource RoundedButtonStyle}"
+                                    CornerRadius="4"
                                     FontSize="11"
                                     Cursor="Hand"/>
                         </StackPanel>

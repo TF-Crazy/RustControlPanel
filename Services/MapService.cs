@@ -118,9 +118,9 @@ namespace RustControlPanel.Services
             Logger.Instance.Debug("Requesting map info...");
 
             var writer = new BridgeWriter();
-            writer.WriteRpcHeader(0, RpcHelper.GetRpcId(RpcNames.LOAD_MAP_INFO));
+            writer.WriteRpcHeader(RpcNames.LOAD_MAP_INFO);
 
-            BridgeClient.Instance.SendAsync(writer.GetBytes());
+            BridgeClient.Instance.SendAsync(writer.ToArray());
         }
 
         /// <summary>
@@ -137,9 +137,9 @@ namespace RustControlPanel.Services
             Logger.Instance.Debug("Requesting map entities...");
 
             var writer = new BridgeWriter();
-            writer.WriteRpcHeader(0, RpcHelper.GetRpcId(RpcNames.REQUEST_MAP_ENTITIES));
+            writer.WriteRpcHeader(RpcNames.REQUEST_MAP_ENTITIES);
 
-            BridgeClient.Instance.SendAsync(writer.GetBytes());
+            BridgeClient.Instance.SendAsync(writer.ToArray());
         }
 
         #endregion

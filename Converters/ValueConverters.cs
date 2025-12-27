@@ -34,11 +34,11 @@ namespace RustControlPanel.Converters
     /// <summary>
     /// Converts health value to color (red → yellow → green).
     /// </summary>
-    public class HealthToColorConverter : IMultiValueConverter
+    public class HealthToColorConverter : IValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values[0] is float health)
+            if (value is float health)
             {
                 if (health > 60)
                     return Color.FromRgb(16, 185, 129); // Green
@@ -50,7 +50,7 @@ namespace RustControlPanel.Converters
             return Colors.Gray;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

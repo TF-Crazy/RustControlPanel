@@ -171,25 +171,6 @@
     </Style>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!-- ROUNDED BUTTON                                                  -->
-    <!-- ═══════════════════════════════════════════════════════════════ -->
-    
-    <Style x:Key="RoundedButtonStyle" TargetType="Button">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="4">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!-- ICON BUTTON (Small, square)                                      -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
@@ -267,6 +248,27 @@
                             <Setter TargetName="border" Property="Background" Value="#30FFFFFF"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- ROUNDED BUTTON (for actions buttons with rounded corners)       -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <Style x:Key="RoundedButtonStyle" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -71,6 +71,7 @@
                                  BorderBrush="{DynamicResource ThemeCardBorder}"
                                  BorderThickness="1"
                                  Padding="30,8,10,8"
+                                 CornerRadius="4"
                                  FontSize="12"/>
                         <TextBlock Text="🔍" 
                                    IsHitTestVisible="False"
@@ -203,13 +204,7 @@
                                             HorizontalAlignment="Left"
                                             Width="{Binding Health, Converter={StaticResource HealthToWidthConverter}}">
                                         <Border.Background>
-                                            <SolidColorBrush>
-                                                <SolidColorBrush.Color>
-                                                    <MultiBinding Converter="{StaticResource HealthToColorConverter}">
-                                                        <Binding Path="Health"/>
-                                                    </MultiBinding>
-                                                </SolidColorBrush.Color>
-                                            </SolidColorBrush>
+                                            <SolidColorBrush Color="{Binding Health, Converter={StaticResource HealthToColorConverter}}"/>
                                         </Border.Background>
                                     </Border>
                                 </Grid>

@@ -1,10 +1,12 @@
 // ════════════════════════════════════════════════════════════════════
-// LoginWindow.xaml.cs - Login window with validation
+// LoginWindow.xaml.cs - V3 FIXED
 // ════════════════════════════════════════════════════════════════════
 
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using RustControlPanel.ViewModels;
 
 namespace RustControlPanel.Views.Windows
@@ -51,9 +53,6 @@ namespace RustControlPanel.Views.Windows
                 return;
             }
 
-            // Clear error
-            ErrorText.Visibility = Visibility.Collapsed;
-
             // Call ViewModel connect
             if (DataContext is LoginViewModel vm)
             {
@@ -63,8 +62,20 @@ namespace RustControlPanel.Views.Windows
 
         private void ShowError(string message)
         {
-            ErrorText.Text = message;
-            ErrorText.Visibility = Visibility.Visible;
+            ErrorMessage.Text = message;
+            ErrorPopup.Visibility = Visibility.Visible;
+            
+            // Animation fade in
+            var fadeIn = new DoubleAnimation(0, 1, System.TimeSpan.FromMilliseconds(200));
+            ErrorPopup.BeginAnimation(OpacityProperty, fadeIn);
+        }
+
+        private void OnErrorOkClick(object sender, RoutedEventArgs e)
+        {
+            // Animation fade out
+            var fadeOut = new DoubleAnimation(1, 0, System.TimeSpan.FromMilliseconds(200));
+            fadeOut.Completed += (s, a) => ErrorPopup.Visibility = Visibility.Collapsed;
+            ErrorPopup.BeginAnimation(OpacityProperty, fadeOut);
         }
 
         private void OnHostTextChanged(object sender, TextChangedEventArgs e)
@@ -87,6 +98,17 @@ namespace RustControlPanel.Views.Windows
             }
         }
 
+        private void OnPortPreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            // Allow only numbers
+            e.Handled = !IsTextNumeric(e.Text);
+        }
+
+        private static bool IsTextNumeric(string text)
+        {
+            return Regex.IsMatch(text, "^[0-9]+$");
+        }
+
         private void OnPasswordChanged(object sender, RoutedEventArgs e)
         {
             if (sender is PasswordBox pb)
@@ -107,14 +129,14 @@ namespace RustControlPanel.Views.Windows
 
         private void UpdatePlaceholders()
         {
-            if (HostPlaceholder != null)
+            if (HostPlaceholder != null && HostTextBox != null)
             {
                 HostPlaceholder.Visibility = string.IsNullOrEmpty(HostTextBox.Text) 
                     ? Visibility.Visible 
                     : Visibility.Collapsed;
             }
             
-            if (PortPlaceholder != null)
+            if (PortPlaceholder != null && PortTextBox != null)
             {
                 PortPlaceholder.Visibility = string.IsNullOrEmpty(PortTextBox.Text) 
                     ? Visibility.Visible 

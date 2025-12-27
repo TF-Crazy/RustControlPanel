@@ -1,5 +1,5 @@
 // ════════════════════════════════════════════════════════════════════
-// Sidebar.xaml.cs - Collapsible sidebar with animations
+// Sidebar.xaml.cs - V3 avec chevron rotate
 // ════════════════════════════════════════════════════════════════════
 
 using System;
@@ -12,28 +12,25 @@ namespace RustControlPanel.Views.Components
 {
     public partial class Sidebar : UserControl
     {
-        private bool _isExpanded = true;
-        private const double ExpandedWidth = 200;
-        private const double CollapsedWidth = 64;
-
         public event EventHandler? MapClicked;
         public event EventHandler? StatsClicked;
         public event EventHandler? PlayersClicked;
         public event EventHandler? ConsoleClicked;
 
-        public string SelectedTab { get; set; } = "Map";
+        private const double ExpandedWidth = 200;
+        private const double CollapsedWidth = 64;
+        private bool _isCollapsed = false;
 
         public Sidebar()
         {
             InitializeComponent();
-            Width = ExpandedWidth;
-            UpdateSelectedTab();
         }
 
         private void OnToggleClick(object sender, RoutedEventArgs e)
         {
-            _isExpanded = !_isExpanded;
-            AnimateWidth(_isExpanded ? ExpandedWidth : CollapsedWidth);
+            _isCollapsed = !_isCollapsed;
+            AnimateWidth(_isCollapsed ? CollapsedWidth : ExpandedWidth);
+            AnimateChevron(_isCollapsed ? 180 : 0);
             UpdateVisibility();
         }
 
@@ -45,75 +42,65 @@ namespace RustControlPanel.Views.Components
                 Duration = TimeSpan.FromMilliseconds(250),
                 EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
             };
-            BeginAnimation(WidthProperty, animation);
+            this.BeginAnimation(WidthProperty, animation);
+        }
+
+        private void AnimateChevron(double targetAngle)
+        {
+            var rotateTransform = (RotateTransform)ChevronIcon.RenderTransform;
+            var animation = new DoubleAnimation
+            {
+                To = targetAngle,
+                Duration = TimeSpan.FromMilliseconds(250),
+                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
+            };
+            rotateTransform.BeginAnimation(RotateTransform.AngleProperty, animation);
         }
 
         private void UpdateVisibility()
         {
-            var visibility = _isExpanded ? Visibility.Visible : Visibility.Collapsed;
+            var visibility = _isCollapsed ? Visibility.Collapsed : Visibility.Visible;
             
-            if (MapText != null) MapText.Visibility = visibility;
-            if (StatsText != null) StatsText.Visibility = visibility;
-            if (PlayersText != null) PlayersText.Visibility = visibility;
-            if (ConsoleText != null) ConsoleText.Visibility = visibility;
-            if (BottomInfo != null) BottomInfo.Visibility = visibility;
+            MapText.Visibility = visibility;
+            StatsText.Visibility = visibility;
+            PlayersText.Visibility = visibility;
+            ConsoleText.Visibility = visibility;
         }
 
         private void OnMapClick(object sender, MouseButtonEventArgs e)
         {
-            SelectedTab = "Map";
-            UpdateSelectedTab();
+            UpdateSelectedTab(MapItem);
             MapClicked?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnStatsClick(object sender, MouseButtonEventArgs e)
         {
-            SelectedTab = "Stats";
-            UpdateSelectedTab();
+            UpdateSelectedTab(StatsItem);
             StatsClicked?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnPlayersClick(object sender, MouseButtonEventArgs e)
         {
-            SelectedTab = "Players";
-            UpdateSelectedTab();
+            UpdateSelectedTab(PlayersItem);
             PlayersClicked?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnConsoleClick(object sender, MouseButtonEventArgs e)
         {
-            SelectedTab = "Console";
-            UpdateSelectedTab();
+            UpdateSelectedTab(ConsoleItem);
             ConsoleClicked?.Invoke(this, EventArgs.Empty);
         }
 
-        private void UpdateSelectedTab()
+        private void UpdateSelectedTab(Border selectedItem)
         {
             // Reset all
-            if (MapBorder != null) MapBorder.Background = System.Windows.Media.Brushes.Transparent;
-            if (StatsBorder != null) StatsBorder.Background = System.Windows.Media.Brushes.Transparent;
-            if (PlayersBorder != null) PlayersBorder.Background = System.Windows.Media.Brushes.Transparent;
-            if (ConsoleBorder != null) ConsoleBorder.Background = System.Windows.Media.Brushes.Transparent;
+            MapItem.Background = System.Windows.Media.Brushes.Transparent;
+            StatsItem.Background = System.Windows.Media.Brushes.Transparent;
+            PlayersItem.Background = System.Windows.Media.Brushes.Transparent;
+            ConsoleItem.Background = System.Windows.Media.Brushes.Transparent;
 
             // Highlight selected
-            var selectedBrush = new System.Windows.Media.SolidColorBrush(
-                System.Windows.Media.Color.FromArgb(40, 0, 217, 255)); // #2800D9FF
-
-            switch (SelectedTab)
-            {
-                case "Map":
-                    if (MapBorder != null) MapBorder.Background = selectedBrush;
-                    break;
-                case "Stats":
-                    if (StatsBorder != null) StatsBorder.Background = selectedBrush;
-                    break;
-                case "Players":
-                    if (PlayersBorder != null) PlayersBorder.Background = selectedBrush;
-                    break;
-                case "Console":
-                    if (ConsoleBorder != null) ConsoleBorder.Background = selectedBrush;
-                    break;
-            }
+            selectedItem.Background = (System.Windows.Media.Brush)Application.Current.Resources["ThemeAccentBackground"];
         }
     }
 }

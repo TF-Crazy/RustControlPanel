@@ -1,7 +1,4 @@
-<!-- ════════════════════════════════════════════════════════════════════ -->
-<!-- LoginWindow.xaml - FINAL (validation + placeholders + boutons)      -->
-<!-- ════════════════════════════════════════════════════════════════════ -->
-
+<!-- LoginWindow.xaml - V3 FIXED ALL ERRORS -->
 <Window x:Class="RustControlPanel.Views.Windows.LoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -90,40 +87,6 @@
                         <ScrollViewer Grid.Row="1"
                                       VerticalScrollBarVisibility="Auto"
                                       HorizontalScrollBarVisibility="Disabled">
-                            <ScrollViewer.Resources>
-                                <Style TargetType="ScrollBar">
-                                    <Setter Property="Width" Value="6"/>
-                                    <Setter Property="Background" Value="Transparent"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="ScrollBar">
-                                                <Grid>
-                                                    <Track x:Name="PART_Track" IsDirectionReversed="True">
-                                                        <Track.Thumb>
-                                                            <Thumb>
-                                                                <Thumb.Style>
-                                                                    <Style TargetType="Thumb">
-                                                                        <Setter Property="Template">
-                                                                            <Setter.Value>
-                                                                                <ControlTemplate>
-                                                                                    <Border Background="{DynamicResource ThemeAccent}"
-                                                                                            CornerRadius="3"
-                                                                                            Opacity="0.4"/>
-                                                                                </ControlTemplate>
-                                                                            </Setter.Value>
-                                                                        </Setter>
-                                                                    </Style>
-                                                                </Thumb.Style>
-                                                            </Thumb>
-                                                        </Track.Thumb>
-                                                    </Track>
-                                                </Grid>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </ScrollViewer.Resources>
-
                             <ItemsControl ItemsSource="{Binding SavedServers}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -132,9 +95,11 @@
                                                 Background="{DynamicResource ThemeCard}"
                                                 BorderBrush="{DynamicResource ThemeCardBorder}"
                                                 BorderThickness="1"
-                                                CornerRadius="4">
+                                                CornerRadius="4"
+                                                Cursor="Hand">
                                             <Border.Style>
                                                 <Style TargetType="Border">
+                                                    <Setter Property="Opacity" Value="1"/>
                                                     <Style.Triggers>
                                                         <Trigger Property="IsMouseOver" Value="True">
                                                             <Setter Property="Background" Value="{DynamicResource ThemeCardHover}"/>
@@ -153,7 +118,7 @@
 
                                                 <!-- Server name -->
                                                 <TextBlock Grid.Row="0"
-                                                           Text="{Binding Name}" 
+                                                           Text="{Binding DisplayName}"
                                                            FontSize="13"
                                                            FontWeight="SemiBold"
                                                            Foreground="{DynamicResource ThemeText}"/>
@@ -183,25 +148,53 @@
                                                                 <Setter Property="Template">
                                                                     <Setter.Value>
                                                                         <ControlTemplate TargetType="Button">
-                                                                            <Border Background="{TemplateBinding Background}"
+                                                                            <Border x:Name="border"
+                                                                                    Background="{TemplateBinding Background}"
                                                                                     CornerRadius="3"
                                                                                     Padding="{TemplateBinding Padding}">
+                                                                                <Border.RenderTransform>
+                                                                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                                                                </Border.RenderTransform>
                                                                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                                             </Border>
+                                                                            <ControlTemplate.Triggers>
+                                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                                    <Trigger.EnterActions>
+                                                                                        <BeginStoryboard>
+                                                                                            <Storyboard>
+                                                                                                <DoubleAnimation Storyboard.TargetName="border"
+                                                                                                                 Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
+                                                                                                                 To="1.05" Duration="0:0:0.2"/>
+                                                                                                <DoubleAnimation Storyboard.TargetName="border"
+                                                                                                                 Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
+                                                                                                                 To="1.05" Duration="0:0:0.2"/>
+                                                                                            </Storyboard>
+                                                                                        </BeginStoryboard>
+                                                                                    </Trigger.EnterActions>
+                                                                                    <Trigger.ExitActions>
+                                                                                        <BeginStoryboard>
+                                                                                            <Storyboard>
+                                                                                                <DoubleAnimation Storyboard.TargetName="border"
+                                                                                                                 Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
+                                                                                                                 To="1.0" Duration="0:0:0.2"/>
+                                                                                                <DoubleAnimation Storyboard.TargetName="border"
+                                                                                                                 Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
+                                                                                                                 To="1.0" Duration="0:0:0.2"/>
+                                                                                            </Storyboard>
+                                                                                        </BeginStoryboard>
+                                                                                    </Trigger.ExitActions>
+                                                                                </Trigger>
+                                                                            </ControlTemplate.Triggers>
                                                                         </ControlTemplate>
                                                                     </Setter.Value>
                                                                 </Setter>
-                                                                <Style.Triggers>
-                                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter Property="Opacity" Value="0.85"/>
-                                                                    </Trigger>
-                                                                </Style.Triggers>
+                                                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
                                                             </Style>
                                                         </Button.Style>
                                                     </Button>
 
                                                     <Button Content="✕"
-                                                            Command="{Binding DataContext.DeleteServerCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            Command="{Binding DataContext.RemoveServerCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                             CommandParameter="{Binding}"
                                                             Width="24" Height="24"
                                                             FontSize="12"
@@ -214,19 +207,20 @@
                                                                 <Setter Property="Template">
                                                                     <Setter.Value>
                                                                         <ControlTemplate TargetType="Button">
-                                                                            <Border Background="{TemplateBinding Background}"
+                                                                            <Border x:Name="border"
+                                                                                    Background="{TemplateBinding Background}"
                                                                                     CornerRadius="3">
                                                                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                                             </Border>
+                                                                            <ControlTemplate.Triggers>
+                                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                                    <Setter TargetName="border" Property="Background" Value="#30EF4444"/>
+                                                                                    <Setter Property="Foreground" Value="{DynamicResource ThemeAccentDanger}"/>
+                                                                                </Trigger>
+                                                                            </ControlTemplate.Triggers>
                                                                         </ControlTemplate>
                                                                     </Setter.Value>
                                                                 </Setter>
-                                                                <Style.Triggers>
-                                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                                        <Setter Property="Background" Value="#30FF0000"/>
-                                                                        <Setter Property="Foreground" Value="{DynamicResource ThemeAccentDanger}"/>
-                                                                    </Trigger>
-                                                                </Style.Triggers>
                                                             </Style>
                                                         </Button.Style>
                                                     </Button>
@@ -274,9 +268,11 @@
                                      Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}"
                                      Height="38"
                                      Padding="12,10"
-                                     FontSize="13"
+                                     FontSize="14"
+                                     FontWeight="Medium"
                                      Background="{DynamicResource ThemeCard}"
-                                     Foreground="{DynamicResource ThemeText}"
+                                     Foreground="#FFFFFF"
+                                     CaretBrush="#00D9FF"
                                      BorderBrush="{DynamicResource ThemeCardBorder}"
                                      BorderThickness="1"
                                      TextChanged="OnHostTextChanged">
@@ -302,7 +298,7 @@
                             <TextBlock x:Name="HostPlaceholder"
                                        Text="127.0.0.1 or example.com"
                                        FontSize="13"
-                                       Foreground="#909AAA"
+                                       Foreground="#707070"
                                        IsHitTestVisible="False"
                                        Margin="13,0,0,0"
                                        VerticalAlignment="Center"
@@ -317,15 +313,24 @@
                                    Margin="0,0,0,6"/>
                         <Grid Margin="0,0,0,16">
                             <TextBox x:Name="PortTextBox"
-                                     Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"
                                      Height="38"
                                      Padding="12,10"
-                                     FontSize="13"
+                                     FontSize="14"
+                                     FontWeight="Medium"
                                      Background="{DynamicResource ThemeCard}"
-                                     Foreground="{DynamicResource ThemeText}"
+                                     Foreground="#FFFFFF"
+                                     CaretBrush="#00D9FF"
                                      BorderBrush="{DynamicResource ThemeCardBorder}"
                                      BorderThickness="1"
-                                     TextChanged="OnPortTextChanged">
+                                     TextChanged="OnPortTextChanged"
+                                     PreviewTextInput="OnPortPreviewTextInput">
+                                <TextBox.Text>
+                                    <Binding Path="Port" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <ExceptionValidationRule/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
                                         <Setter Property="Template">
@@ -346,9 +351,9 @@
                                 </TextBox.Style>
                             </TextBox>
                             <TextBlock x:Name="PortPlaceholder"
-                                       Text="28016"
+                                       Text="3050"
                                        FontSize="13"
-                                       Foreground="#909AAA"
+                                       Foreground="#707070"
                                        IsHitTestVisible="False"
                                        Margin="13,0,0,0"
                                        VerticalAlignment="Center"
@@ -365,9 +370,11 @@
                             <PasswordBox x:Name="PasswordBox"
                                          Height="38"
                                          Padding="12,10"
-                                         FontSize="13"
+                                         FontSize="14"
+                                         FontWeight="Medium"
                                          Background="{DynamicResource ThemeCard}"
-                                         Foreground="{DynamicResource ThemeText}"
+                                         Foreground="#FFFFFF"
+                                         CaretBrush="#00D9FF"
                                          BorderBrush="{DynamicResource ThemeCardBorder}"
                                          BorderThickness="1"
                                          PasswordChanged="OnPasswordChanged">
@@ -393,7 +400,7 @@
                             <TextBlock x:Name="PasswordPlaceholder"
                                        Text="Your RCON password"
                                        FontSize="13"
-                                       Foreground="#909AAA"
+                                       Foreground="#707070"
                                        IsHitTestVisible="False"
                                        Margin="13,0,0,0"
                                        VerticalAlignment="Center"
@@ -414,36 +421,121 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}"
+                                                <Border x:Name="border"
+                                                        Background="{TemplateBinding Background}"
                                                         CornerRadius="4">
+                                                    <Border.RenderTransform>
+                                                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                                    </Border.RenderTransform>
                                                     <ContentPresenter HorizontalAlignment="Center" 
                                                                       VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Trigger.EnterActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetName="border"
+                                                                                     Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
+                                                                                     To="1.02" Duration="0:0:0.15"/>
+                                                                    <DoubleAnimation Storyboard.TargetName="border"
+                                                                                     Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
+                                                                                     To="1.02" Duration="0:0:0.15"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </Trigger.EnterActions>
+                                                        <Trigger.ExitActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetName="border"
+                                                                                     Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
+                                                                                     To="1.0" Duration="0:0:0.15"/>
+                                                                    <DoubleAnimation Storyboard.TargetName="border"
+                                                                                     Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
+                                                                                     To="1.0" Duration="0:0:0.15"/>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </Trigger.ExitActions>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                                    <Setter Property="Content" Value="Connect"/>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <!-- ERROR POPUP -->
+            <Border x:Name="ErrorPopup"
+                    Grid.RowSpan="2"
+                    Background="#DD000000"
+                    Visibility="Collapsed"
+                    Panel.ZIndex="1000">
+                <Border Background="{DynamicResource ThemeCard}"
+                        BorderBrush="{DynamicResource ThemeAccentDanger}"
+                        BorderThickness="2"
+                        CornerRadius="8"
+                        Padding="24"
+                        MaxWidth="400"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Effect="{DynamicResource CardShadowOuter}">
+                    <StackPanel>
+                        <TextBlock Text="⚠️ Connection Error"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource ThemeAccentDanger}"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,16"/>
+                        
+                        <TextBlock x:Name="ErrorMessage"
+                                   Text="Please fill all fields"
+                                   FontSize="13"
+                                   Foreground="{DynamicResource ThemeText}"
+                                   TextWrapping="Wrap"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,20"/>
+                        
+                        <Button Content="OK"
+                                Click="OnErrorOkClick"
+                                Height="32"
+                                Padding="24,0"
+                                Background="{DynamicResource ThemeAccentDanger}"
+                                Foreground="White"
+                                BorderThickness="0"
+                                FontSize="12"
+                                FontWeight="SemiBold"
+                                Cursor="Hand"
+                                HorizontalAlignment="Center">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        CornerRadius="4"
+                                                        Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 </Border>
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
-                                    <Setter Property="Content" Value="Connect"/>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Opacity" Value="0.85"/>
+                                            <Setter Property="Opacity" Value="0.9"/>
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </Button.Style>
                         </Button>
-
-                        <!-- Error -->
-                        <TextBlock x:Name="ErrorText"
-                                   Text=""
-                                   Foreground="{DynamicResource ThemeAccentWarning}"
-                                   FontSize="11"
-                                   TextWrapping="Wrap"
-                                   HorizontalAlignment="Center"
-                                   Margin="0,12,0,0"
-                                   Visibility="Collapsed"/>
                     </StackPanel>
-                </Grid>
-            </Grid>
+                </Border>
+            </Border>
         </Grid>
     </Border>
     
